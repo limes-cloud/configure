@@ -1,10 +1,10 @@
 package logic
 
 import (
-	v1 "configure/api/v1"
-	"configure/internal/model"
-	"configure/util"
 	"github.com/google/uuid"
+	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/internal/model"
+	"github.com/limes-cloud/configure/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

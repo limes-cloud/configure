@@ -1,10 +1,10 @@
 package handler
 
 import (
-	v1 "configure/api/v1"
-	"configure/config"
-	"configure/internal/logic"
 	"context"
+	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/config"
+	"github.com/limes-cloud/configure/internal/logic"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
 )

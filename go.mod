@@ -4,8 +4,9 @@ go 1.19
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
+	github.com/google/uuid v1.3.0
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratos v1.0.5
+	github.com/limes-cloud/kratos v1.0.8
 	go.uber.org/automaxprocs v1.5.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20230711160842-782d3b101e98
 	google.golang.org/grpc v1.58.2
@@ -35,7 +36,6 @@ require (
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect

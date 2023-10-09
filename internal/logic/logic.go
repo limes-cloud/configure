@@ -1,6 +1,8 @@
 package logic
 
-import "github.com/limes-cloud/configure/config"
+import (
+	"github.com/limes-cloud/configure/config"
+)
 
 type Logic struct {
 	conf *config.Config
