@@ -4,37 +4,52 @@ package v1;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 
-message Environment {
+
+// 获取环境列表
+message AllEnvironmentReply {
+  message Environment{
+    int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+    string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+    string title = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
+    string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
+    optional bool status = 5;
+    optional string operator = 7;
+    optional int64 operator_id = 8;
+  }
+  repeated Environment list = 1;
+}
+
+// 新增环境
+message AddEnvironmentRequest {
   string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];
   string title = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
   optional bool status = 4;
-  optional string operator = 5;
-  optional int64 operator_id = 6;
 }
 
-message AllEnvironmentRequest {}
-
-message AllEnvironmentResponse {
-  repeated Environment environments = 1;
-}
-
-message AddEnvironmentRequest {
-  Environment environment = 1;
-}
-
-message AddEnvironmentResponse {}
-
+// 修改环境
 message UpdateEnvironmentRequest {
   int64 id = 1 [(validate.rules).int64 = {gt: 0}];
-  Environment environment = 2;
+  string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string title = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional bool status = 5;
 }
 
-message UpdateEnvironmentResponse {}
+// 获取指定环境token
+message GetEnvironmentTokenRequest {
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+message GetEnvironmentTokenReply {
+  string token = 1;
+}
 
+// 重置token
+message ResetEnvironmentTokenRequest {
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+}
+
+// 删除环境
 message DeleteEnvironmentRequest {
   int64 id = 1 [(validate.rules).int64 = {gt: 0}];
-  Environment environment = 2;
 }
-
-message DeleteEnvironmentResponse {}

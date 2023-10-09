@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -26,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
-	AllEnvironment(ctx context.Context, in *AllEnvironmentRequest, opts ...grpc.CallOption) (*AllEnvironmentResponse, error)
+	AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvironmentReply, error)
 }
 
 type serviceClient struct {
@@ -37,8 +38,8 @@ func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
 }
 
-func (c *serviceClient) AllEnvironment(ctx context.Context, in *AllEnvironmentRequest, opts ...grpc.CallOption) (*AllEnvironmentResponse, error) {
-	out := new(AllEnvironmentResponse)
+func (c *serviceClient) AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvironmentReply, error) {
+	out := new(AllEnvironmentReply)
 	err := c.cc.Invoke(ctx, Service_AllEnvironment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (c *serviceClient) AllEnvironment(ctx context.Context, in *AllEnvironmentRe
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
-	AllEnvironment(context.Context, *AllEnvironmentRequest) (*AllEnvironmentResponse, error)
+	AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -58,7 +59,7 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
-func (UnimplementedServiceServer) AllEnvironment(context.Context, *AllEnvironmentRequest) (*AllEnvironmentResponse, error) {
+func (UnimplementedServiceServer) AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllEnvironment not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
@@ -75,7 +76,7 @@ func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 }
 
 func _Service_AllEnvironment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AllEnvironmentRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -87,7 +88,7 @@ func _Service_AllEnvironment_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Service_AllEnvironment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).AllEnvironment(ctx, req.(*AllEnvironmentRequest))
+		return srv.(ServiceServer).AllEnvironment(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

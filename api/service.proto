@@ -4,17 +4,19 @@ package v1;
 option go_package = "./v1;v1";
 
 import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
 import "environment.proto";
 
 
 service Service {
 
-  rpc AllEnvironment (AllEnvironmentRequest) returns (AllEnvironmentResponse) {
+  rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
     option (google.api.http) = {
-      get: "/v1/environments",
-      response_body:"environment"
+      get: "/v1/environments"
     };
   }
+
+
 }
 
 

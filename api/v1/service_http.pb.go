@@ -10,6 +10,7 @@ import (
 	context "context"
 	http "github.com/limes-cloud/kratos/transport/http"
 	binding "github.com/limes-cloud/kratos/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,7 +23,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationServiceAllEnvironment = "/v1.Service/AllEnvironment"
 
 type ServiceHTTPServer interface {
-	AllEnvironment(context.Context, *AllEnvironmentRequest) (*AllEnvironmentResponse, error)
+	AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error)
 }
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
@@ -32,25 +33,25 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 
 func _Service_AllEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AllEnvironmentRequest
+		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAllEnvironment)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.AllEnvironment(ctx, req.(*AllEnvironmentRequest))
+			return srv.AllEnvironment(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*AllEnvironmentResponse)
-		return ctx.Result(200, reply.Environment)
+		reply := out.(*AllEnvironmentReply)
+		return ctx.Result(200, reply)
 	}
 }
 
 type ServiceHTTPClient interface {
-	AllEnvironment(ctx context.Context, req *AllEnvironmentRequest, opts ...http.CallOption) (rsp *AllEnvironmentResponse, err error)
+	AllEnvironment(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *AllEnvironmentReply, err error)
 }
 
 type ServiceHTTPClientImpl struct {
@@ -61,13 +62,13 @@ func NewServiceHTTPClient(client *http.Client) ServiceHTTPClient {
 	return &ServiceHTTPClientImpl{client}
 }
 
-func (c *ServiceHTTPClientImpl) AllEnvironment(ctx context.Context, in *AllEnvironmentRequest, opts ...http.CallOption) (*AllEnvironmentResponse, error) {
-	var out AllEnvironmentResponse
+func (c *ServiceHTTPClientImpl) AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*AllEnvironmentReply, error) {
+	var out AllEnvironmentReply
 	pattern := "/v1/environments"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceAllEnvironment))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Environment, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
