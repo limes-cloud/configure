@@ -1,12 +1,13 @@
 package main
 
 import (
-	"configure/internal/service"
 	"os"
 
+	"github.com/limes-cloud/configure/internal/service"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
+	srcConf "github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/kratos"
-	v1 "configure/api/v1"
-	srcConf "configure/config"
 	"github.com/limes-cloud/kratos/config"
 	"github.com/limes-cloud/kratos/config/file"
 	"github.com/limes-cloud/kratos/log"

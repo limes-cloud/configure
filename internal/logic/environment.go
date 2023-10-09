@@ -1,7 +1,7 @@
 package logic
 
 import (
-	v1 "configure/api/v1"
+	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/kratos"
 )
 

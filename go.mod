@@ -1,4 +1,4 @@
-module configure
+module github.com/limes-cloud/configure
 
 go 1.19
 
