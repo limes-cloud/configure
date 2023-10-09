@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package v1;
+option go_package = "./v1;v1";
+import "validate/validate.proto";
+
+message Environment {
+  string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string title = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional bool status = 4;
+  optional string operator = 5;
+  optional int64 operator_id = 6;
+}
+
+message AllEnvironmentRequest {}
+
+message AllEnvironmentResponse {
+  repeated Environment environments = 1;
+}
+
+message AddEnvironmentRequest {
+  Environment environment = 1;
+}
+
+message AddEnvironmentResponse {}
+
+message UpdateEnvironmentRequest {
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  Environment environment = 2;
+}
+
+message UpdateEnvironmentResponse {}
+
+message DeleteEnvironmentRequest {
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  Environment environment = 2;
+}
+
+message DeleteEnvironmentResponse {}

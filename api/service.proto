@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package v1;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "environment.proto";
+
+
+service Service {
+
+  rpc AllEnvironment (AllEnvironmentRequest) returns (AllEnvironmentResponse) {
+    option (google.api.http) = {
+      get: "/v1/environments",
+      response_body:"environment"
+    };
+  }
+}
+
+
