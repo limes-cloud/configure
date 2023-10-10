@@ -13,9 +13,40 @@ service Service {
   rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
     option (google.api.http) = {
       get: "/v1/environments"
+      response_body:"list"
     };
   }
 
+  rpc AddEnvironment (AddEnvironmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/environment"
+    };
+  }
+
+  rpc UpdateEnvironment (UpdateEnvironmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/environment"
+    };
+  }
+
+  rpc DeleteEnvironment (DeleteEnvironmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/environment"
+    };
+  }
+
+
+  rpc GetEnvironmentToken (GetEnvironmentTokenRequest) returns (GetEnvironmentTokenReply) {
+    option (google.api.http) = {
+      get: "/v1/environment/token"
+    };
+  }
+
+  rpc ResetEnvironmentToken (ResetEnvironmentTokenRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/environment/token"
+    };
+  }
 
 }
 

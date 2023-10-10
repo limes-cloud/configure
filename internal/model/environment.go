@@ -12,7 +12,7 @@ type Environment struct {
 	Token       string `json:"token,omitempty" gorm:"not null;size:32;comment:连接token"`
 	Status      *bool  `json:"status" gorm:"not null;comment:启用状态"`
 	Operator    string `json:"operator,omitempty" gorm:"not null;size:32;comment:操作人"`
-	OperatorId  int64  `json:"operator_id,omitempty" gorm:"not null;comment:操作人id"`
+	OperatorID  int64  `json:"operator_id,omitempty" gorm:"not null;comment:操作人id"`
 }
 
 // Create 新建环境

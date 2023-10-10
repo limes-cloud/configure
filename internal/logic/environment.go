@@ -4,7 +4,8 @@ import (
 	"github.com/google/uuid"
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/internal/model"
-	"github.com/limes-cloud/configure/util"
+	"github.com/limes-cloud/configure/pkg/md"
+	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -27,7 +28,11 @@ func (l *Logic) AllEnvironment(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEn
 
 // AddEnvironment 新增环境
 func (l *Logic) AddEnvironment(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*emptypb.Empty, error) {
-	env := &model.Environment{}
+	env := &model.Environment{
+		Token:      uuid.NewString(),
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
+	}
 	if util.Transform(in, env) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -41,7 +46,10 @@ func (l *Logic) AddEnvironment(ctx kratos.Context, in *v1.AddEnvironmentRequest)
 
 // UpdateEnvironment 修改环境
 func (l *Logic) UpdateEnvironment(ctx kratos.Context, in *v1.UpdateEnvironmentRequest) (*emptypb.Empty, error) {
-	env := &model.Environment{}
+	env := &model.Environment{
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
+	}
 	if util.Transform(in, env) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -83,7 +91,9 @@ func (l *Logic) GetEnvironmentToken(ctx kratos.Context, in *v1.GetEnvironmentTok
 // ResetEnvironmentToken 重置环境token
 func (l *Logic) ResetEnvironmentToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
-		Token: uuid.NewString(),
+		Token:      uuid.NewString(),
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
 	}
 
 	if env.UpdateByID(ctx, in.Id) != nil {

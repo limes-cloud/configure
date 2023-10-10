@@ -4,19 +4,102 @@
 openapi: 3.0.3
 info:
     title: Service API
-    description: The greeting service definition.
     version: 0.0.1
 paths:
-    /helloworld/{name}:
+    /v1/environment:
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateEnvironment
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: title
+                  in: query
+                  schema:
+                    type: string
+                - name: description
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddEnvironment
+            parameters:
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: title
+                  in: query
+                  schema:
+                    type: string
+                - name: description
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            operationId: Service_DeleteEnvironment
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/environment/token:
         get:
             tags:
                 - Service
-            description: Sends a greeting
-            operationId: Service_SayHello
+            operationId: Service_GetEnvironmentToken
             parameters:
-                - name: name
-                  in: path
-                  required: true
+                - name: id
+                  in: query
                   schema:
                     type: string
             responses:
@@ -25,7 +108,44 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/HelloReply'
+                                $ref: '#/components/schemas/GetEnvironmentTokenReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_ResetEnvironmentToken
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/environments:
+        get:
+            tags:
+                - Service
+            operationId: Service_AllEnvironment
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AllEnvironmentReply'
                 default:
                     description: Default error response
                     content:
@@ -34,6 +154,36 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
+        AllEnvironmentReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AllEnvironmentReply_Environment'
+            description: 获取环境列表
+        AllEnvironmentReply_Environment:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                title:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+                operator:
+                    type: string
+                operatorId:
+                    type: string
+        GetEnvironmentTokenReply:
+            type: object
+            properties:
+                token:
+                    type: string
         GoogleProtobufAny:
             type: object
             properties:
@@ -42,12 +192,6 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        HelloReply:
-            type: object
-            properties:
-                message:
-                    type: string
-            description: The response message containing the greetings
         Status:
             type: object
             properties:
