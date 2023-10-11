@@ -2,16 +2,13 @@ package model
 
 import "gorm.io/gorm"
 
+type Scopes func(db *gorm.DB) *gorm.DB
+
 type PageOptions struct {
 	Page     int
 	PageSize int
 	Model    any
-	Scopes   func(db *gorm.DB) *gorm.DB
-}
-
-type AllOptions struct {
-	Model  any
-	Scopes func(db *gorm.DB) *gorm.DB
+	Scopes   Scopes
 }
 
 type CreateModel struct {

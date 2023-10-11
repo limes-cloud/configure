@@ -6,13 +6,13 @@ import (
 
 type Environment struct {
 	BaseModel
-	Keyword     string `json:"keyword" gorm:"unique;not null;size:32;comment:环境关键字"`
-	Title       string `json:"title" gorm:"not null;size:32;comment:环境标题"`
-	Description string `json:"description" gorm:"not null;size:128;comment:环境描述"`
-	Token       string `json:"token,omitempty" gorm:"not null;size:32;comment:连接token"`
-	Status      *bool  `json:"status" gorm:"not null;comment:启用状态"`
-	Operator    string `json:"operator,omitempty" gorm:"not null;size:32;comment:操作人"`
-	OperatorID  int64  `json:"operator_id,omitempty" gorm:"not null;comment:操作人id"`
+	Keyword     string `json:"keyword"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Token       string `json:"token,omitempty"`
+	Status      *bool  `json:"status"`
+	Operator    string `json:"operator,omitempty"`
+	OperatorID  int64  `json:"operator_id,omitempty"`
 }
 
 // Create 新建环境

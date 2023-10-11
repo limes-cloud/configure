@@ -1,18 +1,21 @@
 package main
 
 import (
-	"github.com/limes-cloud/configure/internal/handler"
 	"os"
 
+	"github.com/limes-cloud/kratos/transport/http"
+
+	"github.com/limes-cloud/configure/internal/handler"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
-	srcConf "github.com/limes-cloud/configure/config"
+	ccf "github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/kratos"
 	"github.com/limes-cloud/kratos/config"
 	"github.com/limes-cloud/kratos/config/file"
 	"github.com/limes-cloud/kratos/log"
 	"github.com/limes-cloud/kratos/middleware/tracing"
 	"github.com/limes-cloud/kratos/transport/grpc"
-	"github.com/limes-cloud/kratos/transport/http"
+
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -49,12 +52,12 @@ func main() {
 }
 
 func RegisterServer(hs *http.Server, gs *grpc.Server, c config.Config) {
-	conf := &srcConf.Config{}
-	if err := c.ScanKey("business", conf); err != nil {
+	ccfIns := &ccf.Config{}
+	if err := c.ScanKey("business", ccfIns); err != nil {
 		panic("business config format error:" + err.Error())
 	}
 
-	srv := handler.New(conf)
+	srv := handler.New(ccfIns)
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
 }
