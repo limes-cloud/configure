@@ -26,7 +26,7 @@ func (u *OperateLog) Page(ctx kratos.Context, options PageOptions) ([]*OperateLo
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
-	db = db.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
+	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
 
 	return list, db.Find(&list).Error
 }

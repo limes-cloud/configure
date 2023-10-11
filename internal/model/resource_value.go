@@ -36,3 +36,8 @@ func (e *ResourceValue) All(ctx kratos.Context, scopes Scopes) ([]*ResourceValue
 
 	return list, db.Find(&list).Error
 }
+
+// Update 更新指定id的资源值
+func (e *ResourceValue) Update(ctx kratos.Context) error {
+	return ctx.DB().Model(e).Updates(e).Error
+}

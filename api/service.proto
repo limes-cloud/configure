@@ -6,7 +6,7 @@ option go_package = "./v1;v1";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "environment.proto";
-
+import "server.proto";
 
 service Service {
 
@@ -48,6 +48,30 @@ service Service {
     };
   }
 
+  rpc PageServer (PageServerRequest) returns (PageServerReply) {
+    option (google.api.http) = {
+      get: "/v1/servers",
+      response_body: "list"
+    };
+  }
+
+  rpc AddServer (AddServerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/server"
+    };
+  }
+
+  rpc UpdateServer (UpdateServerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/server"
+    };
+  }
+
+  rpc DeleteServer (DeleteServerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/server"
+    };
+  }
 }
 
 

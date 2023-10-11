@@ -7,7 +7,6 @@ type Server struct {
 	Keyword     string `json:"keyword"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Status      *bool  `json:"status"`
 	Operator    string `json:"operator"`
 	OperatorID  int64  `json:"operator_id"`
 }
@@ -30,7 +29,7 @@ func (e *Server) Page(ctx kratos.Context, options *PageOptions) ([]*Server, erro
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
-	db = db.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
+	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
 
 	return list, db.Find(&list).Error
 }
@@ -47,9 +46,9 @@ func (e *Server) All(ctx kratos.Context, scopes Scopes) ([]*Server, error) {
 	return list, db.Find(&list).Error
 }
 
-// UpdateByID 更新指定id的资源
-func (e *Server) UpdateByID(ctx kratos.Context, id int64) error {
-	return ctx.DB().Model(e).Where("id = ?", id).Updates(e).Error
+// Update 更新指定id的资源
+func (e *Server) Update(ctx kratos.Context) error {
+	return ctx.DB().Model(e).Updates(e).Error
 }
 
 // DeleteByID 删除指定id的资源

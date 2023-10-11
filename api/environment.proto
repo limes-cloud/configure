@@ -10,7 +10,7 @@ message AllEnvironmentReply {
   message Environment{
     int64 id = 1 [(validate.rules).int64 = {gt: 0}];
     string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
-    string title = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
+    string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
     string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
     optional bool status = 5;
     optional string operator = 7;
@@ -22,7 +22,7 @@ message AllEnvironmentReply {
 // 新增环境
 message AddEnvironmentRequest {
   string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string title = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string name = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
   optional bool status = 4;
 }
@@ -31,7 +31,7 @@ message AddEnvironmentRequest {
 message UpdateEnvironmentRequest {
   int64 id = 1 [(validate.rules).int64 = {gt: 0}];
   string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string title = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
   optional bool status = 5;
 }

@@ -5,8 +5,8 @@ import "gorm.io/gorm"
 type Scopes func(db *gorm.DB) *gorm.DB
 
 type PageOptions struct {
-	Page     int
-	PageSize int
+	Page     int32
+	PageSize int32
 	Scopes   Scopes
 }
 

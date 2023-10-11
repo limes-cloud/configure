@@ -4,7 +4,7 @@ import "github.com/limes-cloud/kratos"
 
 type ResourceServer struct {
 	CreateModel
-	ServerID   string `json:"server_id"`
+	ServerID   int64  `json:"server_id"`
 	ResourceID int64  `json:"resource_id"`
 	Operator   string `json:"operator"`
 	OperatorID int64  `json:"operator_id"`
