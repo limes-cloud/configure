@@ -7,7 +7,6 @@ type Scopes func(db *gorm.DB) *gorm.DB
 type PageOptions struct {
 	Page     int
 	PageSize int
-	Model    any
 	Scopes   Scopes
 }
 

@@ -4,12 +4,12 @@ import "github.com/limes-cloud/kratos"
 
 type Business struct {
 	BaseModel
-	SrvKeyword  string `json:"srv_keyword"`
+	ServerID    string `json:"server_id"`
 	Keyword     string `json:"keyword"`
 	Value       string `json:"value"`
 	Description string `json:"description"`
-	Operator    string `json:"operator,omitempty"`
-	OperatorID  int64  `json:"operator_id,omitempty"`
+	Operator    string `json:"operator"`
+	OperatorID  int64  `json:"operator_id"`
 }
 
 // Create 新建业务字段

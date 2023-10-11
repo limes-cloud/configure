@@ -10,8 +10,8 @@ type Resource struct {
 	Description string `json:"description"`
 	Fields      string `json:"fields"`
 	Type        string `json:"type"`
-	Operator    string `json:"operator,omitempty"`
-	OperatorID  int64  `json:"operator_id,omitempty"`
+	Operator    string `json:"operator"`
+	OperatorID  int64  `json:"operator_id"`
 }
 
 // Create 新建资源
@@ -34,7 +34,7 @@ func (e *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, 
 	}
 	db = db.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
 
-	return list, ctx.DB().Model(e).Find(&list).Error
+	return list, db.Find(&list).Error
 }
 
 // All 查询全部资源
@@ -46,7 +46,7 @@ func (e *Resource) All(ctx kratos.Context, scopes Scopes) ([]*Resource, error) {
 		db = db.Scopes(scopes)
 	}
 
-	return list, ctx.DB().Model(e).Find(&list).Error
+	return list, db.Find(&list).Error
 }
 
 // UpdateByID 更新指定id的资源

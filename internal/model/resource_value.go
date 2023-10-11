@@ -6,11 +6,13 @@ import (
 
 type ResourceValue struct {
 	BaseModel
-	EnvKeyword string `json:"env_keyword"`
-	ResourceID int64  `json:"resource_id"`
-	Values     string `json:"values"`
-	Operator   string `json:"operator,omitempty"`
-	OperatorID int64  `json:"operator_id,omitempty"`
+	EnvironmentID int64       `json:"environment_id"`
+	ResourceID    int64       `json:"resource_id"`
+	Values        string      `json:"values"`
+	Operator      string      `json:"operator"`
+	OperatorID    int64       `json:"operator_id"`
+	Environment   Environment `json:"environment"`
+	Resource      Resource    `json:"resource"`
 }
 
 // Create 新建资源
@@ -32,5 +34,5 @@ func (e *ResourceValue) All(ctx kratos.Context, scopes Scopes) ([]*ResourceValue
 		db = db.Scopes(scopes)
 	}
 
-	return list, ctx.DB().Model(e).Find(&list).Error
+	return list, db.Find(&list).Error
 }

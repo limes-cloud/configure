@@ -1,1 +1,58 @@
 package model
+
+import "github.com/limes-cloud/kratos"
+
+type Server struct {
+	BaseModel
+	Keyword     string `json:"keyword"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Status      *bool  `json:"status"`
+	Operator    string `json:"operator"`
+	OperatorID  int64  `json:"operator_id"`
+}
+
+// Create 新建资源
+func (e *Server) Create(ctx kratos.Context) error {
+	return ctx.DB().Model(e).Create(e).Error
+}
+
+// OneByID 通过关键词查找指定资源
+func (e *Server) OneByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().First(e, "id = ?", id).Error
+}
+
+// Page 查询分页资源
+func (e *Server) Page(ctx kratos.Context, options *PageOptions) ([]*Server, error) {
+	var list []*Server
+
+	db := ctx.DB().Model(e)
+	if options.Scopes != nil {
+		db = db.Scopes(options.Scopes)
+	}
+	db = db.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
+
+	return list, db.Find(&list).Error
+}
+
+// All 查询全部资源
+func (e *Server) All(ctx kratos.Context, scopes Scopes) ([]*Server, error) {
+	var list []*Server
+
+	db := ctx.DB().Model(e)
+	if scopes != nil {
+		db = db.Scopes(scopes)
+	}
+
+	return list, db.Find(&list).Error
+}
+
+// UpdateByID 更新指定id的资源
+func (e *Server) UpdateByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().Model(e).Where("id = ?", id).Updates(e).Error
+}
+
+// DeleteByID 删除指定id的资源
+func (e *Server) DeleteByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().Model(e).Delete(e, "id = ?", id).Error
+}
