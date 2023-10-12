@@ -19,6 +19,9 @@ func (l *Logic) PageResource(ctx kratos.Context, in *v1.PageResourceRequest) (*v
 			if in.Keyword != nil {
 				db = db.Where("keyword like ?", "%"+*in.Keyword+"%")
 			}
+			if in.Tag != nil {
+				db = db.Where("tag like ?", "%"+*in.Tag+"%")
+			}
 			return db
 		},
 	})

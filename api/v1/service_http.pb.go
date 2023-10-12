@@ -51,7 +51,7 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.PUT("/v1/environment", _Service_UpdateEnvironment0_HTTP_Handler(srv))
 	r.DELETE("/v1/environment", _Service_DeleteEnvironment0_HTTP_Handler(srv))
 	r.GET("/v1/environment/token", _Service_GetEnvironmentToken0_HTTP_Handler(srv))
-	r.POST("/v1/environment/token", _Service_ResetEnvironmentToken0_HTTP_Handler(srv))
+	r.POST("/v1/environment/resetToken", _Service_ResetEnvironmentToken0_HTTP_Handler(srv))
 	r.GET("/v1/servers", _Service_PageServer0_HTTP_Handler(srv))
 	r.POST("/v1/server", _Service_AddServer0_HTTP_Handler(srv))
 	r.PUT("/v1/server", _Service_UpdateServer0_HTTP_Handler(srv))
@@ -80,6 +80,9 @@ func _Service_AllEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 func _Service_AddEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddEnvironmentRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -99,6 +102,9 @@ func _Service_AddEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 func _Service_UpdateEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateEnvironmentRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -118,6 +124,9 @@ func _Service_UpdateEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 func _Service_DeleteEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteEnvironmentRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -156,6 +165,9 @@ func _Service_GetEnvironmentToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx 
 func _Service_ResetEnvironmentToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetEnvironmentTokenRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -194,6 +206,9 @@ func _Service_PageServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 func _Service_AddServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddServerRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -213,6 +228,9 @@ func _Service_AddServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Conte
 func _Service_UpdateServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateServerRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -232,6 +250,9 @@ func _Service_UpdateServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 func _Service_DeleteServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteServerRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -272,10 +293,10 @@ func NewServiceHTTPClient(client *http.Client) ServiceHTTPClient {
 func (c *ServiceHTTPClientImpl) AddEnvironment(ctx context.Context, in *AddEnvironmentRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/environment"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceAddEnvironment))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -285,10 +306,10 @@ func (c *ServiceHTTPClientImpl) AddEnvironment(ctx context.Context, in *AddEnvir
 func (c *ServiceHTTPClientImpl) AddServer(ctx context.Context, in *AddServerRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/server"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceAddServer))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -311,10 +332,10 @@ func (c *ServiceHTTPClientImpl) AllEnvironment(ctx context.Context, in *emptypb.
 func (c *ServiceHTTPClientImpl) DeleteEnvironment(ctx context.Context, in *DeleteEnvironmentRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/environment"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceDeleteEnvironment))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -324,10 +345,10 @@ func (c *ServiceHTTPClientImpl) DeleteEnvironment(ctx context.Context, in *Delet
 func (c *ServiceHTTPClientImpl) DeleteServer(ctx context.Context, in *DeleteServerRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/server"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceDeleteServer))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -362,11 +383,11 @@ func (c *ServiceHTTPClientImpl) PageServer(ctx context.Context, in *PageServerRe
 
 func (c *ServiceHTTPClientImpl) ResetEnvironmentToken(ctx context.Context, in *ResetEnvironmentTokenRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/v1/environment/token"
-	path := binding.EncodeURL(pattern, in, true)
+	pattern := "/v1/environment/resetToken"
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceResetEnvironmentToken))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -376,10 +397,10 @@ func (c *ServiceHTTPClientImpl) ResetEnvironmentToken(ctx context.Context, in *R
 func (c *ServiceHTTPClientImpl) UpdateEnvironment(ctx context.Context, in *UpdateEnvironmentRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/environment"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceUpdateEnvironment))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -389,10 +410,10 @@ func (c *ServiceHTTPClientImpl) UpdateEnvironment(ctx context.Context, in *Updat
 func (c *ServiceHTTPClientImpl) UpdateServer(ctx context.Context, in *UpdateServerRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/server"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceUpdateServer))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

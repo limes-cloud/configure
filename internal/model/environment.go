@@ -20,7 +20,12 @@ func (e *Environment) Create(ctx kratos.Context) error {
 	return ctx.DB().Model(e).Create(e).Error
 }
 
-// OneByID 通过关键词查找指定环境
+// OneByKeyword 通过关键词查找指定环境
+func (e *Environment) OneByKeyword(ctx kratos.Context, keyword string) error {
+	return ctx.DB().First(e, "keyword = ?", keyword).Error
+}
+
+// OneByID 通过id查找指定环境
 func (e *Environment) OneByID(ctx kratos.Context, id int64) error {
 	return ctx.DB().First(e, "id = ?", id).Error
 }

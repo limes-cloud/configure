@@ -16,15 +16,15 @@ func IsDatabase(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DATABASE.String() && e.Code == 200
+	return e.Reason == ErrorReason_Database.String() && e.Code == 200
 }
 
 func ErrorDatabaseFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DATABASE.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_Database.String(), fmt.Sprintf(format, args...))
 }
 
 func ErrorDatabase() *errors.Error {
-	return errors.New(200, ErrorReason_DATABASE.String(), "数据库错误")
+	return errors.New(200, ErrorReason_Database.String(), "数据库错误")
 }
 
 func IsTransform(err error) bool {
@@ -32,13 +32,29 @@ func IsTransform(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_TRANSFORM.String() && e.Code == 200
+	return e.Reason == ErrorReason_Transform.String() && e.Code == 200
 }
 
 func ErrorTransformFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_TRANSFORM.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_Transform.String(), fmt.Sprintf(format, args...))
 }
 
 func ErrorTransform() *errors.Error {
-	return errors.New(200, ErrorReason_TRANSFORM.String(), "数据转换失败")
+	return errors.New(200, ErrorReason_Transform.String(), "数据转换失败")
+}
+
+func IsAlreadyExists(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AlreadyExists.String() && e.Code == 200
+}
+
+func ErrorAlreadyExistsFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_AlreadyExists.String(), fmt.Sprintf(format, args...))
+}
+
+func ErrorAlreadyExists() *errors.Error {
+	return errors.New(200, ErrorReason_AlreadyExists.String(), "数据已存在")
 }

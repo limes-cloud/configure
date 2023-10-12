@@ -10,9 +10,9 @@ enum ErrorReason {
   // 设置缺省错误码
   option (errors.default_code) = 200;
 
-  DATABASE = 0[ (errors.message)="数据库错误"]; 
-  TRANSFORM = 1[(errors.message)="数据转换失败"];
-
+  Database = 0[ (errors.message)="数据库错误"];
+  Transform = 1[(errors.message)="数据转换失败"];
+  AlreadyExists = 2[(errors.message)="数据已存在"];
 }
 
 

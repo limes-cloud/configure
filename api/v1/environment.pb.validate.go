@@ -204,9 +204,9 @@ func (m *AddEnvironmentRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 32 {
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
 		err := AddEnvironmentRequestValidationError{
-			field:  "Title",
+			field:  "Name",
 			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
@@ -354,9 +354,9 @@ func (m *UpdateEnvironmentRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 32 {
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
 		err := UpdateEnvironmentRequestValidationError{
-			field:  "Title",
+			field:  "Name",
 			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
@@ -948,9 +948,9 @@ func (m *AllEnvironmentReply_Environment) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 32 {
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
 		err := AllEnvironmentReply_EnvironmentValidationError{
-			field:  "Title",
+			field:  "Name",
 			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {

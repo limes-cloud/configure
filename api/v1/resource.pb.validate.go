@@ -83,6 +83,10 @@ func (m *PageResourceRequest) validate(all bool) error {
 		// no validation rules for Keyword
 	}
 
+	if m.Tag != nil {
+		// no validation rules for Tag
+	}
+
 	if len(errors) > 0 {
 		return PageResourceRequestMultiError(errors)
 	}
@@ -354,9 +358,9 @@ func (m *AddResourceRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetType()); l < 1 || l > 32 {
+	if l := utf8.RuneCountInString(m.GetTag()); l < 1 || l > 32 {
 		err := AddResourceRequestValidationError{
-			field:  "Type",
+			field:  "Tag",
 			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
@@ -513,9 +517,9 @@ func (m *UpdateResourceRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetType()); l < 1 || l > 32 {
+	if l := utf8.RuneCountInString(m.GetTag()); l < 1 || l > 32 {
 		err := UpdateResourceRequestValidationError{
-			field:  "Type",
+			field:  "Tag",
 			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
@@ -751,7 +755,7 @@ func (m *PageResourceReply_Server) validate(all bool) error {
 
 	// no validation rules for Fields
 
-	// no validation rules for Type
+	// no validation rules for Tag
 
 	if len(errors) > 0 {
 		return PageResourceReply_ServerMultiError(errors)

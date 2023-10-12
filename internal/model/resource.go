@@ -9,7 +9,7 @@ type Resource struct {
 	Keyword     string `json:"keyword"`
 	Description string `json:"description"`
 	Fields      string `json:"fields"`
-	Type        string `json:"type"`
+	Tag         string `json:"tag"`
 	Operator    string `json:"operator"`
 	OperatorID  int64  `json:"operator_id"`
 }

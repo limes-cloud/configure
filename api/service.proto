@@ -19,19 +19,22 @@ service Service {
 
   rpc AddEnvironment (AddEnvironmentRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/environment"
+      post: "/v1/environment",
+      body:"*",
     };
   }
 
   rpc UpdateEnvironment (UpdateEnvironmentRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/environment"
+      put: "/v1/environment",
+      body:"*"
     };
   }
 
   rpc DeleteEnvironment (DeleteEnvironmentRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/environment"
+      delete: "/v1/environment",
+      body:"*"
     };
   }
 
@@ -44,7 +47,8 @@ service Service {
 
   rpc ResetEnvironmentToken (ResetEnvironmentTokenRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/environment/token"
+      post: "/v1/environment/resetToken",
+      body:"*"
     };
   }
 
@@ -57,19 +61,22 @@ service Service {
 
   rpc AddServer (AddServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/server"
+      post: "/v1/server",
+      body:"*"
     };
   }
 
   rpc UpdateServer (UpdateServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/server"
+      put: "/v1/server",
+      body:"*"
     };
   }
 
   rpc DeleteServer (DeleteServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/server"
+      delete: "/v1/server",
+      body:"*"
     };
   }
 }

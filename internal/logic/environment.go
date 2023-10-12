@@ -29,15 +29,21 @@ func (l *Logic) AllEnvironment(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEn
 // AddEnvironment 新增环境
 func (l *Logic) AddEnvironment(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
-		Token:      uuid.NewString(),
+		Token:      util.MD5ToUpper([]byte(uuid.NewString())),
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
 	}
+
+	// 查询keyword是否存在
+	if env.OneByKeyword(ctx, in.Keyword) == nil {
+		return nil, v1.ErrorAlreadyExists()
+	}
+
 	if util.Transform(in, env) != nil {
 		return nil, v1.ErrorTransform()
 	}
 
-	if env.Create(ctx) != nil {
+	if err := env.Create(ctx); err != nil {
 		return nil, v1.ErrorDatabase()
 	}
 
@@ -91,7 +97,7 @@ func (l *Logic) GetEnvironmentToken(ctx kratos.Context, in *v1.GetEnvironmentTok
 // ResetEnvironmentToken 重置环境token
 func (l *Logic) ResetEnvironmentToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
-		Token:      uuid.NewString(),
+		Token:      util.MD5ToUpper([]byte(uuid.NewString())),
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
 	}
