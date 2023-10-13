@@ -13,6 +13,8 @@ enum ErrorReason {
   Database = 0[ (errors.message)="数据库错误"];
   Transform = 1[(errors.message)="数据转换失败"];
   AlreadyExists = 2[(errors.message)="数据已存在"];
+  Params = 3[(errors.message)="参数错误"];
+  NotRecord = 4[(errors.message)="暂无数据记录"];
 }
 
 

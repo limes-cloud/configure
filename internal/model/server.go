@@ -21,6 +21,10 @@ func (e *Server) OneByID(ctx kratos.Context, id int64) error {
 	return ctx.DB().First(e, "id = ?", id).Error
 }
 
+func (e *Server) OneByKeyword(ctx kratos.Context, keyword string) error {
+	return ctx.DB().First(e, "keyword = ?", keyword).Error
+}
+
 // Page 查询分页资源
 func (e *Server) Page(ctx kratos.Context, options *PageOptions) ([]*Server, error) {
 	var list []*Server

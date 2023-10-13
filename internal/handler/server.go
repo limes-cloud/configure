@@ -10,6 +10,10 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
+func (s *Service) GetServer(ctx context.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
+	return s.logic.GetServer(kratos.MustContext(ctx), in)
+}
+
 func (s *Service) PageServer(ctx context.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
 	return s.logic.PageServer(kratos.MustContext(ctx), in)
 }

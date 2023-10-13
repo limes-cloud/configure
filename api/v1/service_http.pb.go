@@ -26,6 +26,7 @@ const OperationServiceAllEnvironment = "/v1.Service/AllEnvironment"
 const OperationServiceDeleteEnvironment = "/v1.Service/DeleteEnvironment"
 const OperationServiceDeleteServer = "/v1.Service/DeleteServer"
 const OperationServiceGetEnvironmentToken = "/v1.Service/GetEnvironmentToken"
+const OperationServiceGetServer = "/v1.Service/GetServer"
 const OperationServicePageServer = "/v1.Service/PageServer"
 const OperationServiceResetEnvironmentToken = "/v1.Service/ResetEnvironmentToken"
 const OperationServiceUpdateEnvironment = "/v1.Service/UpdateEnvironment"
@@ -38,6 +39,7 @@ type ServiceHTTPServer interface {
 	DeleteEnvironment(context.Context, *DeleteEnvironmentRequest) (*emptypb.Empty, error)
 	DeleteServer(context.Context, *DeleteServerRequest) (*emptypb.Empty, error)
 	GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error)
+	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
 	PageServer(context.Context, *PageServerRequest) (*PageServerReply, error)
 	ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*emptypb.Empty, error)
 	UpdateEnvironment(context.Context, *UpdateEnvironmentRequest) (*emptypb.Empty, error)
@@ -53,6 +55,7 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.GET("/v1/environment/token", _Service_GetEnvironmentToken0_HTTP_Handler(srv))
 	r.POST("/v1/environment/resetToken", _Service_ResetEnvironmentToken0_HTTP_Handler(srv))
 	r.GET("/v1/servers", _Service_PageServer0_HTTP_Handler(srv))
+	r.GET("/v1/server", _Service_GetServer0_HTTP_Handler(srv))
 	r.POST("/v1/server", _Service_AddServer0_HTTP_Handler(srv))
 	r.PUT("/v1/server", _Service_UpdateServer0_HTTP_Handler(srv))
 	r.DELETE("/v1/server", _Service_DeleteServer0_HTTP_Handler(srv))
@@ -203,6 +206,25 @@ func _Service_PageServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 	}
 }
 
+func _Service_GetServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetServerRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetServer)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetServer(ctx, req.(*GetServerRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetServerReply)
+		return ctx.Result(200, reply.Server)
+	}
+}
+
 func _Service_AddServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddServerRequest
@@ -276,6 +298,7 @@ type ServiceHTTPClient interface {
 	DeleteEnvironment(ctx context.Context, req *DeleteEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteServer(ctx context.Context, req *DeleteServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetEnvironmentToken(ctx context.Context, req *GetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *GetEnvironmentTokenReply, err error)
+	GetServer(ctx context.Context, req *GetServerRequest, opts ...http.CallOption) (rsp *GetServerReply, err error)
 	PageServer(ctx context.Context, req *PageServerRequest, opts ...http.CallOption) (rsp *PageServerReply, err error)
 	ResetEnvironmentToken(ctx context.Context, req *ResetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateEnvironment(ctx context.Context, req *UpdateEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -362,6 +385,19 @@ func (c *ServiceHTTPClientImpl) GetEnvironmentToken(ctx context.Context, in *Get
 	opts = append(opts, http.Operation(OperationServiceGetEnvironmentToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) GetServer(ctx context.Context, in *GetServerRequest, opts ...http.CallOption) (*GetServerReply, error) {
+	var out GetServerReply
+	pattern := "/v1/server"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetServer))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Server, opts...)
 	if err != nil {
 		return nil, err
 	}

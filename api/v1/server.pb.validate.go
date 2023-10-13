@@ -411,6 +411,243 @@ var _ interface {
 	ErrorName() string
 } = PageServerReplyValidationError{}
 
+// Validate checks the field values on GetServerRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetServerRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetServerRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetServerRequestMultiError, or nil if none found.
+func (m *GetServerRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetServerRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.Id != nil {
+		// no validation rules for Id
+	}
+
+	if m.Keyword != nil {
+		// no validation rules for Keyword
+	}
+
+	if len(errors) > 0 {
+		return GetServerRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetServerRequestMultiError is an error wrapping multiple validation errors
+// returned by GetServerRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetServerRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetServerRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetServerRequestMultiError) AllErrors() []error { return m }
+
+// GetServerRequestValidationError is the validation error returned by
+// GetServerRequest.Validate if the designated constraints aren't met.
+type GetServerRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetServerRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetServerRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetServerRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetServerRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetServerRequestValidationError) ErrorName() string { return "GetServerRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetServerRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetServerRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetServerRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetServerRequestValidationError{}
+
+// Validate checks the field values on GetServerReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetServerReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetServerReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GetServerReplyMultiError,
+// or nil if none found.
+func (m *GetServerReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetServerReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetServer()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetServerReplyValidationError{
+					field:  "Server",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetServerReplyValidationError{
+					field:  "Server",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetServer()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetServerReplyValidationError{
+				field:  "Server",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetServerReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetServerReplyMultiError is an error wrapping multiple validation errors
+// returned by GetServerReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetServerReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetServerReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetServerReplyMultiError) AllErrors() []error { return m }
+
+// GetServerReplyValidationError is the validation error returned by
+// GetServerReply.Validate if the designated constraints aren't met.
+type GetServerReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetServerReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetServerReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetServerReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetServerReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetServerReplyValidationError) ErrorName() string { return "GetServerReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetServerReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetServerReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetServerReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetServerReplyValidationError{}
+
 // Validate checks the field values on AddServerRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.

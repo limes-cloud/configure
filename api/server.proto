@@ -23,6 +23,16 @@ message PageServerReply {
   repeated Server list = 1;
 }
 
+message GetServerRequest{
+  optional int64 id = 1;
+  optional string keyword = 2;
+}
+
+message GetServerReply{
+    Server server = 1;
+}
+
+
 // 新增环境
 message AddServerRequest {
   string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];

@@ -25,7 +25,7 @@ database:
     maxLifetime: 2h #最大生存时间
     maxOpenConn: 10 #最大连接数量
     maxIdleConn: 10 #最大空闲数量
-    logLevel: 1 #日志等级
+    logLevel: 4 #日志等级
     slowThreshold: 2s #慢sql阈值
 redis:
   catch: #redis实例名称,如有多个redis可新增

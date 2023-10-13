@@ -27,6 +27,7 @@ const (
 	Service_GetEnvironmentToken_FullMethodName   = "/v1.Service/GetEnvironmentToken"
 	Service_ResetEnvironmentToken_FullMethodName = "/v1.Service/ResetEnvironmentToken"
 	Service_PageServer_FullMethodName            = "/v1.Service/PageServer"
+	Service_GetServer_FullMethodName             = "/v1.Service/GetServer"
 	Service_AddServer_FullMethodName             = "/v1.Service/AddServer"
 	Service_UpdateServer_FullMethodName          = "/v1.Service/UpdateServer"
 	Service_DeleteServer_FullMethodName          = "/v1.Service/DeleteServer"
@@ -43,6 +44,7 @@ type ServiceClient interface {
 	GetEnvironmentToken(ctx context.Context, in *GetEnvironmentTokenRequest, opts ...grpc.CallOption) (*GetEnvironmentTokenReply, error)
 	ResetEnvironmentToken(ctx context.Context, in *ResetEnvironmentTokenRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PageServer(ctx context.Context, in *PageServerRequest, opts ...grpc.CallOption) (*PageServerReply, error)
+	GetServer(ctx context.Context, in *GetServerRequest, opts ...grpc.CallOption) (*GetServerReply, error)
 	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateServer(ctx context.Context, in *UpdateServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteServer(ctx context.Context, in *DeleteServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -119,6 +121,15 @@ func (c *serviceClient) PageServer(ctx context.Context, in *PageServerRequest, o
 	return out, nil
 }
 
+func (c *serviceClient) GetServer(ctx context.Context, in *GetServerRequest, opts ...grpc.CallOption) (*GetServerReply, error) {
+	out := new(GetServerReply)
+	err := c.cc.Invoke(ctx, Service_GetServer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_AddServer_FullMethodName, in, out, opts...)
@@ -157,6 +168,7 @@ type ServiceServer interface {
 	GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error)
 	ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*emptypb.Empty, error)
 	PageServer(context.Context, *PageServerRequest) (*PageServerReply, error)
+	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
 	AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error)
 	UpdateServer(context.Context, *UpdateServerRequest) (*emptypb.Empty, error)
 	DeleteServer(context.Context, *DeleteServerRequest) (*emptypb.Empty, error)
@@ -187,6 +199,9 @@ func (UnimplementedServiceServer) ResetEnvironmentToken(context.Context, *ResetE
 }
 func (UnimplementedServiceServer) PageServer(context.Context, *PageServerRequest) (*PageServerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageServer not implemented")
+}
+func (UnimplementedServiceServer) GetServer(context.Context, *GetServerRequest) (*GetServerReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetServer not implemented")
 }
 func (UnimplementedServiceServer) AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddServer not implemented")
@@ -336,6 +351,24 @@ func _Service_PageServer_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetServer(ctx, req.(*GetServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_AddServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddServerRequest)
 	if err := dec(in); err != nil {
@@ -424,6 +457,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PageServer",
 			Handler:    _Service_PageServer_Handler,
+		},
+		{
+			MethodName: "GetServer",
+			Handler:    _Service_GetServer_Handler,
 		},
 		{
 			MethodName: "AddServer",

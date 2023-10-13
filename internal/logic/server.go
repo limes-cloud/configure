@@ -3,11 +3,38 @@ package logic
 import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/internal/model"
+	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"gorm.io/gorm"
 )
+
+// GetServer 分页查询服务
+func (l *Logic) GetServer(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
+	var err error
+	var server model.Server
+
+	if in.Id == nil && in.Keyword == nil {
+		return nil, v1.ErrorParams()
+	}
+
+	if in.Id != nil {
+		err = server.OneByID(ctx, *in.Id)
+	} else {
+		err = server.OneByKeyword(ctx, *in.Keyword)
+	}
+
+	if err != nil {
+		return nil, v1.ErrorNotRecord()
+	}
+	reply := v1.GetServerReply{}
+	if util.Transform(server, &reply.Server) != nil {
+		return nil, v1.ErrorTransform()
+	}
+
+	return &reply, nil
+}
 
 // PageServer 分页查询服务
 func (l *Logic) PageServer(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
@@ -36,7 +63,15 @@ func (l *Logic) PageServer(ctx kratos.Context, in *v1.PageServerRequest) (*v1.Pa
 
 // AddServer 添加服务
 func (l *Logic) AddServer(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
-	server := model.Server{}
+	server := model.Server{
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
+	}
+
+	if server.OneByKeyword(ctx, in.Keyword) == nil {
+		return nil, v1.ErrorAlreadyExists()
+	}
+
 	if util.Transform(in, &server) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -46,7 +81,10 @@ func (l *Logic) AddServer(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb
 
 // UpdateServer 更新服务
 func (l *Logic) UpdateServer(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {
-	server := model.Server{}
+	server := model.Server{
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
+	}
 	if util.Transform(in, &server) != nil {
 		return nil, v1.ErrorTransform()
 	}

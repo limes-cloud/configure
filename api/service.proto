@@ -59,6 +59,13 @@ service Service {
     };
   }
 
+  rpc GetServer (GetServerRequest) returns (GetServerReply) {
+    option (google.api.http) = {
+      get: "/v1/server",
+      response_body: "server"
+    };
+  }
+
   rpc AddServer (AddServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/server",

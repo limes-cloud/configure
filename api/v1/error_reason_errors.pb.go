@@ -58,3 +58,35 @@ func ErrorAlreadyExistsFormat(format string, args ...interface{}) *errors.Error 
 func ErrorAlreadyExists() *errors.Error {
 	return errors.New(200, ErrorReason_AlreadyExists.String(), "数据已存在")
 }
+
+func IsParams(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_Params.String() && e.Code == 200
+}
+
+func ErrorParamsFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_Params.String(), fmt.Sprintf(format, args...))
+}
+
+func ErrorParams() *errors.Error {
+	return errors.New(200, ErrorReason_Params.String(), "参数错误")
+}
+
+func IsNotRecord(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_NotRecord.String() && e.Code == 200
+}
+
+func ErrorNotRecordFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_NotRecord.String(), fmt.Sprintf(format, args...))
+}
+
+func ErrorNotRecord() *errors.Error {
+	return errors.New(200, ErrorReason_NotRecord.String(), "暂无数据记录")
+}

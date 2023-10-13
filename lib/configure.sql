@@ -18,3 +18,18 @@ create table environment(
 )engine innodb charset utf8;
 
 
+#服务表
+create table `server`(
+    `id` bigint unsigned not null primary key auto_increment comment '自增id',
+    `keyword` char(32) binary not null comment '服务标识',
+    `name` char(32) not null comment '服务名称',
+    `description` varchar(256) not null  comment '服务描述',
+    `operator` varchar(32) not null comment '操作人',
+    `operator_id` bigint unsigned not null comment '操作人id',
+    `created_at` bigint unsigned default null  comment '创建时间',
+    `updated_at`bigint unsigned default null  comment '修改时间',
+    index(`created_at`),
+    unique index(`keyword`)
+)engine innodb charset utf8;
+
+
