@@ -9,13 +9,17 @@ import "environment.proto";
 import "server.proto";
 import "resource.proto";
 import "resource_value.proto";
+import "resource_server.proto";
+import "business.proto";
+import "business_value.proto";
+import "template.proto";
 
 service Service {
 
   rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
     option (google.api.http) = {
       get: "/v1/environments"
-      response_body:"list"
+      response_body:"*"
     };
   }
 
@@ -56,7 +60,7 @@ service Service {
   rpc PageServer (PageServerRequest) returns (PageServerReply) {
     option (google.api.http) = {
       get: "/v1/servers",
-      response_body: "list"
+      response_body: "*"
     };
   }
 
@@ -90,7 +94,7 @@ service Service {
   rpc PageResource (PageResourceRequest) returns (PageResourceReply) {
     option (google.api.http) = {
       get: "/v1/resources",
-      response_body: "list"
+      response_body: "*"
     };
   }
 
@@ -114,27 +118,129 @@ service Service {
     };
   }
 
-  rpc AllEnvResourceValue (AllResourceValueRequest) returns (AllResourceValueReply) {
+  rpc AllResourceServer (AllResourceServerRequest) returns (AllResourceServerReply) {
     option (google.api.http) = {
-      get: "/v1/resourceValues",
-      response_body: "list"
+      get: "/v1/resource/servers",
+      response_body: "*"
+    };
+  }
+
+  rpc AddResourceServer (AddResourceServerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/resource/server",
+      body:"*"
+    };
+  }
+
+  rpc DeleteResourceServer (DeleteResourceServerRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/resource/server"
+    };
+  }
+
+  rpc AllServerResource (AllServerResourceRequest) returns (AllServerResourceReply) {
+    option (google.api.http) = {
+      get: "/v1/server/resources",
+      response_body: "*"
+    };
+  }
+
+  rpc AllResourceValue (AllResourceValueRequest) returns (AllResourceValueReply) {
+    option (google.api.http) = {
+      get: "/v1/resource/values",
+      response_body: "*"
     };
   }
 
   rpc AddResourceValue (AddResourceValueRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/resourceValue",
+      post: "/v1/resource/value",
       body:"*"
     };
   }
 
   rpc UpdateResourceValue (UpdateResourceValueRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/resourceValue",
+      put: "/v1/resource/value",
       body:"*"
     };
   }
 
+  rpc PageBusiness (PageBusinessRequest) returns (PageBusinessReply) {
+    option (google.api.http) = {
+      get: "/v1/business",
+      response_body: "*"
+    };
+  }
+
+  rpc AddBusiness (AddBusinessRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/business",
+      body:"*"
+    };
+  }
+
+  rpc UpdateBusiness (UpdateBusinessRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/business",
+      body:"*"
+    };
+  }
+
+  rpc DeleteBusiness (DeleteBusinessRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/business"
+    };
+  }
+
+  rpc AllBusinessValue (AllBusinessValueRequest) returns (AllBusinessValueReply) {
+    option (google.api.http) = {
+      get: "/v1/business/values",
+      response_body: "*"
+    };
+  }
+
+  rpc AddBusinessValue (AddBusinessValueRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/business/value",
+      body:"*"
+    };
+  }
+
+  rpc UpdateBusinessValue (UpdateBusinessValueRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/business/value",
+      body:"*"
+    };
+  }
+
+  rpc PageTemplate (PageTemplateRequest) returns (PageTemplateReply) {
+    option (google.api.http) = {
+      get: "/v1/templates",
+      response_body: "*"
+    };
+  }
+
+  rpc AddTemplate (AddTemplateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/template",
+      body:"*"
+    };
+  }
+
+  rpc UpdateTemplateVersion (UseTemplateVersionRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/template",
+      body:"*"
+    };
+  }
+
+  rpc ParseTemplate (ParseTemplateRequest) returns (ParseTemplateReply) {
+    option (google.api.http) = {
+      post: "/v1/template/parse",
+      body:"*"
+    };
+  }
 
 }
 

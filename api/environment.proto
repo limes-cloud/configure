@@ -5,17 +5,18 @@ option go_package = "./v1;v1";
 import "validate/validate.proto";
 
 
+message Environment{
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional bool status = 5;
+  optional string operator = 7;
+  optional int64 operator_id = 8;
+}
+
 // 获取环境列表
 message AllEnvironmentReply {
-  message Environment{
-    int64 id = 1 [(validate.rules).int64 = {gt: 0}];
-    string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
-    string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
-    string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
-    optional bool status = 5;
-    optional string operator = 7;
-    optional int64 operator_id = 8;
-  }
   repeated Environment list = 1;
 }
 

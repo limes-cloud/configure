@@ -57,7 +57,16 @@ func (m *AllResourceValueRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for ResourceId
+	if m.GetResourceId() <= 0 {
+		err := AllResourceValueRequestValidationError{
+			field:  "ResourceId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return AllResourceValueRequestMultiError(errors)
@@ -297,29 +306,20 @@ func (m *AddResourceValueRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetEnvironmentId()); l < 1 || l > 32 {
+	// no validation rules for EnvironmentId
+
+	// no validation rules for ResourceId
+
+	if utf8.RuneCountInString(m.GetValues()) < 7 {
 		err := AddResourceValueRequestValidationError{
-			field:  "EnvironmentId",
-			reason: "value length must be between 1 and 32 runes, inclusive",
+			field:  "Values",
+			reason: "value length must be at least 7 runes",
 		}
 		if !all {
 			return err
 		}
 		errors = append(errors, err)
 	}
-
-	if l := utf8.RuneCountInString(m.GetResourceId()); l < 1 || l > 32 {
-		err := AddResourceValueRequestValidationError{
-			field:  "ResourceId",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	// no validation rules for Values
 
 	if len(errors) > 0 {
 		return AddResourceValueRequestMultiError(errors)
@@ -546,6 +546,35 @@ func (m *AllResourceValueReply_ResourceValue) validate(all bool) error {
 	// no validation rules for ResourceId
 
 	// no validation rules for Values
+
+	if all {
+		switch v := interface{}(m.GetEnvironment()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AllResourceValueReply_ResourceValueValidationError{
+					field:  "Environment",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AllResourceValueReply_ResourceValueValidationError{
+					field:  "Environment",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetEnvironment()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AllResourceValueReply_ResourceValueValidationError{
+				field:  "Environment",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return AllResourceValueReply_ResourceValueMultiError(errors)

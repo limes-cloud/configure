@@ -15,6 +15,7 @@ enum ErrorReason {
   AlreadyExists = 2[(errors.message)="数据已存在"];
   Params = 3[(errors.message)="参数错误"];
   NotRecord = 4[(errors.message)="暂无数据记录"];
+  ResourceFormatValue = 5[(errors.message)="资源字段值格式错误"];
 }
 
 

@@ -9,11 +9,25 @@ import (
 // Service is a greeter service.
 type Service struct {
 	v1.UnimplementedServiceServer
-	logic *logic.Logic
+	Environment    *logic.Environment
+	Server         *logic.Server
+	Resource       *logic.Resource
+	ResourceServer *logic.ResourceServer
+	ResourceValue  *logic.ResourceValue
+	Business       *logic.Business
+	BusinessValue  *logic.BusinessValue
+	Template       *logic.Template
 }
 
-func New(conf *config.Config) *Service {
+func New(config *config.Config) *Service {
 	return &Service{
-		logic: logic.NewLogic(conf),
+		Environment:    logic.NewEnvironment(config),
+		Server:         logic.NewServer(config),
+		Resource:       logic.NewResource(config),
+		ResourceServer: logic.NewResourceServer(config),
+		ResourceValue:  logic.NewResourceValue(config),
+		Business:       logic.NewBusiness(config),
+		BusinessValue:  logic.NewBusinessValue(config),
+		Template:       logic.NewTemplate(config),
 	}
 }

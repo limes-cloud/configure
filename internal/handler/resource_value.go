@@ -11,13 +11,13 @@ import (
 )
 
 func (s *Service) AllResourceValue(ctx context.Context, in *v1.AllResourceValueRequest) (*v1.AllResourceValueReply, error) {
-	return s.logic.AllResourceValue(kratos.MustContext(ctx), in)
+	return s.ResourceValue.All(kratos.MustContext(ctx), in)
 }
 
 func (s *Service) AddResourceValue(ctx context.Context, in *v1.AddResourceValueRequest) (*emptypb.Empty, error) {
-	return s.logic.AddResourceValue(kratos.MustContext(ctx), in)
+	return s.ResourceValue.Add(kratos.MustContext(ctx), in)
 }
 
 func (s *Service) UpdateResourceValue(ctx context.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
-	return s.logic.UpdateResourceValue(kratos.MustContext(ctx), in)
+	return s.ResourceValue.Update(kratos.MustContext(ctx), in)
 }

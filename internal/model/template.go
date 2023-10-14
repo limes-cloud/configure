@@ -37,16 +37,22 @@ func (u *Template) OneBy(ctx kratos.Context, conds ...interface{}) error {
 	return ctx.DB().First(u, conds...).Error
 }
 
-func (u *Template) All(ctx kratos.Context, scopes Scopes) ([]*Template, error) {
+// Page 查询分页资源
+func (e *Template) Page(ctx kratos.Context, options *PageOptions) ([]*Template, int64, error) {
 	var list []*Template
+	total := int64(0)
 
-	db := ctx.DB().Model(u)
-	if scopes != nil {
-		db = db.Scopes(scopes)
+	db := ctx.DB().Model(e)
+	if options.Scopes != nil {
+		db = db.Scopes(options.Scopes)
+	}
+	if err := db.Count(&total).Error; err != nil {
+		return nil, total, err
 	}
 
-	return list, db.Find(&list).Error
+	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
 
+	return list, total, db.Find(&list).Error
 }
 
 func (u *Template) UseVersionByID(ctx kratos.Context, srvId, id int64) error {

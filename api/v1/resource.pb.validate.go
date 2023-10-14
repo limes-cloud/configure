@@ -61,8 +61,6 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Keyword
 
-	// no validation rules for Name
-
 	// no validation rules for Description
 
 	// no validation rules for Fields
@@ -300,6 +298,8 @@ func (m *PageResourceReply) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Total
+
 	for idx, item := range m.GetList() {
 		_, _ = idx, item
 
@@ -447,17 +447,6 @@ func (m *AddResourceRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
-		err := AddResourceRequestValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 128 {
 		err := AddResourceRequestValidationError{
 			field:  "Description",
@@ -588,17 +577,6 @@ func (m *UpdateResourceRequest) validate(all bool) error {
 		err := UpdateResourceRequestValidationError{
 			field:  "Id",
 			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
-		err := UpdateResourceRequestValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err

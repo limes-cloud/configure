@@ -2,6 +2,7 @@ package logic
 
 import (
 	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
@@ -10,8 +11,18 @@ import (
 	"gorm.io/gorm"
 )
 
-// GetServer 分页查询服务
-func (l *Logic) GetServer(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
+type Server struct {
+	conf *config.Config
+}
+
+func NewServer(conf *config.Config) *Server {
+	return &Server{
+		conf: conf,
+	}
+}
+
+// Get 分页查询服务
+func (l *Server) Get(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
 	var err error
 	var server model.Server
 
@@ -36,10 +47,10 @@ func (l *Logic) GetServer(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetS
 	return &reply, nil
 }
 
-// PageServer 分页查询服务
-func (l *Logic) PageServer(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
+// Page 分页查询服务
+func (l *Server) Page(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
 	server := model.Server{}
-	list, err := server.Page(ctx, &model.PageOptions{
+	list, total, err := server.Page(ctx, &model.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {
@@ -53,7 +64,9 @@ func (l *Logic) PageServer(ctx kratos.Context, in *v1.PageServerRequest) (*v1.Pa
 	if err != nil {
 		return nil, v1.ErrorDatabase()
 	}
-	reply := v1.PageServerReply{}
+	reply := v1.PageServerReply{
+		Total: total,
+	}
 	if util.Transform(list, &reply.List) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -61,8 +74,8 @@ func (l *Logic) PageServer(ctx kratos.Context, in *v1.PageServerRequest) (*v1.Pa
 	return &reply, nil
 }
 
-// AddServer 添加服务
-func (l *Logic) AddServer(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
+// Add 添加服务
+func (l *Server) Add(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
 	server := model.Server{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -79,8 +92,8 @@ func (l *Logic) AddServer(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb
 	return nil, server.Create(ctx)
 }
 
-// UpdateServer 更新服务
-func (l *Logic) UpdateServer(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {
+// Update 更新服务
+func (l *Server) Update(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {
 	server := model.Server{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -92,8 +105,8 @@ func (l *Logic) UpdateServer(ctx kratos.Context, in *v1.UpdateServerRequest) (*e
 	return nil, server.Update(ctx)
 }
 
-// DeleteServer 删除服务
-func (l *Logic) DeleteServer(ctx kratos.Context, in *v1.DeleteServerRequest) (*emptypb.Empty, error) {
+// Delete 删除服务
+func (l *Server) Delete(ctx kratos.Context, in *v1.DeleteServerRequest) (*emptypb.Empty, error) {
 	server := model.Server{}
 	return nil, server.DeleteByID(ctx, in.Id)
 }

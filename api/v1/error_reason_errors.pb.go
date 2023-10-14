@@ -90,3 +90,19 @@ func ErrorNotRecordFormat(format string, args ...interface{}) *errors.Error {
 func ErrorNotRecord() *errors.Error {
 	return errors.New(200, ErrorReason_NotRecord.String(), "暂无数据记录")
 }
+
+func IsResourceFormatValue(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ResourceFormatValue.String() && e.Code == 200
+}
+
+func ErrorResourceFormatValueFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_ResourceFormatValue.String(), fmt.Sprintf(format, args...))
+}
+
+func ErrorResourceFormatValue() *errors.Error {
+	return errors.New(200, ErrorReason_ResourceFormatValue.String(), "资源字段值格式错误")
+}

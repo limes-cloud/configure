@@ -11,17 +11,17 @@ import (
 )
 
 func (s *Service) PageResource(ctx context.Context, in *v1.PageResourceRequest) (*v1.PageResourceReply, error) {
-	return s.logic.PageResource(kratos.MustContext(ctx), in)
+	return s.Resource.Page(kratos.MustContext(ctx), in)
 }
 
 func (s *Service) AddResource(ctx context.Context, in *v1.AddResourceRequest) (*emptypb.Empty, error) {
-	return s.logic.AddResource(kratos.MustContext(ctx), in)
+	return s.Resource.Add(kratos.MustContext(ctx), in)
 }
 
 func (s *Service) UpdateResource(ctx context.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
-	return s.logic.UpdateResource(kratos.MustContext(ctx), in)
+	return s.Resource.Update(kratos.MustContext(ctx), in)
 }
 
 func (s *Service) DeleteResource(ctx context.Context, in *v1.DeleteResourceRequest) (*emptypb.Empty, error) {
-	return s.logic.DeleteResource(kratos.MustContext(ctx), in)
+	return s.Resource.Delete(kratos.MustContext(ctx), in)
 }

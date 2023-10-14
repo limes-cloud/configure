@@ -25,16 +25,21 @@ func (e *Resource) OneByID(ctx kratos.Context, id int64) error {
 }
 
 // Page 查询分页资源
-func (e *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, error) {
+func (e *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, int64, error) {
 	var list []*Resource
+	total := int64(0)
 
 	db := ctx.DB().Model(e)
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
+	if err := db.Count(&total).Error; err != nil {
+		return nil, total, err
+	}
+
 	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
 
-	return list, db.Find(&list).Error
+	return list, total, db.Find(&list).Error
 }
 
 // All 查询全部资源

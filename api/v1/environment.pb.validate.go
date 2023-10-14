@@ -35,6 +35,161 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on Environment with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Environment) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Environment with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in EnvironmentMultiError, or
+// nil if none found.
+func (m *Environment) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Environment) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := EnvironmentValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
+		err := EnvironmentValidationError{
+			field:  "Keyword",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
+		err := EnvironmentValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 128 {
+		err := EnvironmentValidationError{
+			field:  "Description",
+			reason: "value length must be between 1 and 128 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
+	}
+
+	if m.Operator != nil {
+		// no validation rules for Operator
+	}
+
+	if m.OperatorId != nil {
+		// no validation rules for OperatorId
+	}
+
+	if len(errors) > 0 {
+		return EnvironmentMultiError(errors)
+	}
+
+	return nil
+}
+
+// EnvironmentMultiError is an error wrapping multiple validation errors
+// returned by Environment.ValidateAll() if the designated constraints aren't met.
+type EnvironmentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m EnvironmentMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m EnvironmentMultiError) AllErrors() []error { return m }
+
+// EnvironmentValidationError is the validation error returned by
+// Environment.Validate if the designated constraints aren't met.
+type EnvironmentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EnvironmentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EnvironmentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EnvironmentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EnvironmentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EnvironmentValidationError) ErrorName() string { return "EnvironmentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e EnvironmentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEnvironment.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EnvironmentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EnvironmentValidationError{}
+
 // Validate checks the field values on AllEnvironmentReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -903,162 +1058,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteEnvironmentRequestValidationError{}
-
-// Validate checks the field values on AllEnvironmentReply_Environment with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AllEnvironmentReply_Environment) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on AllEnvironmentReply_Environment with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// AllEnvironmentReply_EnvironmentMultiError, or nil if none found.
-func (m *AllEnvironmentReply_Environment) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *AllEnvironmentReply_Environment) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := AllEnvironmentReply_EnvironmentValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
-		err := AllEnvironmentReply_EnvironmentValidationError{
-			field:  "Keyword",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
-		err := AllEnvironmentReply_EnvironmentValidationError{
-			field:  "Name",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 128 {
-		err := AllEnvironmentReply_EnvironmentValidationError{
-			field:  "Description",
-			reason: "value length must be between 1 and 128 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.Status != nil {
-		// no validation rules for Status
-	}
-
-	if m.Operator != nil {
-		// no validation rules for Operator
-	}
-
-	if m.OperatorId != nil {
-		// no validation rules for OperatorId
-	}
-
-	if len(errors) > 0 {
-		return AllEnvironmentReply_EnvironmentMultiError(errors)
-	}
-
-	return nil
-}
-
-// AllEnvironmentReply_EnvironmentMultiError is an error wrapping multiple
-// validation errors returned by AllEnvironmentReply_Environment.ValidateAll()
-// if the designated constraints aren't met.
-type AllEnvironmentReply_EnvironmentMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m AllEnvironmentReply_EnvironmentMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m AllEnvironmentReply_EnvironmentMultiError) AllErrors() []error { return m }
-
-// AllEnvironmentReply_EnvironmentValidationError is the validation error
-// returned by AllEnvironmentReply_Environment.Validate if the designated
-// constraints aren't met.
-type AllEnvironmentReply_EnvironmentValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e AllEnvironmentReply_EnvironmentValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e AllEnvironmentReply_EnvironmentValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e AllEnvironmentReply_EnvironmentValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e AllEnvironmentReply_EnvironmentValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e AllEnvironmentReply_EnvironmentValidationError) ErrorName() string {
-	return "AllEnvironmentReply_EnvironmentValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e AllEnvironmentReply_EnvironmentValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sAllEnvironmentReply_Environment.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = AllEnvironmentReply_EnvironmentValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = AllEnvironmentReply_EnvironmentValidationError{}

@@ -24,14 +24,20 @@ func (e *BusinessValue) OneByID(ctx kratos.Context, id int64) error {
 }
 
 // All 查询所有业务字段
-func (e *BusinessValue) All(ctx kratos.Context) ([]*Business, error) {
-	var list []*Business
+func (e *BusinessValue) All(ctx kratos.Context, scopes Scopes) ([]*BusinessValue, error) {
+	var list []*BusinessValue
+
+	db := ctx.DB().Model(e)
+	if scopes != nil {
+		db = db.Scopes(scopes)
+	}
+
 	return list, ctx.DB().Model(e).Find(&list).Error
 }
 
-// UpdateByID 更新指定id的业务字段
-func (e *BusinessValue) UpdateByID(ctx kratos.Context, id int64) error {
-	return ctx.DB().Model(e).Where("id = ?", id).Updates(e).Error
+// Update 更新指定id的业务字段
+func (e *BusinessValue) Update(ctx kratos.Context) error {
+	return ctx.DB().Model(e).Updates(e).Error
 }
 
 // DeleteByID 删除指定id的业务字段

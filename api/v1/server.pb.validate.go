@@ -299,6 +299,8 @@ func (m *PageServerReply) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Total
+
 	for idx, item := range m.GetList() {
 		_, _ = idx, item
 

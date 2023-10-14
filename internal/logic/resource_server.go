@@ -2,6 +2,7 @@ package logic
 
 import (
 	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
@@ -9,10 +10,39 @@ import (
 	"gorm.io/gorm"
 )
 
-// AllResourceServer 分页查询服务
-func (l *Logic) AllResourceServer(ctx kratos.Context, in *v1.AllResourceServerRequest) (*v1.AllResourceServerReply, error) {
+type ResourceServer struct {
+	conf *config.Config
+}
+
+func NewResourceServer(conf *config.Config) *ResourceServer {
+	return &ResourceServer{
+		conf: conf,
+	}
+}
+
+// AllResource 查询指定服务的所有资源
+func (l *ResourceServer) AllResource(ctx kratos.Context, in *v1.AllServerResourceRequest) (*v1.AllServerResourceReply, error) {
 	resource := model.ResourceServer{}
 	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
+		db.Preload("Resource")
+		return db.Where("server_id =?", in.ServerId)
+	})
+
+	if err != nil {
+		return nil, v1.ErrorDatabase()
+	}
+	reply := v1.AllServerResourceReply{}
+	if util.Transform(list, &reply.List) != nil {
+		return nil, v1.ErrorTransform()
+	}
+	return &reply, nil
+}
+
+// AllServer 查询指定资源的所有服务
+func (l *ResourceServer) AllServer(ctx kratos.Context, in *v1.AllResourceServerRequest) (*v1.AllResourceServerReply, error) {
+	resource := model.ResourceServer{}
+	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
+		db.Preload("Server")
 		return db.Where("resource_id =?", in.ResourceId)
 	})
 
@@ -26,8 +56,8 @@ func (l *Logic) AllResourceServer(ctx kratos.Context, in *v1.AllResourceServerRe
 	return &reply, nil
 }
 
-// AddResourceServer 添加服务
-func (l *Logic) AddResourceServer(ctx kratos.Context, in *v1.AddResourceServerRequest) (*emptypb.Empty, error) {
+// Add 添加资源-服务
+func (l *ResourceServer) Add(ctx kratos.Context, in *v1.AddResourceServerRequest) (*emptypb.Empty, error) {
 	resource := model.ResourceServer{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
@@ -36,8 +66,8 @@ func (l *Logic) AddResourceServer(ctx kratos.Context, in *v1.AddResourceServerRe
 	return nil, resource.Create(ctx)
 }
 
-// DeleteResourceServer 删除服务
-func (l *Logic) DeleteResourceServer(ctx kratos.Context, in *v1.DeleteResourceServerRequest) (*emptypb.Empty, error) {
+// Delete 删除资源-服务
+func (l *ResourceServer) Delete(ctx kratos.Context, in *v1.DeleteResourceServerRequest) (*emptypb.Empty, error) {
 	resource := model.ResourceServer{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()

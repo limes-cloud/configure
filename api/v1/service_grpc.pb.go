@@ -35,9 +35,24 @@ const (
 	Service_AddResource_FullMethodName           = "/v1.Service/AddResource"
 	Service_UpdateResource_FullMethodName        = "/v1.Service/UpdateResource"
 	Service_DeleteResource_FullMethodName        = "/v1.Service/DeleteResource"
-	Service_AllEnvResourceValue_FullMethodName   = "/v1.Service/AllEnvResourceValue"
+	Service_AllResourceServer_FullMethodName     = "/v1.Service/AllResourceServer"
+	Service_AddResourceServer_FullMethodName     = "/v1.Service/AddResourceServer"
+	Service_DeleteResourceServer_FullMethodName  = "/v1.Service/DeleteResourceServer"
+	Service_AllServerResource_FullMethodName     = "/v1.Service/AllServerResource"
+	Service_AllResourceValue_FullMethodName      = "/v1.Service/AllResourceValue"
 	Service_AddResourceValue_FullMethodName      = "/v1.Service/AddResourceValue"
 	Service_UpdateResourceValue_FullMethodName   = "/v1.Service/UpdateResourceValue"
+	Service_PageBusiness_FullMethodName          = "/v1.Service/PageBusiness"
+	Service_AddBusiness_FullMethodName           = "/v1.Service/AddBusiness"
+	Service_UpdateBusiness_FullMethodName        = "/v1.Service/UpdateBusiness"
+	Service_DeleteBusiness_FullMethodName        = "/v1.Service/DeleteBusiness"
+	Service_AllBusinessValue_FullMethodName      = "/v1.Service/AllBusinessValue"
+	Service_AddBusinessValue_FullMethodName      = "/v1.Service/AddBusinessValue"
+	Service_UpdateBusinessValue_FullMethodName   = "/v1.Service/UpdateBusinessValue"
+	Service_PageTemplate_FullMethodName          = "/v1.Service/PageTemplate"
+	Service_AddTemplate_FullMethodName           = "/v1.Service/AddTemplate"
+	Service_UpdateTemplateVersion_FullMethodName = "/v1.Service/UpdateTemplateVersion"
+	Service_ParseTemplate_FullMethodName         = "/v1.Service/ParseTemplate"
 )
 
 // ServiceClient is the client API for Service service.
@@ -59,9 +74,24 @@ type ServiceClient interface {
 	AddResource(ctx context.Context, in *AddResourceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	AllEnvResourceValue(ctx context.Context, in *AllResourceValueRequest, opts ...grpc.CallOption) (*AllResourceValueReply, error)
+	AllResourceServer(ctx context.Context, in *AllResourceServerRequest, opts ...grpc.CallOption) (*AllResourceServerReply, error)
+	AddResourceServer(ctx context.Context, in *AddResourceServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteResourceServer(ctx context.Context, in *DeleteResourceServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AllServerResource(ctx context.Context, in *AllServerResourceRequest, opts ...grpc.CallOption) (*AllServerResourceReply, error)
+	AllResourceValue(ctx context.Context, in *AllResourceValueRequest, opts ...grpc.CallOption) (*AllResourceValueReply, error)
 	AddResourceValue(ctx context.Context, in *AddResourceValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateResourceValue(ctx context.Context, in *UpdateResourceValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PageBusiness(ctx context.Context, in *PageBusinessRequest, opts ...grpc.CallOption) (*PageBusinessReply, error)
+	AddBusiness(ctx context.Context, in *AddBusinessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateBusiness(ctx context.Context, in *UpdateBusinessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteBusiness(ctx context.Context, in *DeleteBusinessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AllBusinessValue(ctx context.Context, in *AllBusinessValueRequest, opts ...grpc.CallOption) (*AllBusinessValueReply, error)
+	AddBusinessValue(ctx context.Context, in *AddBusinessValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateBusinessValue(ctx context.Context, in *UpdateBusinessValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	PageTemplate(ctx context.Context, in *PageTemplateRequest, opts ...grpc.CallOption) (*PageTemplateReply, error)
+	AddTemplate(ctx context.Context, in *AddTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateTemplateVersion(ctx context.Context, in *UseTemplateVersionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...grpc.CallOption) (*ParseTemplateReply, error)
 }
 
 type serviceClient struct {
@@ -207,9 +237,45 @@ func (c *serviceClient) DeleteResource(ctx context.Context, in *DeleteResourceRe
 	return out, nil
 }
 
-func (c *serviceClient) AllEnvResourceValue(ctx context.Context, in *AllResourceValueRequest, opts ...grpc.CallOption) (*AllResourceValueReply, error) {
+func (c *serviceClient) AllResourceServer(ctx context.Context, in *AllResourceServerRequest, opts ...grpc.CallOption) (*AllResourceServerReply, error) {
+	out := new(AllResourceServerReply)
+	err := c.cc.Invoke(ctx, Service_AllResourceServer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddResourceServer(ctx context.Context, in *AddResourceServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_AddResourceServer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) DeleteResourceServer(ctx context.Context, in *DeleteResourceServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_DeleteResourceServer_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AllServerResource(ctx context.Context, in *AllServerResourceRequest, opts ...grpc.CallOption) (*AllServerResourceReply, error) {
+	out := new(AllServerResourceReply)
+	err := c.cc.Invoke(ctx, Service_AllServerResource_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AllResourceValue(ctx context.Context, in *AllResourceValueRequest, opts ...grpc.CallOption) (*AllResourceValueReply, error) {
 	out := new(AllResourceValueReply)
-	err := c.cc.Invoke(ctx, Service_AllEnvResourceValue_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_AllResourceValue_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -228,6 +294,105 @@ func (c *serviceClient) AddResourceValue(ctx context.Context, in *AddResourceVal
 func (c *serviceClient) UpdateResourceValue(ctx context.Context, in *UpdateResourceValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_UpdateResourceValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) PageBusiness(ctx context.Context, in *PageBusinessRequest, opts ...grpc.CallOption) (*PageBusinessReply, error) {
+	out := new(PageBusinessReply)
+	err := c.cc.Invoke(ctx, Service_PageBusiness_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddBusiness(ctx context.Context, in *AddBusinessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_AddBusiness_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) UpdateBusiness(ctx context.Context, in *UpdateBusinessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_UpdateBusiness_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) DeleteBusiness(ctx context.Context, in *DeleteBusinessRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_DeleteBusiness_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AllBusinessValue(ctx context.Context, in *AllBusinessValueRequest, opts ...grpc.CallOption) (*AllBusinessValueReply, error) {
+	out := new(AllBusinessValueReply)
+	err := c.cc.Invoke(ctx, Service_AllBusinessValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddBusinessValue(ctx context.Context, in *AddBusinessValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_AddBusinessValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) UpdateBusinessValue(ctx context.Context, in *UpdateBusinessValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_UpdateBusinessValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) PageTemplate(ctx context.Context, in *PageTemplateRequest, opts ...grpc.CallOption) (*PageTemplateReply, error) {
+	out := new(PageTemplateReply)
+	err := c.cc.Invoke(ctx, Service_PageTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddTemplate(ctx context.Context, in *AddTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_AddTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) UpdateTemplateVersion(ctx context.Context, in *UseTemplateVersionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_UpdateTemplateVersion_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...grpc.CallOption) (*ParseTemplateReply, error) {
+	out := new(ParseTemplateReply)
+	err := c.cc.Invoke(ctx, Service_ParseTemplate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -253,9 +418,24 @@ type ServiceServer interface {
 	AddResource(context.Context, *AddResourceRequest) (*emptypb.Empty, error)
 	UpdateResource(context.Context, *UpdateResourceRequest) (*emptypb.Empty, error)
 	DeleteResource(context.Context, *DeleteResourceRequest) (*emptypb.Empty, error)
-	AllEnvResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error)
+	AllResourceServer(context.Context, *AllResourceServerRequest) (*AllResourceServerReply, error)
+	AddResourceServer(context.Context, *AddResourceServerRequest) (*emptypb.Empty, error)
+	DeleteResourceServer(context.Context, *DeleteResourceServerRequest) (*emptypb.Empty, error)
+	AllServerResource(context.Context, *AllServerResourceRequest) (*AllServerResourceReply, error)
+	AllResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error)
 	AddResourceValue(context.Context, *AddResourceValueRequest) (*emptypb.Empty, error)
 	UpdateResourceValue(context.Context, *UpdateResourceValueRequest) (*emptypb.Empty, error)
+	PageBusiness(context.Context, *PageBusinessRequest) (*PageBusinessReply, error)
+	AddBusiness(context.Context, *AddBusinessRequest) (*emptypb.Empty, error)
+	UpdateBusiness(context.Context, *UpdateBusinessRequest) (*emptypb.Empty, error)
+	DeleteBusiness(context.Context, *DeleteBusinessRequest) (*emptypb.Empty, error)
+	AllBusinessValue(context.Context, *AllBusinessValueRequest) (*AllBusinessValueReply, error)
+	AddBusinessValue(context.Context, *AddBusinessValueRequest) (*emptypb.Empty, error)
+	UpdateBusinessValue(context.Context, *UpdateBusinessValueRequest) (*emptypb.Empty, error)
+	PageTemplate(context.Context, *PageTemplateRequest) (*PageTemplateReply, error)
+	AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error)
+	UpdateTemplateVersion(context.Context, *UseTemplateVersionRequest) (*emptypb.Empty, error)
+	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -308,14 +488,59 @@ func (UnimplementedServiceServer) UpdateResource(context.Context, *UpdateResourc
 func (UnimplementedServiceServer) DeleteResource(context.Context, *DeleteResourceRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteResource not implemented")
 }
-func (UnimplementedServiceServer) AllEnvResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AllEnvResourceValue not implemented")
+func (UnimplementedServiceServer) AllResourceServer(context.Context, *AllResourceServerRequest) (*AllResourceServerReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllResourceServer not implemented")
+}
+func (UnimplementedServiceServer) AddResourceServer(context.Context, *AddResourceServerRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddResourceServer not implemented")
+}
+func (UnimplementedServiceServer) DeleteResourceServer(context.Context, *DeleteResourceServerRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteResourceServer not implemented")
+}
+func (UnimplementedServiceServer) AllServerResource(context.Context, *AllServerResourceRequest) (*AllServerResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllServerResource not implemented")
+}
+func (UnimplementedServiceServer) AllResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllResourceValue not implemented")
 }
 func (UnimplementedServiceServer) AddResourceValue(context.Context, *AddResourceValueRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddResourceValue not implemented")
 }
 func (UnimplementedServiceServer) UpdateResourceValue(context.Context, *UpdateResourceValueRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateResourceValue not implemented")
+}
+func (UnimplementedServiceServer) PageBusiness(context.Context, *PageBusinessRequest) (*PageBusinessReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageBusiness not implemented")
+}
+func (UnimplementedServiceServer) AddBusiness(context.Context, *AddBusinessRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBusiness not implemented")
+}
+func (UnimplementedServiceServer) UpdateBusiness(context.Context, *UpdateBusinessRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBusiness not implemented")
+}
+func (UnimplementedServiceServer) DeleteBusiness(context.Context, *DeleteBusinessRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBusiness not implemented")
+}
+func (UnimplementedServiceServer) AllBusinessValue(context.Context, *AllBusinessValueRequest) (*AllBusinessValueReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllBusinessValue not implemented")
+}
+func (UnimplementedServiceServer) AddBusinessValue(context.Context, *AddBusinessValueRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBusinessValue not implemented")
+}
+func (UnimplementedServiceServer) UpdateBusinessValue(context.Context, *UpdateBusinessValueRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBusinessValue not implemented")
+}
+func (UnimplementedServiceServer) PageTemplate(context.Context, *PageTemplateRequest) (*PageTemplateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageTemplate not implemented")
+}
+func (UnimplementedServiceServer) AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddTemplate not implemented")
+}
+func (UnimplementedServiceServer) UpdateTemplateVersion(context.Context, *UseTemplateVersionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTemplateVersion not implemented")
+}
+func (UnimplementedServiceServer) ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParseTemplate not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -600,20 +825,92 @@ func _Service_DeleteResource_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_AllEnvResourceValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_AllResourceServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllResourceServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AllResourceServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AllResourceServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AllResourceServer(ctx, req.(*AllResourceServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AddResourceServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddResourceServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AddResourceServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AddResourceServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AddResourceServer(ctx, req.(*AddResourceServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_DeleteResourceServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteResourceServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).DeleteResourceServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_DeleteResourceServer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).DeleteResourceServer(ctx, req.(*DeleteResourceServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AllServerResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllServerResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AllServerResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AllServerResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AllServerResource(ctx, req.(*AllServerResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AllResourceValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AllResourceValueRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).AllEnvResourceValue(ctx, in)
+		return srv.(ServiceServer).AllResourceValue(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_AllEnvResourceValue_FullMethodName,
+		FullMethod: Service_AllResourceValue_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).AllEnvResourceValue(ctx, req.(*AllResourceValueRequest))
+		return srv.(ServiceServer).AllResourceValue(ctx, req.(*AllResourceValueRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -650,6 +947,204 @@ func _Service_UpdateResourceValue_Handler(srv interface{}, ctx context.Context, 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).UpdateResourceValue(ctx, req.(*UpdateResourceValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_PageBusiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageBusinessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).PageBusiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_PageBusiness_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).PageBusiness(ctx, req.(*PageBusinessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AddBusiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddBusinessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AddBusiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AddBusiness_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AddBusiness(ctx, req.(*AddBusinessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UpdateBusiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBusinessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateBusiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateBusiness_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateBusiness(ctx, req.(*UpdateBusinessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_DeleteBusiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBusinessRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).DeleteBusiness(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_DeleteBusiness_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).DeleteBusiness(ctx, req.(*DeleteBusinessRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AllBusinessValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AllBusinessValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AllBusinessValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AllBusinessValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AllBusinessValue(ctx, req.(*AllBusinessValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AddBusinessValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddBusinessValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AddBusinessValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AddBusinessValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AddBusinessValue(ctx, req.(*AddBusinessValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UpdateBusinessValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBusinessValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateBusinessValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateBusinessValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateBusinessValue(ctx, req.(*UpdateBusinessValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_PageTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).PageTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_PageTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).PageTemplate(ctx, req.(*PageTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AddTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AddTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AddTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AddTemplate(ctx, req.(*AddTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UpdateTemplateVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UseTemplateVersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateTemplateVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateTemplateVersion_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateTemplateVersion(ctx, req.(*UseTemplateVersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_ParseTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParseTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ParseTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ParseTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ParseTemplate(ctx, req.(*ParseTemplateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -722,8 +1217,24 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_DeleteResource_Handler,
 		},
 		{
-			MethodName: "AllEnvResourceValue",
-			Handler:    _Service_AllEnvResourceValue_Handler,
+			MethodName: "AllResourceServer",
+			Handler:    _Service_AllResourceServer_Handler,
+		},
+		{
+			MethodName: "AddResourceServer",
+			Handler:    _Service_AddResourceServer_Handler,
+		},
+		{
+			MethodName: "DeleteResourceServer",
+			Handler:    _Service_DeleteResourceServer_Handler,
+		},
+		{
+			MethodName: "AllServerResource",
+			Handler:    _Service_AllServerResource_Handler,
+		},
+		{
+			MethodName: "AllResourceValue",
+			Handler:    _Service_AllResourceValue_Handler,
 		},
 		{
 			MethodName: "AddResourceValue",
@@ -732,6 +1243,50 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateResourceValue",
 			Handler:    _Service_UpdateResourceValue_Handler,
+		},
+		{
+			MethodName: "PageBusiness",
+			Handler:    _Service_PageBusiness_Handler,
+		},
+		{
+			MethodName: "AddBusiness",
+			Handler:    _Service_AddBusiness_Handler,
+		},
+		{
+			MethodName: "UpdateBusiness",
+			Handler:    _Service_UpdateBusiness_Handler,
+		},
+		{
+			MethodName: "DeleteBusiness",
+			Handler:    _Service_DeleteBusiness_Handler,
+		},
+		{
+			MethodName: "AllBusinessValue",
+			Handler:    _Service_AllBusinessValue_Handler,
+		},
+		{
+			MethodName: "AddBusinessValue",
+			Handler:    _Service_AddBusinessValue_Handler,
+		},
+		{
+			MethodName: "UpdateBusinessValue",
+			Handler:    _Service_UpdateBusinessValue_Handler,
+		},
+		{
+			MethodName: "PageTemplate",
+			Handler:    _Service_PageTemplate_Handler,
+		},
+		{
+			MethodName: "AddTemplate",
+			Handler:    _Service_AddTemplate_Handler,
+		},
+		{
+			MethodName: "UpdateTemplateVersion",
+			Handler:    _Service_UpdateTemplateVersion_Handler,
+		},
+		{
+			MethodName: "ParseTemplate",
+			Handler:    _Service_ParseTemplate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -4,10 +4,12 @@ import "github.com/limes-cloud/kratos"
 
 type ResourceServer struct {
 	CreateModel
-	ServerID   int64  `json:"server_id"`
-	ResourceID int64  `json:"resource_id"`
-	Operator   string `json:"operator"`
-	OperatorID int64  `json:"operator_id"`
+	ServerID   int64    `json:"server_id"`
+	ResourceID int64    `json:"resource_id"`
+	Operator   string   `json:"operator"`
+	OperatorID int64    `json:"operator_id"`
+	Resource   Resource `json:"resource"`
+	Server     Server   `json:"server"`
 }
 
 // Create 新建资源
@@ -23,7 +25,6 @@ func (e *ResourceServer) All(ctx kratos.Context, scopes Scopes) ([]*ResourceServ
 	if scopes != nil {
 		db = db.Scopes(scopes)
 	}
-
 	return list, db.Find(&list).Error
 }
 

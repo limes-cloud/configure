@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package v1;
+option go_package = "./v1;v1";
+import "validate/validate.proto";
+import "resource.proto";
+import "environment.proto";
+
+message AllBusinessValueRequest{
+  int64 business_id = 1[(validate.rules).int64.gt = 0];
+}
+
+message AllBusinessValueReply {
+  message BusinessValue{
+    int64 id = 1;
+    int64 environment_id = 2;
+    int64 business_id = 3;
+    string value = 4;
+    Environment environment = 5;
+  }
+  repeated BusinessValue list = 1;
+}
+
+// 新增资源值
+message AddBusinessValueRequest {
+  int64 environment_id = 1;
+  int64 business_id = 2;
+  string value = 3[(validate.rules).string = {min_len: 7}];
+}
+
+// 修改资源值
+message UpdateBusinessValueRequest {
+  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  string value = 4;
+}
+

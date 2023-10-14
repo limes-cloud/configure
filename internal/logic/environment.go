@@ -3,6 +3,7 @@ package logic
 import (
 	"github.com/google/uuid"
 	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
@@ -10,8 +11,18 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-// AllEnvironment 获取全部环境
-func (l *Logic) AllEnvironment(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEnvironmentReply, error) {
+type Environment struct {
+	conf *config.Config
+}
+
+func NewEnvironment(conf *config.Config) *Environment {
+	return &Environment{
+		conf: conf,
+	}
+}
+
+// All 获取全部环境
+func (l *Environment) All(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEnvironmentReply, error) {
 	env := model.Environment{}
 	list, err := env.All(ctx)
 	if err != nil {
@@ -26,8 +37,8 @@ func (l *Logic) AllEnvironment(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEn
 	return &reply, nil
 }
 
-// AddEnvironment 新增环境
-func (l *Logic) AddEnvironment(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*emptypb.Empty, error) {
+// Add 新增环境
+func (l *Environment) Add(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
 		Token:      util.MD5ToUpper([]byte(uuid.NewString())),
 		Operator:   md.GetUserName(ctx),
@@ -50,8 +61,8 @@ func (l *Logic) AddEnvironment(ctx kratos.Context, in *v1.AddEnvironmentRequest)
 	return nil, nil
 }
 
-// UpdateEnvironment 修改环境
-func (l *Logic) UpdateEnvironment(ctx kratos.Context, in *v1.UpdateEnvironmentRequest) (*emptypb.Empty, error) {
+// Update 修改环境
+func (l *Environment) Update(ctx kratos.Context, in *v1.UpdateEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -67,8 +78,8 @@ func (l *Logic) UpdateEnvironment(ctx kratos.Context, in *v1.UpdateEnvironmentRe
 	return nil, nil
 }
 
-// DeleteEnvironment 删除环境
-func (l *Logic) DeleteEnvironment(ctx kratos.Context, in *v1.DeleteEnvironmentRequest) (*emptypb.Empty, error) {
+// Delete 删除环境
+func (l *Environment) Delete(ctx kratos.Context, in *v1.DeleteEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{}
 
 	if env.DeleteByID(ctx, in.Id) != nil {
@@ -78,8 +89,8 @@ func (l *Logic) DeleteEnvironment(ctx kratos.Context, in *v1.DeleteEnvironmentRe
 	return nil, nil
 }
 
-// GetEnvironmentToken 获取环境token
-func (l *Logic) GetEnvironmentToken(ctx kratos.Context, in *v1.GetEnvironmentTokenRequest) (*v1.GetEnvironmentTokenReply, error) {
+// GetToken 获取环境token
+func (l *Environment) GetToken(ctx kratos.Context, in *v1.GetEnvironmentTokenRequest) (*v1.GetEnvironmentTokenReply, error) {
 	env := &model.Environment{}
 
 	if env.OneByID(ctx, in.Id) != nil {
@@ -94,8 +105,8 @@ func (l *Logic) GetEnvironmentToken(ctx kratos.Context, in *v1.GetEnvironmentTok
 	return &reply, nil
 }
 
-// ResetEnvironmentToken 重置环境token
-func (l *Logic) ResetEnvironmentToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
+// ResetToken 重置环境token
+func (l *Environment) ResetToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
 		Token:      util.MD5ToUpper([]byte(uuid.NewString())),
 		Operator:   md.GetUserName(ctx),

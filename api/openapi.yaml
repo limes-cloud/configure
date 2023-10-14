@@ -3,8 +3,1150 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Service API
     version: 0.0.1
-paths: {}
+paths:
+    /v1/business:
+        get:
+            tags:
+                - Service
+            operationId: Service_PageBusiness
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PageBusinessReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateBusiness
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateBusinessRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddBusiness
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddBusinessRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            operationId: Service_DeleteBusiness
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/business/value:
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateBusinessValue
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateBusinessValueRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddBusinessValue
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddBusinessValueRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/business/values:
+        get:
+            tags:
+                - Service
+            operationId: Service_AllBusinessValue
+            parameters:
+                - name: businessId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AllBusinessValueReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/environment:
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateEnvironment
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateEnvironmentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddEnvironment
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddEnvironmentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            operationId: Service_DeleteEnvironment
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/environment/resetToken:
+        post:
+            tags:
+                - Service
+            operationId: Service_ResetEnvironmentToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ResetEnvironmentTokenRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/environment/token:
+        get:
+            tags:
+                - Service
+            operationId: Service_GetEnvironmentToken
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetEnvironmentTokenReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/environments:
+        get:
+            tags:
+                - Service
+            operationId: Service_AllEnvironment
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AllEnvironmentReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/resource:
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateResource
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateResourceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddResource
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddResourceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            operationId: Service_DeleteResource
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/resource/server:
+        post:
+            tags:
+                - Service
+            operationId: Service_AddResourceServer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddResourceServerRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            operationId: Service_DeleteResourceServer
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/resource/servers:
+        get:
+            tags:
+                - Service
+            operationId: Service_AllResourceServer
+            parameters:
+                - name: resourceId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AllResourceServerReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/resource/value:
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateResourceValue
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateResourceValueRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddResourceValue
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddResourceValueRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/resource/values:
+        get:
+            tags:
+                - Service
+            operationId: Service_AllResourceValue
+            parameters:
+                - name: resourceId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AllResourceValueReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/resources:
+        get:
+            tags:
+                - Service
+            operationId: Service_PageResource
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: tag
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PageResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/server:
+        get:
+            tags:
+                - Service
+            operationId: Service_GetServer
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetServerReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateServer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateServerRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddServer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddServerRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            operationId: Service_DeleteServer
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/server/resources:
+        get:
+            tags:
+                - Service
+            operationId: Service_AllServerResource
+            parameters:
+                - name: serverId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AllServerResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/servers:
+        get:
+            tags:
+                - Service
+            operationId: Service_PageServer
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PageServerReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/template:
+        put:
+            tags:
+                - Service
+            operationId: Service_UpdateTemplateVersion
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UseTemplateVersionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            operationId: Service_AddTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/template/parse:
+        post:
+            tags:
+                - Service
+            operationId: Service_ParseTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ParseTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ParseTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1/templates:
+        get:
+            tags:
+                - Service
+            operationId: Service_PageTemplate
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: serverId
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PageTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
-    schemas: {}
+    schemas:
+        AddBusinessRequest:
+            type: object
+            properties:
+                serverId:
+                    type: string
+                keyword:
+                    type: string
+                description:
+                    type: string
+            description: 新增业务key
+        AddBusinessValueRequest:
+            type: object
+            properties:
+                environmentId:
+                    type: string
+                businessId:
+                    type: string
+                value:
+                    type: string
+            description: 新增资源值
+        AddEnvironmentRequest:
+            type: object
+            properties:
+                keyword:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+            description: 新增环境
+        AddResourceRequest:
+            type: object
+            properties:
+                keyword:
+                    type: string
+                description:
+                    type: string
+                tag:
+                    type: string
+                fields:
+                    type: string
+            description: 新增环境
+        AddResourceServerRequest:
+            type: object
+            properties:
+                resourceId:
+                    type: string
+                serverId:
+                    type: string
+            description: 新增环境
+        AddResourceValueRequest:
+            type: object
+            properties:
+                environmentId:
+                    type: string
+                resourceId:
+                    type: string
+                values:
+                    type: string
+            description: 新增资源值
+        AddServerRequest:
+            type: object
+            properties:
+                keyword:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+            description: 新增环境
+        AddTemplateRequest:
+            type: object
+            properties:
+                serverId:
+                    type: string
+                content:
+                    type: string
+                description:
+                    type: string
+            description: 新增模板
+        AllBusinessValueReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AllBusinessValueReply_BusinessValue'
+        AllBusinessValueReply_BusinessValue:
+            type: object
+            properties:
+                id:
+                    type: string
+                environmentId:
+                    type: string
+                businessId:
+                    type: string
+                value:
+                    type: string
+                environment:
+                    $ref: '#/components/schemas/Environment'
+        AllEnvironmentReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Environment'
+            description: 获取环境列表
+        AllResourceServerReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AllResourceServerReply_ResourceServer'
+        AllResourceServerReply_ResourceServer:
+            type: object
+            properties:
+                resourceId:
+                    type: string
+                serverId:
+                    type: string
+                server:
+                    $ref: '#/components/schemas/Server'
+        AllResourceValueReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AllResourceValueReply_ResourceValue'
+        AllResourceValueReply_ResourceValue:
+            type: object
+            properties:
+                id:
+                    type: string
+                environmentId:
+                    type: string
+                resourceId:
+                    type: string
+                values:
+                    type: string
+                environment:
+                    $ref: '#/components/schemas/Environment'
+        AllServerResourceReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AllServerResourceReply_ResourceServer'
+        AllServerResourceReply_ResourceServer:
+            type: object
+            properties:
+                resourceId:
+                    type: string
+                serverId:
+                    type: string
+                resource:
+                    $ref: '#/components/schemas/Resource'
+        Business:
+            type: object
+            properties:
+                id:
+                    type: string
+                serverId:
+                    type: string
+                keyword:
+                    type: string
+                description:
+                    type: string
+        Environment:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+                operator:
+                    type: string
+                operatorId:
+                    type: string
+        GetEnvironmentTokenReply:
+            type: object
+            properties:
+                token:
+                    type: string
+        GetServerReply:
+            type: object
+            properties:
+                server:
+                    $ref: '#/components/schemas/Server'
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        PageBusinessReply:
+            type: object
+            properties:
+                total:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Business'
+        PageResourceReply:
+            type: object
+            properties:
+                total:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Resource'
+        PageServerReply:
+            type: object
+            properties:
+                total:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Server'
+        PageTemplateReply:
+            type: object
+            properties:
+                total:
+                    type: string
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/PageTemplateReply_Template'
+        PageTemplateReply_Template:
+            type: object
+            properties:
+                id:
+                    type: string
+                serverId:
+                    type: string
+                description:
+                    type: string
+                version:
+                    type: string
+                isUse:
+                    type: boolean
+                operator:
+                    type: string
+                operatorId:
+                    type: string
+        ParseTemplateReply:
+            type: object
+            properties:
+                content:
+                    type: string
+        ParseTemplateRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                srvKeyword:
+                    type: string
+                envKeyword:
+                    type: string
+            description: 解析模板
+        ResetEnvironmentTokenRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+            description: 重置token
+        Resource:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                description:
+                    type: string
+                fields:
+                    type: string
+                tag:
+                    type: string
+        Server:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                operator:
+                    type: string
+                operatorId:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateBusinessRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                description:
+                    type: string
+            description: 修改业务key
+        UpdateBusinessValueRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                value:
+                    type: string
+            description: 修改资源值
+        UpdateEnvironmentRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+            description: 修改环境
+        UpdateResourceRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                description:
+                    type: string
+                tag:
+                    type: string
+                fields:
+                    type: string
+            description: 修改环境
+        UpdateResourceValueRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                values:
+                    type: string
+            description: 修改资源值
+        UpdateServerRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                description:
+                    type: string
+            description: 修改环境
+        UseTemplateVersionRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                serverId:
+                    type: string
+            description: 修改模板
+tags:
+    - name: Service

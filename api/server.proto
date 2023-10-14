@@ -20,7 +20,8 @@ message PageServerRequest{
 }
 
 message PageServerReply {
-  repeated Server list = 1;
+  int64 total = 1;
+  repeated Server list = 2;
 }
 
 message GetServerRequest{
