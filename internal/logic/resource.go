@@ -47,6 +47,7 @@ func (l *Logic) AddResource(ctx kratos.Context, in *v1.AddResourceRequest) (*emp
 }
 
 // UpdateResource 更新服务
+// todo 修改的时候，避免被改动key
 func (l *Logic) UpdateResource(ctx kratos.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
 	resource := model.Resource{}
 	if util.Transform(in, &resource) != nil {

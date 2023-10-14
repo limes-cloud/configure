@@ -4,6 +4,9 @@ package v1;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 import "server.proto";
+import "resource.proto";
+import "business.proto";
+
 
 
 message AllResourceServerRequest{
@@ -19,12 +22,30 @@ message AllResourceServerReply {
   repeated ResourceServer list = 1;
 }
 
+
+message AllServerResourceRequest{
+  int64 server_id = 1;
+}
+
+message AllServerResourceReply {
+  repeated Resource list = 1;
+}
+
+
+message AllServerBusinessRequest{
+  int64 server_id = 1;
+}
+
+message AllServerBusinessReply {
+  repeated Business list = 1;
+}
+
+
 // 新增环境
 message AddResourceServerRequest {
   int64 resource_id = 1[(validate.rules).int64 = {gt: 0}];
   int64 server_id = 2[(validate.rules).int64 = {gt: 0}];
 }
-
 
 // 删除环境
 message DeleteResourceServerRequest {

@@ -5,6 +5,15 @@ option go_package = "./v1;v1";
 import "validate/validate.proto";
 
 
+message Resource{
+  int64 id = 1 ;
+  string keyword = 2;
+  string name = 3;
+  string description = 4;
+  string fields = 5;
+  string tag = 6;
+}
+
 message PageResourceRequest{
   int32 page = 1[(validate.rules).int32 = {gt: 0}];
   int32 page_size = 2[(validate.rules).int32 = {gt: 0,lte:50}];
@@ -13,15 +22,7 @@ message PageResourceRequest{
 }
 
 message PageResourceReply {
-  message Server{
-    int64 id = 1 ;
-    string keyword = 2;
-    string name = 3;
-    string description = 4;
-    string fields = 5;
-    string tag = 6;
-  }
-  repeated Server list = 1;
+  repeated Resource list = 1;
 }
 
 // 新增环境
@@ -36,11 +37,10 @@ message AddResourceRequest {
 // 修改环境
 message UpdateResourceRequest {
   int64 id = 1 [(validate.rules).int64 = {gt: 0}];
-  string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
-  string tag = 5[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string fields = 6;
+  string name = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
+  string tag = 4[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string fields = 5;
 }
 
 // 删除环境

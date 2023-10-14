@@ -35,6 +35,117 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on Resource with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Resource) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Resource with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ResourceMultiError, or nil
+// if none found.
+func (m *Resource) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Resource) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Keyword
+
+	// no validation rules for Name
+
+	// no validation rules for Description
+
+	// no validation rules for Fields
+
+	// no validation rules for Tag
+
+	if len(errors) > 0 {
+		return ResourceMultiError(errors)
+	}
+
+	return nil
+}
+
+// ResourceMultiError is an error wrapping multiple validation errors returned
+// by Resource.ValidateAll() if the designated constraints aren't met.
+type ResourceMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ResourceMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ResourceMultiError) AllErrors() []error { return m }
+
+// ResourceValidationError is the validation error returned by
+// Resource.Validate if the designated constraints aren't met.
+type ResourceValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ResourceValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ResourceValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ResourceValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ResourceValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ResourceValidationError) ErrorName() string { return "ResourceValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ResourceValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sResource.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ResourceValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ResourceValidationError{}
+
 // Validate checks the field values on PageResourceRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -484,17 +595,6 @@ func (m *UpdateResourceRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
-		err := UpdateResourceRequestValidationError{
-			field:  "Keyword",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 32 {
 		err := UpdateResourceRequestValidationError{
 			field:  "Name",
@@ -722,117 +822,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteResourceRequestValidationError{}
-
-// Validate checks the field values on PageResourceReply_Server with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *PageResourceReply_Server) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on PageResourceReply_Server with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// PageResourceReply_ServerMultiError, or nil if none found.
-func (m *PageResourceReply_Server) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *PageResourceReply_Server) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Keyword
-
-	// no validation rules for Name
-
-	// no validation rules for Description
-
-	// no validation rules for Fields
-
-	// no validation rules for Tag
-
-	if len(errors) > 0 {
-		return PageResourceReply_ServerMultiError(errors)
-	}
-
-	return nil
-}
-
-// PageResourceReply_ServerMultiError is an error wrapping multiple validation
-// errors returned by PageResourceReply_Server.ValidateAll() if the designated
-// constraints aren't met.
-type PageResourceReply_ServerMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m PageResourceReply_ServerMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m PageResourceReply_ServerMultiError) AllErrors() []error { return m }
-
-// PageResourceReply_ServerValidationError is the validation error returned by
-// PageResourceReply_Server.Validate if the designated constraints aren't met.
-type PageResourceReply_ServerValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e PageResourceReply_ServerValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e PageResourceReply_ServerValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e PageResourceReply_ServerValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e PageResourceReply_ServerValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e PageResourceReply_ServerValidationError) ErrorName() string {
-	return "PageResourceReply_ServerValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e PageResourceReply_ServerValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sPageResourceReply_Server.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = PageResourceReply_ServerValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = PageResourceReply_ServerValidationError{}

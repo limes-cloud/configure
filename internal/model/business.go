@@ -6,7 +6,6 @@ type Business struct {
 	BaseModel
 	ServerID    string `json:"server_id"`
 	Keyword     string `json:"keyword"`
-	Value       string `json:"value"`
 	Description string `json:"description"`
 	Operator    string `json:"operator"`
 	OperatorID  int64  `json:"operator_id"`
