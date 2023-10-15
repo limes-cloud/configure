@@ -7,21 +7,22 @@ import (
 
 type Template struct {
 	BaseModel
-	ServerID    string  `json:"server_id"`
+	ServerID    int64   `json:"server_id"`
 	Content     string  `json:"content"`
 	Version     string  `json:"version"`
 	IsUse       bool    `json:"is_use"`
 	Description *string `json:"description"`
 	Operator    string  `json:"operator"`
-	OperatorId  int64   `json:"operator_id"`
+	OperatorID  int64   `json:"operator_id"`
 }
 
 func (u *Template) Create(ctx kratos.Context) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Create(&u).Error; err != nil {
+		if err := tx.Model(u).Create(&u).Error; err != nil {
 			return err
 		}
-		return tx.Where("server_id=? and id!=?", u.ServerID, u.ID).Update("is_use", false).Error
+		temp := Template{}
+		return tx.Model(&temp).Where("server_id=? and id!=?", u.ServerID, u.ID).Update("is_use", false).Error
 	})
 }
 
@@ -29,12 +30,12 @@ func (u *Template) OneById(ctx kratos.Context, id int64) error {
 	return ctx.DB().First(u, "id = ?", id).Error
 }
 
-func (u *Template) One(ctx kratos.Context, conds ...interface{}) error {
-	return ctx.DB().First(u, conds...).Error
+func (u *Template) OneBySrvKeyword(ctx kratos.Context, keyword string) error {
+	return ctx.DB().First(u, "keyword = ?", keyword).Error
 }
 
-func (u *Template) OneBy(ctx kratos.Context, conds ...interface{}) error {
-	return ctx.DB().First(u, conds...).Error
+func (u *Template) Current(ctx kratos.Context, srvId int64) error {
+	return ctx.DB().First(u, "is_use = true and server_id = ?", srvId).Error
 }
 
 // Page 查询分页资源

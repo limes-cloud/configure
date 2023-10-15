@@ -16,6 +16,9 @@ enum ErrorReason {
   Params = 3[(errors.message)="参数错误"];
   NotRecord = 4[(errors.message)="暂无数据记录"];
   ResourceFormatValue = 5[(errors.message)="资源字段值格式错误"];
+  CheckTemplate = 6[(errors.message)="模板检测出现错误"];
+  ParseTemplate= 7[(errors.message)="模板解析出现错误"];
+  VersionExist = 8[(errors.message)="此版本已存在"];
 }
 
 

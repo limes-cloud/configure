@@ -1,6 +1,8 @@
 package model
 
-import "github.com/limes-cloud/kratos"
+import (
+	"github.com/limes-cloud/kratos"
+)
 
 type Business struct {
 	BaseModel
@@ -40,9 +42,15 @@ func (e *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, 
 }
 
 // All 查询所有业务字段
-func (e *Business) All(ctx kratos.Context) ([]*Business, error) {
+func (e *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
 	var list []*Business
-	return list, ctx.DB().Model(e).Find(&list).Error
+
+	db := ctx.DB()
+	if scopes != nil {
+		db = db.Scopes(scopes)
+	}
+
+	return list, db.Model(e).Find(&list).Error
 }
 
 // Update 更新指定id的业务字段

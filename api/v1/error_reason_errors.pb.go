@@ -20,7 +20,7 @@ func IsDatabase(err error) bool {
 }
 
 func ErrorDatabaseFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_Database.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_Database.String(), "数据库错误:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorDatabase() *errors.Error {
@@ -36,7 +36,7 @@ func IsTransform(err error) bool {
 }
 
 func ErrorTransformFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_Transform.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_Transform.String(), "数据转换失败:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorTransform() *errors.Error {
@@ -52,7 +52,7 @@ func IsAlreadyExists(err error) bool {
 }
 
 func ErrorAlreadyExistsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_AlreadyExists.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_AlreadyExists.String(), "数据已存在:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorAlreadyExists() *errors.Error {
@@ -68,7 +68,7 @@ func IsParams(err error) bool {
 }
 
 func ErrorParamsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_Params.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_Params.String(), "参数错误:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorParams() *errors.Error {
@@ -84,7 +84,7 @@ func IsNotRecord(err error) bool {
 }
 
 func ErrorNotRecordFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_NotRecord.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_NotRecord.String(), "暂无数据记录:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorNotRecord() *errors.Error {
@@ -100,9 +100,57 @@ func IsResourceFormatValue(err error) bool {
 }
 
 func ErrorResourceFormatValueFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_ResourceFormatValue.String(), fmt.Sprintf(format, args...))
+	return errors.New(200, ErrorReason_ResourceFormatValue.String(), "资源字段值格式错误:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorResourceFormatValue() *errors.Error {
 	return errors.New(200, ErrorReason_ResourceFormatValue.String(), "资源字段值格式错误")
+}
+
+func IsCheckTemplate(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_CheckTemplate.String() && e.Code == 200
+}
+
+func ErrorCheckTemplateFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_CheckTemplate.String(), "模板检测出现错误:"+fmt.Sprintf(format, args...))
+}
+
+func ErrorCheckTemplate() *errors.Error {
+	return errors.New(200, ErrorReason_CheckTemplate.String(), "模板检测出现错误")
+}
+
+func IsParseTemplate(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ParseTemplate.String() && e.Code == 200
+}
+
+func ErrorParseTemplateFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_ParseTemplate.String(), "模板解析出现错误:"+fmt.Sprintf(format, args...))
+}
+
+func ErrorParseTemplate() *errors.Error {
+	return errors.New(200, ErrorReason_ParseTemplate.String(), "模板解析出现错误")
+}
+
+func IsVersionExist(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_VersionExist.String() && e.Code == 200
+}
+
+func ErrorVersionExistFormat(format string, args ...interface{}) *errors.Error {
+	return errors.New(200, ErrorReason_VersionExist.String(), "此版本已存在:"+fmt.Sprintf(format, args...))
+}
+
+func ErrorVersionExist() *errors.Error {
+	return errors.New(200, ErrorReason_VersionExist.String(), "此版本已存在")
 }

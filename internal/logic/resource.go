@@ -4,6 +4,7 @@ import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
+	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -51,7 +52,10 @@ func (l *Resource) Page(ctx kratos.Context, in *v1.PageResourceRequest) (*v1.Pag
 
 // Add 添加资源
 func (l *Resource) Add(ctx kratos.Context, in *v1.AddResourceRequest) (*emptypb.Empty, error) {
-	resource := model.Resource{}
+	resource := model.Resource{
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
+	}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -61,7 +65,10 @@ func (l *Resource) Add(ctx kratos.Context, in *v1.AddResourceRequest) (*emptypb.
 
 // Update 更新资源
 func (l *Resource) Update(ctx kratos.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
-	resource := model.Resource{}
+	resource := model.Resource{
+		Operator:   md.GetUserName(ctx),
+		OperatorID: md.GetUserID(ctx),
+	}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}
