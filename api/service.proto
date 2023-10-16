@@ -221,6 +221,20 @@ service Service {
     };
   }
 
+  rpc GetTemplate (GetTemplateRequest) returns (GetTemplateReply) {
+    option (google.api.http) = {
+      get: "/v1/template",
+      response_body: "*"
+    };
+  }
+
+  rpc CurrentTemplate (CurrentTemplateRequest) returns (CurrentTemplateReply) {
+    option (google.api.http) = {
+      get: "/v1/template/current",
+      response_body: "*"
+    };
+  }
+
   rpc AddTemplate (AddTemplateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1/template",

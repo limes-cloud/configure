@@ -38,7 +38,7 @@ var file_service_proto_rawDesc = []byte{
 	0x73, 0x69, 0x6e, 0x65, 0x73, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x14, 0x62, 0x75,
 	0x73, 0x69, 0x6e, 0x65, 0x73, 0x73, 0x5f, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x1a, 0x0e, 0x74, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x2e, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x32, 0xb6, 0x19, 0x0a, 0x07, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x5e,
+	0x74, 0x6f, 0x32, 0xf6, 0x1a, 0x0a, 0x07, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x5e,
 	0x0a, 0x0e, 0x41, 0x6c, 0x6c, 0x45, 0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74,
 	0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x17, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x6c,
@@ -223,7 +223,19 @@ var file_service_proto_rawDesc = []byte{
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x67,
 	0x65, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x18,
 	0x82, 0xd3, 0xe4, 0x93, 0x02, 0x12, 0x62, 0x01, 0x2a, 0x12, 0x0d, 0x2f, 0x76, 0x31, 0x2f, 0x74,
-	0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73, 0x12, 0x56, 0x0a, 0x0b, 0x41, 0x64, 0x64, 0x54,
+	0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x73, 0x12, 0x54, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x54,
+	0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x12, 0x16, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74,
+	0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x14, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65,
+	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x17, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x11, 0x62, 0x01, 0x2a,
+	0x12, 0x0c, 0x2f, 0x76, 0x31, 0x2f, 0x74, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x12, 0x68,
+	0x0a, 0x0f, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74,
+	0x65, 0x12, 0x1a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x65,
+	0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18, 0x2e,
+	0x76, 0x31, 0x2e, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x1f, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x19, 0x62,
+	0x01, 0x2a, 0x12, 0x14, 0x2f, 0x76, 0x31, 0x2f, 0x74, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65,
+	0x2f, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x12, 0x56, 0x0a, 0x0b, 0x41, 0x64, 0x64, 0x54,
 	0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x12, 0x16, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x64, 0x64,
 	0x54, 0x65, 0x6d, 0x70, 0x6c, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
 	0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75,
@@ -276,21 +288,25 @@ var file_service_proto_goTypes = []interface{}{
 	(*AddBusinessValueRequest)(nil),      // 27: v1.AddBusinessValueRequest
 	(*UpdateBusinessValueRequest)(nil),   // 28: v1.UpdateBusinessValueRequest
 	(*PageTemplateRequest)(nil),          // 29: v1.PageTemplateRequest
-	(*AddTemplateRequest)(nil),           // 30: v1.AddTemplateRequest
-	(*UseTemplateVersionRequest)(nil),    // 31: v1.UseTemplateVersionRequest
-	(*ParseTemplateRequest)(nil),         // 32: v1.ParseTemplateRequest
-	(*AllEnvironmentReply)(nil),          // 33: v1.AllEnvironmentReply
-	(*GetEnvironmentTokenReply)(nil),     // 34: v1.GetEnvironmentTokenReply
-	(*PageServerReply)(nil),              // 35: v1.PageServerReply
-	(*GetServerReply)(nil),               // 36: v1.GetServerReply
-	(*PageResourceReply)(nil),            // 37: v1.PageResourceReply
-	(*AllResourceServerReply)(nil),       // 38: v1.AllResourceServerReply
-	(*AllServerResourceReply)(nil),       // 39: v1.AllServerResourceReply
-	(*AllResourceValueReply)(nil),        // 40: v1.AllResourceValueReply
-	(*PageBusinessReply)(nil),            // 41: v1.PageBusinessReply
-	(*AllBusinessValueReply)(nil),        // 42: v1.AllBusinessValueReply
-	(*PageTemplateReply)(nil),            // 43: v1.PageTemplateReply
-	(*ParseTemplateReply)(nil),           // 44: v1.ParseTemplateReply
+	(*GetTemplateRequest)(nil),           // 30: v1.GetTemplateRequest
+	(*CurrentTemplateRequest)(nil),       // 31: v1.CurrentTemplateRequest
+	(*AddTemplateRequest)(nil),           // 32: v1.AddTemplateRequest
+	(*UseTemplateVersionRequest)(nil),    // 33: v1.UseTemplateVersionRequest
+	(*ParseTemplateRequest)(nil),         // 34: v1.ParseTemplateRequest
+	(*AllEnvironmentReply)(nil),          // 35: v1.AllEnvironmentReply
+	(*GetEnvironmentTokenReply)(nil),     // 36: v1.GetEnvironmentTokenReply
+	(*PageServerReply)(nil),              // 37: v1.PageServerReply
+	(*GetServerReply)(nil),               // 38: v1.GetServerReply
+	(*PageResourceReply)(nil),            // 39: v1.PageResourceReply
+	(*AllResourceServerReply)(nil),       // 40: v1.AllResourceServerReply
+	(*AllServerResourceReply)(nil),       // 41: v1.AllServerResourceReply
+	(*AllResourceValueReply)(nil),        // 42: v1.AllResourceValueReply
+	(*PageBusinessReply)(nil),            // 43: v1.PageBusinessReply
+	(*AllBusinessValueReply)(nil),        // 44: v1.AllBusinessValueReply
+	(*PageTemplateReply)(nil),            // 45: v1.PageTemplateReply
+	(*GetTemplateReply)(nil),             // 46: v1.GetTemplateReply
+	(*CurrentTemplateReply)(nil),         // 47: v1.CurrentTemplateReply
+	(*ParseTemplateReply)(nil),           // 48: v1.ParseTemplateReply
 }
 var file_service_proto_depIdxs = []int32{
 	0,  // 0: v1.Service.AllEnvironment:input_type -> google.protobuf.Empty
@@ -323,44 +339,48 @@ var file_service_proto_depIdxs = []int32{
 	27, // 27: v1.Service.AddBusinessValue:input_type -> v1.AddBusinessValueRequest
 	28, // 28: v1.Service.UpdateBusinessValue:input_type -> v1.UpdateBusinessValueRequest
 	29, // 29: v1.Service.PageTemplate:input_type -> v1.PageTemplateRequest
-	30, // 30: v1.Service.AddTemplate:input_type -> v1.AddTemplateRequest
-	31, // 31: v1.Service.UpdateTemplateVersion:input_type -> v1.UseTemplateVersionRequest
-	32, // 32: v1.Service.ParseTemplate:input_type -> v1.ParseTemplateRequest
-	33, // 33: v1.Service.AllEnvironment:output_type -> v1.AllEnvironmentReply
-	0,  // 34: v1.Service.AddEnvironment:output_type -> google.protobuf.Empty
-	0,  // 35: v1.Service.UpdateEnvironment:output_type -> google.protobuf.Empty
-	0,  // 36: v1.Service.DeleteEnvironment:output_type -> google.protobuf.Empty
-	34, // 37: v1.Service.GetEnvironmentToken:output_type -> v1.GetEnvironmentTokenReply
-	0,  // 38: v1.Service.ResetEnvironmentToken:output_type -> google.protobuf.Empty
-	35, // 39: v1.Service.PageServer:output_type -> v1.PageServerReply
-	36, // 40: v1.Service.GetServer:output_type -> v1.GetServerReply
-	0,  // 41: v1.Service.AddServer:output_type -> google.protobuf.Empty
-	0,  // 42: v1.Service.UpdateServer:output_type -> google.protobuf.Empty
-	0,  // 43: v1.Service.DeleteServer:output_type -> google.protobuf.Empty
-	37, // 44: v1.Service.PageResource:output_type -> v1.PageResourceReply
-	0,  // 45: v1.Service.AddResource:output_type -> google.protobuf.Empty
-	0,  // 46: v1.Service.UpdateResource:output_type -> google.protobuf.Empty
-	0,  // 47: v1.Service.DeleteResource:output_type -> google.protobuf.Empty
-	38, // 48: v1.Service.AllResourceServer:output_type -> v1.AllResourceServerReply
-	0,  // 49: v1.Service.AddResourceServer:output_type -> google.protobuf.Empty
-	0,  // 50: v1.Service.DeleteResourceServer:output_type -> google.protobuf.Empty
-	39, // 51: v1.Service.AllServerResource:output_type -> v1.AllServerResourceReply
-	40, // 52: v1.Service.AllResourceValue:output_type -> v1.AllResourceValueReply
-	0,  // 53: v1.Service.AddResourceValue:output_type -> google.protobuf.Empty
-	0,  // 54: v1.Service.UpdateResourceValue:output_type -> google.protobuf.Empty
-	41, // 55: v1.Service.PageBusiness:output_type -> v1.PageBusinessReply
-	0,  // 56: v1.Service.AddBusiness:output_type -> google.protobuf.Empty
-	0,  // 57: v1.Service.UpdateBusiness:output_type -> google.protobuf.Empty
-	0,  // 58: v1.Service.DeleteBusiness:output_type -> google.protobuf.Empty
-	42, // 59: v1.Service.AllBusinessValue:output_type -> v1.AllBusinessValueReply
-	0,  // 60: v1.Service.AddBusinessValue:output_type -> google.protobuf.Empty
-	0,  // 61: v1.Service.UpdateBusinessValue:output_type -> google.protobuf.Empty
-	43, // 62: v1.Service.PageTemplate:output_type -> v1.PageTemplateReply
-	0,  // 63: v1.Service.AddTemplate:output_type -> google.protobuf.Empty
-	0,  // 64: v1.Service.UpdateTemplateVersion:output_type -> google.protobuf.Empty
-	44, // 65: v1.Service.ParseTemplate:output_type -> v1.ParseTemplateReply
-	33, // [33:66] is the sub-list for method output_type
-	0,  // [0:33] is the sub-list for method input_type
+	30, // 30: v1.Service.GetTemplate:input_type -> v1.GetTemplateRequest
+	31, // 31: v1.Service.CurrentTemplate:input_type -> v1.CurrentTemplateRequest
+	32, // 32: v1.Service.AddTemplate:input_type -> v1.AddTemplateRequest
+	33, // 33: v1.Service.UpdateTemplateVersion:input_type -> v1.UseTemplateVersionRequest
+	34, // 34: v1.Service.ParseTemplate:input_type -> v1.ParseTemplateRequest
+	35, // 35: v1.Service.AllEnvironment:output_type -> v1.AllEnvironmentReply
+	0,  // 36: v1.Service.AddEnvironment:output_type -> google.protobuf.Empty
+	0,  // 37: v1.Service.UpdateEnvironment:output_type -> google.protobuf.Empty
+	0,  // 38: v1.Service.DeleteEnvironment:output_type -> google.protobuf.Empty
+	36, // 39: v1.Service.GetEnvironmentToken:output_type -> v1.GetEnvironmentTokenReply
+	0,  // 40: v1.Service.ResetEnvironmentToken:output_type -> google.protobuf.Empty
+	37, // 41: v1.Service.PageServer:output_type -> v1.PageServerReply
+	38, // 42: v1.Service.GetServer:output_type -> v1.GetServerReply
+	0,  // 43: v1.Service.AddServer:output_type -> google.protobuf.Empty
+	0,  // 44: v1.Service.UpdateServer:output_type -> google.protobuf.Empty
+	0,  // 45: v1.Service.DeleteServer:output_type -> google.protobuf.Empty
+	39, // 46: v1.Service.PageResource:output_type -> v1.PageResourceReply
+	0,  // 47: v1.Service.AddResource:output_type -> google.protobuf.Empty
+	0,  // 48: v1.Service.UpdateResource:output_type -> google.protobuf.Empty
+	0,  // 49: v1.Service.DeleteResource:output_type -> google.protobuf.Empty
+	40, // 50: v1.Service.AllResourceServer:output_type -> v1.AllResourceServerReply
+	0,  // 51: v1.Service.AddResourceServer:output_type -> google.protobuf.Empty
+	0,  // 52: v1.Service.DeleteResourceServer:output_type -> google.protobuf.Empty
+	41, // 53: v1.Service.AllServerResource:output_type -> v1.AllServerResourceReply
+	42, // 54: v1.Service.AllResourceValue:output_type -> v1.AllResourceValueReply
+	0,  // 55: v1.Service.AddResourceValue:output_type -> google.protobuf.Empty
+	0,  // 56: v1.Service.UpdateResourceValue:output_type -> google.protobuf.Empty
+	43, // 57: v1.Service.PageBusiness:output_type -> v1.PageBusinessReply
+	0,  // 58: v1.Service.AddBusiness:output_type -> google.protobuf.Empty
+	0,  // 59: v1.Service.UpdateBusiness:output_type -> google.protobuf.Empty
+	0,  // 60: v1.Service.DeleteBusiness:output_type -> google.protobuf.Empty
+	44, // 61: v1.Service.AllBusinessValue:output_type -> v1.AllBusinessValueReply
+	0,  // 62: v1.Service.AddBusinessValue:output_type -> google.protobuf.Empty
+	0,  // 63: v1.Service.UpdateBusinessValue:output_type -> google.protobuf.Empty
+	45, // 64: v1.Service.PageTemplate:output_type -> v1.PageTemplateReply
+	46, // 65: v1.Service.GetTemplate:output_type -> v1.GetTemplateReply
+	47, // 66: v1.Service.CurrentTemplate:output_type -> v1.CurrentTemplateReply
+	0,  // 67: v1.Service.AddTemplate:output_type -> google.protobuf.Empty
+	0,  // 68: v1.Service.UpdateTemplateVersion:output_type -> google.protobuf.Empty
+	48, // 69: v1.Service.ParseTemplate:output_type -> v1.ParseTemplateReply
+	35, // [35:70] is the sub-list for method output_type
+	0,  // [0:35] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

@@ -35,7 +35,7 @@ func (bv *BusinessValue) All(ctx kratos.Context, scopes Scopes) ([]*BusinessValu
 		db = db.Scopes(scopes)
 	}
 
-	return list, ctx.DB().Model(bv).Find(&list).Error
+	return list, db.Find(&list).Error
 }
 
 // Update 更新指定id的业务字段

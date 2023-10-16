@@ -33,6 +33,7 @@ const OperationServiceAllEnvironment = "/v1.Service/AllEnvironment"
 const OperationServiceAllResourceServer = "/v1.Service/AllResourceServer"
 const OperationServiceAllResourceValue = "/v1.Service/AllResourceValue"
 const OperationServiceAllServerResource = "/v1.Service/AllServerResource"
+const OperationServiceCurrentTemplate = "/v1.Service/CurrentTemplate"
 const OperationServiceDeleteBusiness = "/v1.Service/DeleteBusiness"
 const OperationServiceDeleteEnvironment = "/v1.Service/DeleteEnvironment"
 const OperationServiceDeleteResource = "/v1.Service/DeleteResource"
@@ -40,6 +41,7 @@ const OperationServiceDeleteResourceServer = "/v1.Service/DeleteResourceServer"
 const OperationServiceDeleteServer = "/v1.Service/DeleteServer"
 const OperationServiceGetEnvironmentToken = "/v1.Service/GetEnvironmentToken"
 const OperationServiceGetServer = "/v1.Service/GetServer"
+const OperationServiceGetTemplate = "/v1.Service/GetTemplate"
 const OperationServicePageBusiness = "/v1.Service/PageBusiness"
 const OperationServicePageResource = "/v1.Service/PageResource"
 const OperationServicePageServer = "/v1.Service/PageServer"
@@ -68,6 +70,7 @@ type ServiceHTTPServer interface {
 	AllResourceServer(context.Context, *AllResourceServerRequest) (*AllResourceServerReply, error)
 	AllResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error)
 	AllServerResource(context.Context, *AllServerResourceRequest) (*AllServerResourceReply, error)
+	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error)
 	DeleteBusiness(context.Context, *DeleteBusinessRequest) (*emptypb.Empty, error)
 	DeleteEnvironment(context.Context, *DeleteEnvironmentRequest) (*emptypb.Empty, error)
 	DeleteResource(context.Context, *DeleteResourceRequest) (*emptypb.Empty, error)
@@ -75,6 +78,7 @@ type ServiceHTTPServer interface {
 	DeleteServer(context.Context, *DeleteServerRequest) (*emptypb.Empty, error)
 	GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error)
 	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
+	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error)
 	PageBusiness(context.Context, *PageBusinessRequest) (*PageBusinessReply, error)
 	PageResource(context.Context, *PageResourceRequest) (*PageResourceReply, error)
 	PageServer(context.Context, *PageServerRequest) (*PageServerReply, error)
@@ -122,6 +126,8 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/v1/business/value", _Service_AddBusinessValue0_HTTP_Handler(srv))
 	r.PUT("/v1/business/value", _Service_UpdateBusinessValue0_HTTP_Handler(srv))
 	r.GET("/v1/templates", _Service_PageTemplate0_HTTP_Handler(srv))
+	r.GET("/v1/template", _Service_GetTemplate0_HTTP_Handler(srv))
+	r.GET("/v1/template/current", _Service_CurrentTemplate0_HTTP_Handler(srv))
 	r.POST("/v1/template", _Service_AddTemplate0_HTTP_Handler(srv))
 	r.PUT("/v1/template", _Service_UpdateTemplateVersion0_HTTP_Handler(srv))
 	r.POST("/v1/template/parse", _Service_ParseTemplate0_HTTP_Handler(srv))
@@ -739,6 +745,44 @@ func _Service_PageTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 	}
 }
 
+func _Service_GetTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetTemplateRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetTemplate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetTemplate(ctx, req.(*GetTemplateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetTemplateReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_CurrentTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CurrentTemplateRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceCurrentTemplate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.CurrentTemplate(ctx, req.(*CurrentTemplateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CurrentTemplateReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Service_AddTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddTemplateRequest
@@ -819,6 +863,7 @@ type ServiceHTTPClient interface {
 	AllResourceServer(ctx context.Context, req *AllResourceServerRequest, opts ...http.CallOption) (rsp *AllResourceServerReply, err error)
 	AllResourceValue(ctx context.Context, req *AllResourceValueRequest, opts ...http.CallOption) (rsp *AllResourceValueReply, err error)
 	AllServerResource(ctx context.Context, req *AllServerResourceRequest, opts ...http.CallOption) (rsp *AllServerResourceReply, err error)
+	CurrentTemplate(ctx context.Context, req *CurrentTemplateRequest, opts ...http.CallOption) (rsp *CurrentTemplateReply, err error)
 	DeleteBusiness(ctx context.Context, req *DeleteBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteEnvironment(ctx context.Context, req *DeleteEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteResource(ctx context.Context, req *DeleteResourceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -826,6 +871,7 @@ type ServiceHTTPClient interface {
 	DeleteServer(ctx context.Context, req *DeleteServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetEnvironmentToken(ctx context.Context, req *GetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *GetEnvironmentTokenReply, err error)
 	GetServer(ctx context.Context, req *GetServerRequest, opts ...http.CallOption) (rsp *GetServerReply, err error)
+	GetTemplate(ctx context.Context, req *GetTemplateRequest, opts ...http.CallOption) (rsp *GetTemplateReply, err error)
 	PageBusiness(ctx context.Context, req *PageBusinessRequest, opts ...http.CallOption) (rsp *PageBusinessReply, err error)
 	PageResource(ctx context.Context, req *PageResourceRequest, opts ...http.CallOption) (rsp *PageResourceReply, err error)
 	PageServer(ctx context.Context, req *PageServerRequest, opts ...http.CallOption) (rsp *PageServerReply, err error)
@@ -1018,6 +1064,19 @@ func (c *ServiceHTTPClientImpl) AllServerResource(ctx context.Context, in *AllSe
 	return &out, err
 }
 
+func (c *ServiceHTTPClientImpl) CurrentTemplate(ctx context.Context, in *CurrentTemplateRequest, opts ...http.CallOption) (*CurrentTemplateReply, error) {
+	var out CurrentTemplateReply
+	pattern := "/v1/template/current"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceCurrentTemplate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ServiceHTTPClientImpl) DeleteBusiness(ctx context.Context, in *DeleteBusinessRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/v1/business"
@@ -1103,6 +1162,19 @@ func (c *ServiceHTTPClientImpl) GetServer(ctx context.Context, in *GetServerRequ
 	opts = append(opts, http.Operation(OperationServiceGetServer))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Server, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...http.CallOption) (*GetTemplateReply, error) {
+	var out GetTemplateReply
+	pattern := "/v1/template"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetTemplate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

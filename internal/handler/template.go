@@ -10,6 +10,14 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
+func (s *Service) CurrentTemplate(ctx context.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
+	return s.Template.Current(kratos.MustContext(ctx), in)
+}
+
+func (s *Service) GetTemplate(ctx context.Context, in *v1.GetTemplateRequest) (*v1.GetTemplateReply, error) {
+	return s.Template.Get(kratos.MustContext(ctx), in)
+}
+
 func (s *Service) PageTemplate(ctx context.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
 	return s.Template.Page(kratos.MustContext(ctx), in)
 }

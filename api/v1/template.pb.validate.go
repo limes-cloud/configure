@@ -308,6 +308,241 @@ var _ interface {
 	ErrorName() string
 } = PageTemplateReplyValidationError{}
 
+// Validate checks the field values on CurrentTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CurrentTemplateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CurrentTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CurrentTemplateRequestMultiError, or nil if none found.
+func (m *CurrentTemplateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CurrentTemplateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetServerId() <= 0 {
+		err := CurrentTemplateRequestValidationError{
+			field:  "ServerId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return CurrentTemplateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CurrentTemplateRequestMultiError is an error wrapping multiple validation
+// errors returned by CurrentTemplateRequest.ValidateAll() if the designated
+// constraints aren't met.
+type CurrentTemplateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CurrentTemplateRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CurrentTemplateRequestMultiError) AllErrors() []error { return m }
+
+// CurrentTemplateRequestValidationError is the validation error returned by
+// CurrentTemplateRequest.Validate if the designated constraints aren't met.
+type CurrentTemplateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CurrentTemplateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CurrentTemplateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CurrentTemplateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CurrentTemplateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CurrentTemplateRequestValidationError) ErrorName() string {
+	return "CurrentTemplateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CurrentTemplateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCurrentTemplateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CurrentTemplateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CurrentTemplateRequestValidationError{}
+
+// Validate checks the field values on CurrentTemplateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CurrentTemplateReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CurrentTemplateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CurrentTemplateReplyMultiError, or nil if none found.
+func (m *CurrentTemplateReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CurrentTemplateReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for ServerId
+
+	// no validation rules for Content
+
+	// no validation rules for Description
+
+	// no validation rules for Version
+
+	// no validation rules for IsUse
+
+	if m.Operator != nil {
+		// no validation rules for Operator
+	}
+
+	if m.OperatorId != nil {
+		// no validation rules for OperatorId
+	}
+
+	if len(errors) > 0 {
+		return CurrentTemplateReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// CurrentTemplateReplyMultiError is an error wrapping multiple validation
+// errors returned by CurrentTemplateReply.ValidateAll() if the designated
+// constraints aren't met.
+type CurrentTemplateReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CurrentTemplateReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CurrentTemplateReplyMultiError) AllErrors() []error { return m }
+
+// CurrentTemplateReplyValidationError is the validation error returned by
+// CurrentTemplateReply.Validate if the designated constraints aren't met.
+type CurrentTemplateReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CurrentTemplateReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CurrentTemplateReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CurrentTemplateReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CurrentTemplateReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CurrentTemplateReplyValidationError) ErrorName() string {
+	return "CurrentTemplateReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CurrentTemplateReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCurrentTemplateReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CurrentTemplateReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CurrentTemplateReplyValidationError{}
+
 // Validate checks the field values on GetTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -330,7 +565,16 @@ func (m *GetTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() <= 0 {
+		err := GetTemplateRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetTemplateRequestMultiError(errors)
@@ -444,7 +688,9 @@ func (m *GetTemplateReply) validate(all bool) error {
 
 	// no validation rules for Version
 
-	// no validation rules for IsUse
+	if m.IsUse != nil {
+		// no validation rules for IsUse
+	}
 
 	if m.Operator != nil {
 		// no validation rules for Operator
@@ -813,17 +1059,6 @@ func (m *ParseTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
-		err := ParseTemplateRequestValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetSrvKeyword()) < 1 {
 		err := ParseTemplateRequestValidationError{
 			field:  "SrvKeyword",
@@ -1061,6 +1296,8 @@ func (m *PageTemplateReply_Template) validate(all bool) error {
 	// no validation rules for Version
 
 	// no validation rules for IsUse
+
+	// no validation rules for CreatedAt
 
 	if m.Operator != nil {
 		// no validation rules for Operator

@@ -30,10 +30,6 @@ func (u *Template) OneById(ctx kratos.Context, id int64) error {
 	return ctx.DB().First(u, "id = ?", id).Error
 }
 
-func (u *Template) OneBySrvKeyword(ctx kratos.Context, keyword string) error {
-	return ctx.DB().First(u, "keyword = ?", keyword).Error
-}
-
 func (u *Template) Current(ctx kratos.Context, srvId int64) error {
 	return ctx.DB().First(u, "is_use = true and server_id = ?", srvId).Error
 }

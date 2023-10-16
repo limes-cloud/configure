@@ -45,12 +45,12 @@ func (e *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, 
 func (e *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
 	var list []*Business
 
-	db := ctx.DB()
+	db := ctx.DB().Model(e)
 	if scopes != nil {
 		db = db.Scopes(scopes)
 	}
 
-	return list, db.Model(e).Find(&list).Error
+	return list, db.Find(&list).Error
 }
 
 // Update 更新指定id的业务字段

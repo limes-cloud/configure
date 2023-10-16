@@ -28,12 +28,33 @@ func NewTemplate(conf *config.Config) *Template {
 	}
 }
 
-type value struct {
-	value   interface{}
-	exclude bool
+// Current 查询指定服务的当前模板
+func (l *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
+	template := model.Template{}
+	if err := template.Current(ctx, in.ServerId); err != nil {
+		return nil, v1.ErrorDatabase()
+	}
+	reply := v1.CurrentTemplateReply{}
+	if util.Transform(template, &reply) != nil {
+		return nil, v1.ErrorTransform()
+	}
+	return &reply, nil
 }
 
-// Page 查询分页业务
+// Get 查询指定模板
+func (l *Template) Get(ctx kratos.Context, in *v1.GetTemplateRequest) (*v1.GetTemplateReply, error) {
+	template := model.Template{}
+	if err := template.OneById(ctx, in.Id); err != nil {
+		return nil, v1.ErrorDatabase()
+	}
+	reply := v1.GetTemplateReply{}
+	if util.Transform(template, &reply) != nil {
+		return nil, v1.ErrorTransform()
+	}
+	return &reply, nil
+}
+
+// Page 查询分页模板
 func (l *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
 	template := model.Template{}
 	list, total, err := template.Page(ctx, &model.PageOptions{
@@ -56,7 +77,7 @@ func (l *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.Pag
 	return &reply, nil
 }
 
-// Add 添加资源
+// Add 添加模板
 func (l *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.Empty, error) {
 	template := model.Template{
 		Operator:   md.GetUserName(ctx),
@@ -98,9 +119,14 @@ func (l *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionReque
 
 // Parse 使用指定版本
 func (l *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
+	// 获取指定服务
+	server := model.Server{}
+	if err := server.OneByKeyword(ctx, in.SrvKeyword); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
 	// 获取指定模板
 	template := model.Template{}
-	if err := template.OneBySrvKeyword(ctx, in.SrvKeyword); err != nil {
+	if err := template.Current(ctx, server.ID); err != nil {
 		return nil, v1.ErrorDatabaseFormat(err.Error())
 	}
 
@@ -117,7 +143,7 @@ func (l *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.P
 	}
 
 	// 进行值替换
-	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
+	reg := regexp.MustCompile(`"\{\{(\w|\.)+}}"`)
 	tempKeys := reg.FindAllString(template.Content, -1)
 	for _, key := range tempKeys {
 		if val, ok := values[key]; ok {
@@ -138,7 +164,7 @@ func (l *Template) fillKey(val string) string {
 
 // checkTemplate 校验数据模板数据是否合法
 func (l *Template) checkTemplate(ctx kratos.Context, srvId int64, template string) error {
-	//获取指定服务的业务字段
+	//获取指定服务的模板字段
 	bs := model.Business{}
 	bsList, err := bs.All(ctx, func(db *gorm.DB) *gorm.DB {
 		return db.Where("server_id = ?", srvId)
@@ -147,14 +173,14 @@ func (l *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 		return v1.ErrorDatabase()
 	}
 
-	// 获取指定服务的资源字段
+	// 获取指定服务的模板字段
 	rs := model.ResourceServer{}
 	rsList, _ := rs.All(ctx, func(db *gorm.DB) *gorm.DB {
 		db.Preload("Resource")
 		return db.Where("server_id =?", srvId)
 	})
 
-	//组合业务和资源的key
+	//组合模板和模板的key
 	keys := map[string]bool{}
 	for _, item := range rsList {
 		var fields []string

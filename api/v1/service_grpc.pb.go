@@ -50,6 +50,8 @@ const (
 	Service_AddBusinessValue_FullMethodName      = "/v1.Service/AddBusinessValue"
 	Service_UpdateBusinessValue_FullMethodName   = "/v1.Service/UpdateBusinessValue"
 	Service_PageTemplate_FullMethodName          = "/v1.Service/PageTemplate"
+	Service_GetTemplate_FullMethodName           = "/v1.Service/GetTemplate"
+	Service_CurrentTemplate_FullMethodName       = "/v1.Service/CurrentTemplate"
 	Service_AddTemplate_FullMethodName           = "/v1.Service/AddTemplate"
 	Service_UpdateTemplateVersion_FullMethodName = "/v1.Service/UpdateTemplateVersion"
 	Service_ParseTemplate_FullMethodName         = "/v1.Service/ParseTemplate"
@@ -89,6 +91,8 @@ type ServiceClient interface {
 	AddBusinessValue(ctx context.Context, in *AddBusinessValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateBusinessValue(ctx context.Context, in *UpdateBusinessValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PageTemplate(ctx context.Context, in *PageTemplateRequest, opts ...grpc.CallOption) (*PageTemplateReply, error)
+	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateReply, error)
+	CurrentTemplate(ctx context.Context, in *CurrentTemplateRequest, opts ...grpc.CallOption) (*CurrentTemplateReply, error)
 	AddTemplate(ctx context.Context, in *AddTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateTemplateVersion(ctx context.Context, in *UseTemplateVersionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...grpc.CallOption) (*ParseTemplateReply, error)
@@ -372,6 +376,24 @@ func (c *serviceClient) PageTemplate(ctx context.Context, in *PageTemplateReques
 	return out, nil
 }
 
+func (c *serviceClient) GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateReply, error) {
+	out := new(GetTemplateReply)
+	err := c.cc.Invoke(ctx, Service_GetTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) CurrentTemplate(ctx context.Context, in *CurrentTemplateRequest, opts ...grpc.CallOption) (*CurrentTemplateReply, error) {
+	out := new(CurrentTemplateReply)
+	err := c.cc.Invoke(ctx, Service_CurrentTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) AddTemplate(ctx context.Context, in *AddTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_AddTemplate_FullMethodName, in, out, opts...)
@@ -433,6 +455,8 @@ type ServiceServer interface {
 	AddBusinessValue(context.Context, *AddBusinessValueRequest) (*emptypb.Empty, error)
 	UpdateBusinessValue(context.Context, *UpdateBusinessValueRequest) (*emptypb.Empty, error)
 	PageTemplate(context.Context, *PageTemplateRequest) (*PageTemplateReply, error)
+	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error)
+	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error)
 	AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error)
 	UpdateTemplateVersion(context.Context, *UseTemplateVersionRequest) (*emptypb.Empty, error)
 	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
@@ -532,6 +556,12 @@ func (UnimplementedServiceServer) UpdateBusinessValue(context.Context, *UpdateBu
 }
 func (UnimplementedServiceServer) PageTemplate(context.Context, *PageTemplateRequest) (*PageTemplateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageTemplate not implemented")
+}
+func (UnimplementedServiceServer) GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTemplate not implemented")
+}
+func (UnimplementedServiceServer) CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CurrentTemplate not implemented")
 }
 func (UnimplementedServiceServer) AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddTemplate not implemented")
@@ -1095,6 +1125,42 @@ func _Service_PageTemplate_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetTemplate(ctx, req.(*GetTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_CurrentTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CurrentTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).CurrentTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_CurrentTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).CurrentTemplate(ctx, req.(*CurrentTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_AddTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddTemplateRequest)
 	if err := dec(in); err != nil {
@@ -1275,6 +1341,14 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PageTemplate",
 			Handler:    _Service_PageTemplate_Handler,
+		},
+		{
+			MethodName: "GetTemplate",
+			Handler:    _Service_GetTemplate_Handler,
+		},
+		{
+			MethodName: "CurrentTemplate",
+			Handler:    _Service_CurrentTemplate_Handler,
 		},
 		{
 			MethodName: "AddTemplate",
