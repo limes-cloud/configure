@@ -1037,22 +1037,22 @@ var _ interface {
 	ErrorName() string
 } = UseTemplateVersionRequestValidationError{}
 
-// Validate checks the field values on ParseTemplateRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ParseTemplateRequest) Validate() error {
+// Validate checks the field values on GetConfigRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetConfigRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ParseTemplateRequest with the rules
+// ValidateAll checks the field values on GetConfigRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ParseTemplateRequestMultiError, or nil if none found.
-func (m *ParseTemplateRequest) ValidateAll() error {
+// GetConfigRequestMultiError, or nil if none found.
+func (m *GetConfigRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ParseTemplateRequest) validate(all bool) error {
+func (m *GetConfigRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1060,7 +1060,7 @@ func (m *ParseTemplateRequest) validate(all bool) error {
 	var errors []error
 
 	if utf8.RuneCountInString(m.GetSrvKeyword()) < 1 {
-		err := ParseTemplateRequestValidationError{
+		err := GetConfigRequestValidationError{
 			field:  "SrvKeyword",
 			reason: "value length must be at least 1 runes",
 		}
@@ -1071,7 +1071,7 @@ func (m *ParseTemplateRequest) validate(all bool) error {
 	}
 
 	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
-		err := ParseTemplateRequestValidationError{
+		err := GetConfigRequestValidationError{
 			field:  "EnvKeyword",
 			reason: "value length must be at least 1 runes",
 		}
@@ -1082,19 +1082,19 @@ func (m *ParseTemplateRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ParseTemplateRequestMultiError(errors)
+		return GetConfigRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ParseTemplateRequestMultiError is an error wrapping multiple validation
-// errors returned by ParseTemplateRequest.ValidateAll() if the designated
-// constraints aren't met.
-type ParseTemplateRequestMultiError []error
+// GetConfigRequestMultiError is an error wrapping multiple validation errors
+// returned by GetConfigRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetConfigRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ParseTemplateRequestMultiError) Error() string {
+func (m GetConfigRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1103,11 +1103,11 @@ func (m ParseTemplateRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ParseTemplateRequestMultiError) AllErrors() []error { return m }
+func (m GetConfigRequestMultiError) AllErrors() []error { return m }
 
-// ParseTemplateRequestValidationError is the validation error returned by
-// ParseTemplateRequest.Validate if the designated constraints aren't met.
-type ParseTemplateRequestValidationError struct {
+// GetConfigRequestValidationError is the validation error returned by
+// GetConfigRequest.Validate if the designated constraints aren't met.
+type GetConfigRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1115,24 +1115,22 @@ type ParseTemplateRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ParseTemplateRequestValidationError) Field() string { return e.field }
+func (e GetConfigRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ParseTemplateRequestValidationError) Reason() string { return e.reason }
+func (e GetConfigRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ParseTemplateRequestValidationError) Cause() error { return e.cause }
+func (e GetConfigRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ParseTemplateRequestValidationError) Key() bool { return e.key }
+func (e GetConfigRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ParseTemplateRequestValidationError) ErrorName() string {
-	return "ParseTemplateRequestValidationError"
-}
+func (e GetConfigRequestValidationError) ErrorName() string { return "GetConfigRequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ParseTemplateRequestValidationError) Error() string {
+func (e GetConfigRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1144,14 +1142,14 @@ func (e ParseTemplateRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sParseTemplateRequest.%s: %s%s",
+		"invalid %sGetConfigRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ParseTemplateRequestValidationError{}
+var _ error = GetConfigRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1159,24 +1157,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ParseTemplateRequestValidationError{}
+} = GetConfigRequestValidationError{}
 
-// Validate checks the field values on ParseTemplateReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ParseTemplateReply) Validate() error {
+// Validate checks the field values on GetConfigReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetConfigReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ParseTemplateReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ParseTemplateReplyMultiError, or nil if none found.
-func (m *ParseTemplateReply) ValidateAll() error {
+// ValidateAll checks the field values on GetConfigReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GetConfigReplyMultiError,
+// or nil if none found.
+func (m *GetConfigReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ParseTemplateReply) validate(all bool) error {
+func (m *GetConfigReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1186,19 +1184,19 @@ func (m *ParseTemplateReply) validate(all bool) error {
 	// no validation rules for Content
 
 	if len(errors) > 0 {
-		return ParseTemplateReplyMultiError(errors)
+		return GetConfigReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ParseTemplateReplyMultiError is an error wrapping multiple validation errors
-// returned by ParseTemplateReply.ValidateAll() if the designated constraints
+// GetConfigReplyMultiError is an error wrapping multiple validation errors
+// returned by GetConfigReply.ValidateAll() if the designated constraints
 // aren't met.
-type ParseTemplateReplyMultiError []error
+type GetConfigReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ParseTemplateReplyMultiError) Error() string {
+func (m GetConfigReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1207,11 +1205,11 @@ func (m ParseTemplateReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ParseTemplateReplyMultiError) AllErrors() []error { return m }
+func (m GetConfigReplyMultiError) AllErrors() []error { return m }
 
-// ParseTemplateReplyValidationError is the validation error returned by
-// ParseTemplateReply.Validate if the designated constraints aren't met.
-type ParseTemplateReplyValidationError struct {
+// GetConfigReplyValidationError is the validation error returned by
+// GetConfigReply.Validate if the designated constraints aren't met.
+type GetConfigReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1219,24 +1217,22 @@ type ParseTemplateReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e ParseTemplateReplyValidationError) Field() string { return e.field }
+func (e GetConfigReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ParseTemplateReplyValidationError) Reason() string { return e.reason }
+func (e GetConfigReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ParseTemplateReplyValidationError) Cause() error { return e.cause }
+func (e GetConfigReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ParseTemplateReplyValidationError) Key() bool { return e.key }
+func (e GetConfigReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ParseTemplateReplyValidationError) ErrorName() string {
-	return "ParseTemplateReplyValidationError"
-}
+func (e GetConfigReplyValidationError) ErrorName() string { return "GetConfigReplyValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ParseTemplateReplyValidationError) Error() string {
+func (e GetConfigReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1248,14 +1244,14 @@ func (e ParseTemplateReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sParseTemplateReply.%s: %s%s",
+		"invalid %sGetConfigReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ParseTemplateReplyValidationError{}
+var _ error = GetConfigReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -1263,7 +1259,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ParseTemplateReplyValidationError{}
+} = GetConfigReplyValidationError{}
 
 // Validate checks the field values on PageTemplateReply_Template with the
 // rules defined in the proto definition for this message. If any rules are

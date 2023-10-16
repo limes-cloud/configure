@@ -74,12 +74,14 @@ message UseTemplateVersionRequest {
   int64 server_id = 2[(validate.rules).int64 = {gt: 0}];
 }
 
-// 解析模板
-message ParseTemplateRequest {
+
+// 获取配置
+message GetConfigRequest {
   string srv_keyword = 1[(validate.rules).string = {min_len: 1}];
   string env_keyword = 2[(validate.rules).string = {min_len: 1}];
 }
 
-message ParseTemplateReply {
+message GetConfigReply {
   string content = 1;
 }
+

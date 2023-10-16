@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/limes-cloud/configure/pkg/md"
 
@@ -117,16 +118,16 @@ func (l *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionReque
 	return nil, template.UseVersionByID(ctx, in.ServerId, in.Id)
 }
 
-// Parse 使用指定版本
-func (l *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
+// Config 使用指定版本配置
+func (l *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetConfigReply, error) {
 	// 获取指定服务
 	server := model.Server{}
 	if err := server.OneByKeyword(ctx, in.SrvKeyword); err != nil {
 		return nil, v1.ErrorDatabaseFormat(err.Error())
 	}
 	// 获取指定模板
-	template := model.Template{}
-	if err := template.Current(ctx, server.ID); err != nil {
+	tp := model.Template{}
+	if err := tp.Current(ctx, server.ID); err != nil {
 		return nil, v1.ErrorDatabaseFormat(err.Error())
 	}
 
@@ -137,29 +138,25 @@ func (l *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.P
 	}
 
 	// 获取字段的配置值
-	values, err := l.getVariableValue(ctx, env.ID, template.ServerID)
+	values, err := l.getVariableValue(ctx, env.ID, tp.ServerID)
 	if err != nil {
 		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
 	}
 
 	// 进行值替换
 	reg := regexp.MustCompile(`"\{\{(\w|\.)+}}"`)
-	tempKeys := reg.FindAllString(template.Content, -1)
+	tempKeys := reg.FindAllString(tp.Content, -1)
 	for _, key := range tempKeys {
 		if val, ok := values[key]; ok {
-			template.Content = strings.Replace(template.Content, key, val, 1)
+			tp.Content = strings.Replace(tp.Content, key, val, 1)
 		} else {
-			template.Content = strings.Replace(template.Content, key, "null", 1)
+			tp.Content = strings.Replace(tp.Content, key, "null", 1)
 		}
 	}
 
-	return &v1.ParseTemplateReply{
-		Content: template.Content,
+	return &v1.GetConfigReply{
+		Content: tp.Content,
 	}, nil
-}
-
-func (l *Template) fillKey(val string) string {
-	return fmt.Sprintf(`"{{%s}}"`, val)
 }
 
 // checkTemplate 校验数据模板数据是否合法
@@ -203,6 +200,10 @@ func (l *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 		}
 	}
 	return nil
+}
+
+func (l *Template) fillKey(val string) string {
+	return fmt.Sprintf(`"{{%s}}"`, val)
 }
 
 func (l *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map[string]string, error) {
@@ -265,5 +266,16 @@ func (l *Template) parseResourceValue(val any) string {
 		return str
 	default:
 		return fmt.Sprint(val)
+	}
+}
+
+func (s *Template) Watch(ctx kratos.Context, req *v1.GetConfigRequest, reply v1.Service_WatchConfigServer) error {
+	index := 1
+	for {
+		reply.Send(&v1.GetConfigReply{
+			Content: fmt.Sprint(index),
+		})
+		index++
+		time.Sleep(3 * time.Second)
 	}
 }
