@@ -22,7 +22,7 @@ func NewServer(conf *config.Config) *Server {
 }
 
 // Get 分页查询服务
-func (l *Server) Get(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
+func (s *Server) Get(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
 	var err error
 	var server model.Server
 
@@ -48,7 +48,7 @@ func (l *Server) Get(ctx kratos.Context, in *v1.GetServerRequest) (*v1.GetServer
 }
 
 // Page 分页查询服务
-func (l *Server) Page(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
+func (s *Server) Page(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
 	server := model.Server{}
 	list, total, err := server.Page(ctx, &model.PageOptions{
 		Page:     in.Page,
@@ -75,7 +75,7 @@ func (l *Server) Page(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageSer
 }
 
 // Add 添加服务
-func (l *Server) Add(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
+func (s *Server) Add(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
 	server := model.Server{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -93,7 +93,7 @@ func (l *Server) Add(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empt
 }
 
 // Update 更新服务
-func (l *Server) Update(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {
+func (s *Server) Update(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {
 	server := model.Server{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -106,7 +106,7 @@ func (l *Server) Update(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptyp
 }
 
 // Delete 删除服务
-func (l *Server) Delete(ctx kratos.Context, in *v1.DeleteServerRequest) (*emptypb.Empty, error) {
+func (s *Server) Delete(ctx kratos.Context, in *v1.DeleteServerRequest) (*emptypb.Empty, error) {
 	server := model.Server{}
 	return nil, server.DeleteByID(ctx, in.Id)
 }

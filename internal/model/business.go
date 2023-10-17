@@ -14,21 +14,21 @@ type Business struct {
 }
 
 // Create 新建业务字段
-func (e *Business) Create(ctx kratos.Context) error {
-	return ctx.DB().Model(e).Create(e).Error
+func (b *Business) Create(ctx kratos.Context) error {
+	return ctx.DB().Model(b).Create(b).Error
 }
 
 // OneByID 通过关键词查找指定业务字段
-func (e *Business) OneByID(ctx kratos.Context, id int64) error {
-	return ctx.DB().First(e, "id = ?", id).Error
+func (b *Business) OneByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().First(b, "id = ?", id).Error
 }
 
 // Page 查询分页资源
-func (e *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, int64, error) {
+func (b *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, int64, error) {
 	var list []*Business
 	total := int64(0)
 
-	db := ctx.DB().Model(e)
+	db := ctx.DB().Model(b)
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
@@ -42,10 +42,10 @@ func (e *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, 
 }
 
 // All 查询所有业务字段
-func (e *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
+func (b *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
 	var list []*Business
 
-	db := ctx.DB().Model(e)
+	db := ctx.DB().Model(b)
 	if scopes != nil {
 		db = db.Scopes(scopes)
 	}
@@ -54,11 +54,11 @@ func (e *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
 }
 
 // Update 更新指定id的业务字段
-func (e *Business) Update(ctx kratos.Context) error {
-	return ctx.DB().Model(e).Updates(e).Error
+func (b *Business) Update(ctx kratos.Context) error {
+	return ctx.DB().Model(b).Updates(b).Error
 }
 
 // DeleteByID 删除指定id的业务字段
-func (e *Business) DeleteByID(ctx kratos.Context, id int64) error {
-	return ctx.DB().Model(e).Delete(e, "id = ?", id).Error
+func (b *Business) DeleteByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().Model(b).Delete(b, "id = ?", id).Error
 }

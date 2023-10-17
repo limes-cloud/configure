@@ -22,9 +22,9 @@ func NewBusinessValue(conf *config.Config) *BusinessValue {
 }
 
 // All 分页资源
-func (l *BusinessValue) All(ctx kratos.Context, in *v1.AllBusinessValueRequest) (*v1.AllBusinessValueReply, error) {
-	bv := model.BusinessValue{}
-	list, err := bv.All(ctx, func(db *gorm.DB) *gorm.DB {
+func (bv *BusinessValue) All(ctx kratos.Context, in *v1.AllBusinessValueRequest) (*v1.AllBusinessValueReply, error) {
+	mbv := model.BusinessValue{}
+	list, err := mbv.All(ctx, func(db *gorm.DB) *gorm.DB {
 		return db.Where("business_id = ?", in.BusinessId)
 	})
 
@@ -39,8 +39,8 @@ func (l *BusinessValue) All(ctx kratos.Context, in *v1.AllBusinessValueRequest) 
 }
 
 // Add 添加资源
-func (l *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest) (*emptypb.Empty, error) {
-	bv := model.BusinessValue{
+func (bv *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest) (*emptypb.Empty, error) {
+	mbv := model.BusinessValue{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
 	}
@@ -48,12 +48,12 @@ func (l *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest) 
 		return nil, v1.ErrorTransform()
 	}
 
-	return nil, bv.Create(ctx)
+	return nil, mbv.Create(ctx)
 }
 
 // Update 更新资源
-func (l *BusinessValue) Update(ctx kratos.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
-	bv := model.BusinessValue{
+func (bv *BusinessValue) Update(ctx kratos.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
+	mbv := model.BusinessValue{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
 	}
@@ -61,5 +61,5 @@ func (l *BusinessValue) Update(ctx kratos.Context, in *v1.UpdateBusinessValueReq
 		return nil, v1.ErrorTransform()
 	}
 
-	return nil, bv.Update(ctx)
+	return nil, mbv.Update(ctx)
 }

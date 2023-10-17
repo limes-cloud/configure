@@ -16,30 +16,30 @@ type Template struct {
 	OperatorID  int64   `json:"operator_id"`
 }
 
-func (u *Template) Create(ctx kratos.Context) error {
+func (t *Template) Create(ctx kratos.Context) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(u).Create(&u).Error; err != nil {
+		if err := tx.Model(t).Create(&t).Error; err != nil {
 			return err
 		}
 		temp := Template{}
-		return tx.Model(&temp).Where("server_id=? and id!=?", u.ServerID, u.ID).Update("is_use", false).Error
+		return tx.Model(&temp).Where("server_id=? and id!=?", t.ServerID, t.ID).Update("is_use", false).Error
 	})
 }
 
-func (u *Template) OneById(ctx kratos.Context, id int64) error {
-	return ctx.DB().First(u, "id = ?", id).Error
+func (t *Template) OneById(ctx kratos.Context, id int64) error {
+	return ctx.DB().First(t, "id = ?", id).Error
 }
 
-func (u *Template) Current(ctx kratos.Context, srvId int64) error {
-	return ctx.DB().First(u, "is_use = true and server_id = ?", srvId).Error
+func (t *Template) Current(ctx kratos.Context, srvId int64) error {
+	return ctx.DB().First(t, "is_use = true and server_id = ?", srvId).Error
 }
 
 // Page 查询分页资源
-func (e *Template) Page(ctx kratos.Context, options *PageOptions) ([]*Template, int64, error) {
+func (t *Template) Page(ctx kratos.Context, options *PageOptions) ([]*Template, int64, error) {
 	var list []*Template
 	total := int64(0)
 
-	db := ctx.DB().Model(e)
+	db := ctx.DB().Model(t)
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
@@ -52,11 +52,11 @@ func (e *Template) Page(ctx kratos.Context, options *PageOptions) ([]*Template, 
 	return list, total, db.Find(&list).Error
 }
 
-func (u *Template) UseVersionByID(ctx kratos.Context, srvId, id int64) error {
+func (t *Template) UseVersionByID(ctx kratos.Context, srvId, id int64) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("server_id=? and id=?", srvId, u.ID).Update("is_use", true).Error; err != nil {
+		if err := tx.Where("server_id=? and id=?", srvId, t.ID).Update("is_use", true).Error; err != nil {
 			return err
 		}
-		return tx.Where("server_id=? and id!=?", u.ID).Update("is_use", false).Error
+		return tx.Where("server_id=? and id!=?", t.ID).Update("is_use", false).Error
 	})
 }

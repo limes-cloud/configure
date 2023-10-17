@@ -22,7 +22,7 @@ func NewResourceServer(conf *config.Config) *ResourceServer {
 }
 
 // AllResource 查询指定服务的所有资源
-func (l *ResourceServer) AllResource(ctx kratos.Context, in *v1.AllServerResourceRequest) (*v1.AllServerResourceReply, error) {
+func (rs *ResourceServer) AllResource(ctx kratos.Context, in *v1.AllServerResourceRequest) (*v1.AllServerResourceReply, error) {
 	resource := model.ResourceServer{}
 	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
 		db.Preload("Resource")
@@ -40,7 +40,7 @@ func (l *ResourceServer) AllResource(ctx kratos.Context, in *v1.AllServerResourc
 }
 
 // AllServer 查询指定资源的所有服务
-func (l *ResourceServer) AllServer(ctx kratos.Context, in *v1.AllResourceServerRequest) (*v1.AllResourceServerReply, error) {
+func (rs *ResourceServer) AllServer(ctx kratos.Context, in *v1.AllResourceServerRequest) (*v1.AllResourceServerReply, error) {
 	resource := model.ResourceServer{}
 	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
 		db.Preload("Server")
@@ -58,7 +58,7 @@ func (l *ResourceServer) AllServer(ctx kratos.Context, in *v1.AllResourceServerR
 }
 
 // Add 添加资源-服务
-func (l *ResourceServer) Add(ctx kratos.Context, in *v1.AddResourceServerRequest) (*emptypb.Empty, error) {
+func (rs *ResourceServer) Add(ctx kratos.Context, in *v1.AddResourceServerRequest) (*emptypb.Empty, error) {
 	resource := model.ResourceServer{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -71,7 +71,7 @@ func (l *ResourceServer) Add(ctx kratos.Context, in *v1.AddResourceServerRequest
 }
 
 // Delete 删除资源-服务
-func (l *ResourceServer) Delete(ctx kratos.Context, in *v1.DeleteResourceServerRequest) (*emptypb.Empty, error) {
+func (rs *ResourceServer) Delete(ctx kratos.Context, in *v1.DeleteResourceServerRequest) (*emptypb.Empty, error) {
 	resource := model.ResourceServer{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()

@@ -27,7 +27,7 @@ func NewResourceValue(conf *config.Config) *ResourceValue {
 }
 
 // All 分页字段值
-func (l *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest) (*v1.AllResourceValueReply, error) {
+func (rv *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest) (*v1.AllResourceValueReply, error) {
 	resource := model.ResourceValue{}
 	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
 		db.Preload("Environment")
@@ -45,7 +45,7 @@ func (l *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest) 
 }
 
 // Add 添加资源值
-func (l *ResourceValue) Add(ctx kratos.Context, in *v1.AddResourceValueRequest) (*emptypb.Empty, error) {
+func (rv *ResourceValue) Add(ctx kratos.Context, in *v1.AddResourceValueRequest) (*emptypb.Empty, error) {
 	resource := model.ResourceValue{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -55,14 +55,14 @@ func (l *ResourceValue) Add(ctx kratos.Context, in *v1.AddResourceValueRequest) 
 	}
 
 	// 判断值是否复合字段
-	if err := l.checkValue(ctx, in.ResourceId, in.Values); err != nil {
+	if err := rv.checkValue(ctx, in.ResourceId, in.Values); err != nil {
 		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
 	}
 
 	return nil, resource.Create(ctx)
 }
 
-func (l *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string) error {
+func (rv *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string) error {
 	m := make(map[string]any)
 	if err := json.Unmarshal([]byte(values), &m); err != nil {
 		return err
@@ -89,7 +89,7 @@ func (l *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string)
 }
 
 // Update 更新资源值
-func (l *ResourceValue) Update(ctx kratos.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
+func (rv *ResourceValue) Update(ctx kratos.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
 	resource := model.ResourceValue{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),

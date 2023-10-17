@@ -30,7 +30,7 @@ func NewTemplate(conf *config.Config) *Template {
 }
 
 // Current 查询指定服务的当前模板
-func (l *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
+func (t *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
 	template := model.Template{}
 	if err := template.Current(ctx, in.ServerId); err != nil {
 		return nil, v1.ErrorDatabase()
@@ -43,7 +43,7 @@ func (l *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*
 }
 
 // Get 查询指定模板
-func (l *Template) Get(ctx kratos.Context, in *v1.GetTemplateRequest) (*v1.GetTemplateReply, error) {
+func (t *Template) Get(ctx kratos.Context, in *v1.GetTemplateRequest) (*v1.GetTemplateReply, error) {
 	template := model.Template{}
 	if err := template.OneById(ctx, in.Id); err != nil {
 		return nil, v1.ErrorDatabase()
@@ -56,7 +56,7 @@ func (l *Template) Get(ctx kratos.Context, in *v1.GetTemplateRequest) (*v1.GetTe
 }
 
 // Page 查询分页模板
-func (l *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
+func (t *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
 	template := model.Template{}
 	list, total, err := template.Page(ctx, &model.PageOptions{
 		Page:     in.Page,
@@ -79,7 +79,7 @@ func (l *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.Pag
 }
 
 // Add 添加模板
-func (l *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.Empty, error) {
+func (t *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.Empty, error) {
 	template := model.Template{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -98,7 +98,7 @@ func (l *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.
 		}
 	}
 
-	if err := l.checkTemplate(ctx, in.ServerId, in.Content); err != nil {
+	if err := t.checkTemplate(ctx, in.ServerId, in.Content); err != nil {
 		return nil, v1.ErrorCheckTemplateFormat(err.Error())
 	}
 	template.IsUse = true
@@ -106,7 +106,7 @@ func (l *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.
 }
 
 // UseVersion 使用指定版本
-func (l *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
+func (t *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
 	template := model.Template{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -119,7 +119,7 @@ func (l *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionReque
 }
 
 // Config 使用指定版本配置
-func (l *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetConfigReply, error) {
+func (t *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetConfigReply, error) {
 	// 获取指定服务
 	server := model.Server{}
 	if err := server.OneByKeyword(ctx, in.SrvKeyword); err != nil {
@@ -138,7 +138,7 @@ func (l *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetC
 	}
 
 	// 获取字段的配置值
-	values, err := l.getVariableValue(ctx, env.ID, tp.ServerID)
+	values, err := t.getVariableValue(ctx, env.ID, tp.ServerID)
 	if err != nil {
 		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
 	}
@@ -160,7 +160,7 @@ func (l *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetC
 }
 
 // checkTemplate 校验数据模板数据是否合法
-func (l *Template) checkTemplate(ctx kratos.Context, srvId int64, template string) error {
+func (t *Template) checkTemplate(ctx kratos.Context, srvId int64, template string) error {
 	//获取指定服务的模板字段
 	bs := model.Business{}
 	bsList, err := bs.All(ctx, func(db *gorm.DB) *gorm.DB {
@@ -183,11 +183,11 @@ func (l *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 		var fields []string
 		_ = json.Unmarshal([]byte(item.Resource.Fields), &fields)
 		for _, val := range fields {
-			keys[l.fillKey(item.Resource.Keyword+"."+val)] = true
+			keys[t.fillKey(item.Resource.Keyword+"."+val)] = true
 		}
 	}
 	for _, item := range bsList {
-		keys[l.fillKey(item.Keyword)] = true
+		keys[t.fillKey(item.Keyword)] = true
 	}
 
 	//进行增则匹配
@@ -202,11 +202,11 @@ func (l *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 	return nil
 }
 
-func (l *Template) fillKey(val string) string {
+func (t *Template) fillKey(val string) string {
 	return fmt.Sprintf(`"{{%s}}"`, val)
 }
 
-func (l *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map[string]string, error) {
+func (t *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map[string]string, error) {
 	// 查找模板
 	bv := model.BusinessValue{}
 	bvs, err := bv.AllByEnvAndServer(ctx, envId, srvId)
@@ -223,7 +223,7 @@ func (l *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map
 	result := make(map[string]string)
 
 	for _, item := range bvs {
-		result[l.fillKey(item.Business.Keyword)] = l.parseBusinessValue(item.Value)
+		result[t.fillKey(item.Business.Keyword)] = t.parseBusinessValue(item.Value)
 	}
 
 	for _, item := range rvs {
@@ -231,14 +231,14 @@ func (l *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map
 		_ = json.Unmarshal([]byte(item.Values), &fs)
 		for key, val := range fs {
 			k := fmt.Sprintf("%v.%v", item.Resource.Keyword, key)
-			result[l.fillKey(k)] = l.parseResourceValue(val)
+			result[t.fillKey(k)] = t.parseResourceValue(val)
 		}
 	}
 
 	return result, nil
 }
 
-func (l *Template) parseBusinessValue(input string) string {
+func (t *Template) parseBusinessValue(input string) string {
 	input = strings.ReplaceAll(input, `\"`, `"`)
 	input = strings.Trim(input, " ")
 
@@ -255,7 +255,7 @@ func (l *Template) parseBusinessValue(input string) string {
 	return input
 }
 
-func (l *Template) parseResourceValue(val any) string {
+func (t *Template) parseResourceValue(val any) string {
 	switch val.(type) {
 	//case int64, int32, int16, int8, uint64, uint32, uint16, uint8, int, float32, float64, bool:
 	//	return fmt.Sprint(val)
@@ -269,7 +269,7 @@ func (l *Template) parseResourceValue(val any) string {
 	}
 }
 
-func (s *Template) Watch(ctx kratos.Context, req *v1.GetConfigRequest, reply v1.Service_WatchConfigServer) error {
+func (t *Template) Watch(ctx kratos.Context, req *v1.GetConfigRequest, reply v1.Service_WatchConfigServer) error {
 	index := 1
 	for {
 		reply.Send(&v1.GetConfigReply{

@@ -15,15 +15,15 @@ type OperateLog struct {
 	Environment   Environment `json:"environment"`
 }
 
-func (u *OperateLog) Create(ctx kratos.Context) error {
-	return ctx.DB().Create(u).Error
+func (ol *OperateLog) Create(ctx kratos.Context) error {
+	return ctx.DB().Create(ol).Error
 }
 
-func (u *OperateLog) Page(ctx kratos.Context, options PageOptions) ([]*OperateLog, int64, error) {
+func (ol *OperateLog) Page(ctx kratos.Context, options PageOptions) ([]*OperateLog, int64, error) {
 	var list []*OperateLog
 	total := int64(0)
 
-	db := ctx.DB().Model(u)
+	db := ctx.DB().Model(ol)
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
@@ -36,6 +36,6 @@ func (u *OperateLog) Page(ctx kratos.Context, options PageOptions) ([]*OperateLo
 	return list, total, db.Find(&list).Error
 }
 
-func (u *OperateLog) OneById(ctx kratos.Context, id int64) error {
-	return ctx.DB().First(u, "id = ?", id).Error
+func (ol *OperateLog) OneById(ctx kratos.Context, id int64) error {
+	return ctx.DB().First(ol, "id = ?", id).Error
 }

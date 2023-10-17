@@ -22,7 +22,7 @@ func NewEnvironment(conf *config.Config) *Environment {
 }
 
 // All 获取全部环境
-func (l *Environment) All(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEnvironmentReply, error) {
+func (e *Environment) All(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEnvironmentReply, error) {
 	env := model.Environment{}
 	list, err := env.All(ctx)
 	if err != nil {
@@ -38,7 +38,7 @@ func (l *Environment) All(ctx kratos.Context, in *emptypb.Empty) (*v1.AllEnviron
 }
 
 // Add 新增环境
-func (l *Environment) Add(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*emptypb.Empty, error) {
+func (e *Environment) Add(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
 		Token:      util.MD5ToUpper([]byte(uuid.NewString())),
 		Operator:   md.GetUserName(ctx),
@@ -62,7 +62,7 @@ func (l *Environment) Add(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*em
 }
 
 // Update 修改环境
-func (l *Environment) Update(ctx kratos.Context, in *v1.UpdateEnvironmentRequest) (*emptypb.Empty, error) {
+func (e *Environment) Update(ctx kratos.Context, in *v1.UpdateEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -79,7 +79,7 @@ func (l *Environment) Update(ctx kratos.Context, in *v1.UpdateEnvironmentRequest
 }
 
 // Delete 删除环境
-func (l *Environment) Delete(ctx kratos.Context, in *v1.DeleteEnvironmentRequest) (*emptypb.Empty, error) {
+func (e *Environment) Delete(ctx kratos.Context, in *v1.DeleteEnvironmentRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{}
 
 	if env.DeleteByID(ctx, in.Id) != nil {
@@ -90,7 +90,7 @@ func (l *Environment) Delete(ctx kratos.Context, in *v1.DeleteEnvironmentRequest
 }
 
 // GetToken 获取环境token
-func (l *Environment) GetToken(ctx kratos.Context, in *v1.GetEnvironmentTokenRequest) (*v1.GetEnvironmentTokenReply, error) {
+func (e *Environment) GetToken(ctx kratos.Context, in *v1.GetEnvironmentTokenRequest) (*v1.GetEnvironmentTokenReply, error) {
 	env := &model.Environment{}
 
 	if env.OneByID(ctx, in.Id) != nil {
@@ -106,7 +106,7 @@ func (l *Environment) GetToken(ctx kratos.Context, in *v1.GetEnvironmentTokenReq
 }
 
 // ResetToken 重置环境token
-func (l *Environment) ResetToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
+func (e *Environment) ResetToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
 	env := &model.Environment{
 		Token:      util.MD5ToUpper([]byte(uuid.NewString())),
 		Operator:   md.GetUserName(ctx),

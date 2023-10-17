@@ -15,21 +15,21 @@ type Resource struct {
 }
 
 // Create 新建资源
-func (e *Resource) Create(ctx kratos.Context) error {
-	return ctx.DB().Model(e).Create(e).Error
+func (r *Resource) Create(ctx kratos.Context) error {
+	return ctx.DB().Model(r).Create(r).Error
 }
 
 // OneByID 通过关键词查找指定资源
-func (e *Resource) OneByID(ctx kratos.Context, id int64) error {
-	return ctx.DB().First(e, "id = ?", id).Error
+func (r *Resource) OneByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().First(r, "id = ?", id).Error
 }
 
 // Page 查询分页资源
-func (e *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, int64, error) {
+func (r *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, int64, error) {
 	var list []*Resource
 	total := int64(0)
 
-	db := ctx.DB().Model(e)
+	db := ctx.DB().Model(r)
 	if options.Scopes != nil {
 		db = db.Scopes(options.Scopes)
 	}
@@ -43,10 +43,10 @@ func (e *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, 
 }
 
 // All 查询全部资源
-func (e *Resource) All(ctx kratos.Context, scopes Scopes) ([]*Resource, error) {
+func (r *Resource) All(ctx kratos.Context, scopes Scopes) ([]*Resource, error) {
 	var list []*Resource
 
-	db := ctx.DB().Model(e)
+	db := ctx.DB().Model(r)
 	if scopes != nil {
 		db = db.Scopes(scopes)
 	}
@@ -55,11 +55,11 @@ func (e *Resource) All(ctx kratos.Context, scopes Scopes) ([]*Resource, error) {
 }
 
 // Update 更新指定id的资源
-func (e *Resource) Update(ctx kratos.Context) error {
-	return ctx.DB().Model(e).Updates(e).Error
+func (r *Resource) Update(ctx kratos.Context) error {
+	return ctx.DB().Model(r).Updates(r).Error
 }
 
 // DeleteByID 删除指定id的资源
-func (e *Resource) DeleteByID(ctx kratos.Context, id int64) error {
-	return ctx.DB().Model(e).Delete(e, "id = ?", id).Error
+func (r *Resource) DeleteByID(ctx kratos.Context, id int64) error {
+	return ctx.DB().Model(r).Delete(r, "id = ?", id).Error
 }

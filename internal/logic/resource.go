@@ -22,7 +22,7 @@ func NewResource(conf *config.Config) *Resource {
 }
 
 // Page 分页查询资源
-func (l *Resource) Page(ctx kratos.Context, in *v1.PageResourceRequest) (*v1.PageResourceReply, error) {
+func (r *Resource) Page(ctx kratos.Context, in *v1.PageResourceRequest) (*v1.PageResourceReply, error) {
 	resource := model.Resource{}
 	list, total, err := resource.Page(ctx, &model.PageOptions{
 		Page:     in.Page,
@@ -51,7 +51,7 @@ func (l *Resource) Page(ctx kratos.Context, in *v1.PageResourceRequest) (*v1.Pag
 }
 
 // Add 添加资源
-func (l *Resource) Add(ctx kratos.Context, in *v1.AddResourceRequest) (*emptypb.Empty, error) {
+func (r *Resource) Add(ctx kratos.Context, in *v1.AddResourceRequest) (*emptypb.Empty, error) {
 	resource := model.Resource{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -64,7 +64,7 @@ func (l *Resource) Add(ctx kratos.Context, in *v1.AddResourceRequest) (*emptypb.
 }
 
 // Update 更新资源
-func (l *Resource) Update(ctx kratos.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
+func (r *Resource) Update(ctx kratos.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
 	resource := model.Resource{
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
@@ -77,7 +77,7 @@ func (l *Resource) Update(ctx kratos.Context, in *v1.UpdateResourceRequest) (*em
 }
 
 // Delete 删除资源
-func (l *Resource) Delete(ctx kratos.Context, in *v1.DeleteResourceRequest) (*emptypb.Empty, error) {
+func (r *Resource) Delete(ctx kratos.Context, in *v1.DeleteResourceRequest) (*emptypb.Empty, error) {
 	resource := model.Resource{}
 	return nil, resource.DeleteByID(ctx, in.Id)
 }
