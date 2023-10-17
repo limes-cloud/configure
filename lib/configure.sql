@@ -14,7 +14,8 @@ create table environment(
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     index(`created_at`),
-    unique index(`keyword`)
+    unique index(`keyword`),
+    unique index(`token`)
 )engine innodb charset utf8;
 
 
@@ -101,9 +102,6 @@ create table business_value(
     unique index(`environment_id`,`business_id`)
 )engine innodb charset utf8;
 
-select * from template;
-
-drop table template;
 
 create table template(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
@@ -112,9 +110,37 @@ create table template(
     `description` varchar(256) not null comment '版本描述',
     `version` varchar(64) not null comment '模板版本',
     `is_use` bool not null comment  '是否使用',
+    `format` char(32) not null comment '模板格式',
     `operator` varchar(32) not null comment '操作人',
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     unique index(`server_id`,`version`)
 )engine innodb charset utf8;
+
+
+create table configure(
+    `id` bigint unsigned not null primary key auto_increment comment '自增id',
+    `server_id` bigint unsigned not null comment '服务id',
+    `environment_id` bigint unsigned not null comment '环境id',
+    `content` text not null comment '模板内容',
+    `description` varchar(256) not null comment '版本描述',
+    `version` varchar(64) not null comment '模板版本',
+    `format` char(32) not null comment '模板格式',
+    `operator` varchar(32) not null comment '操作人',
+    `operator_id` bigint unsigned not null comment '操作人id',
+    `created_at` bigint unsigned default null  comment '创建时间',
+    `updated_at`bigint unsigned default null  comment '修改时间',
+    unique index(`server_id`,`version`)
+)engine innodb charset utf8;
+
+
+# create table operate_log(
+#     `id` bigint unsigned not null primary key auto_increment comment '自增id',
+#     `server_id` bigint unsigned not null comment '服务id',
+#     `environment_id` bigint unsigned not null comment '环境id',
+#     `compare` text not null comment '差异内容',
+#     `created_at` bigint unsigned default null  comment '创建时间',
+#     unique index(`server_id`,`version`)
+# )engine innodb charset utf8;
+

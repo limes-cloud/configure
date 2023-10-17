@@ -1037,22 +1037,22 @@ var _ interface {
 	ErrorName() string
 } = UseTemplateVersionRequestValidationError{}
 
-// Validate checks the field values on GetConfigRequest with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetConfigRequest) Validate() error {
+// Validate checks the field values on ParseTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ParseTemplateRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetConfigRequest with the rules
+// ValidateAll checks the field values on ParseTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetConfigRequestMultiError, or nil if none found.
-func (m *GetConfigRequest) ValidateAll() error {
+// ParseTemplateRequestMultiError, or nil if none found.
+func (m *ParseTemplateRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetConfigRequest) validate(all bool) error {
+func (m *ParseTemplateRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1060,7 +1060,7 @@ func (m *GetConfigRequest) validate(all bool) error {
 	var errors []error
 
 	if utf8.RuneCountInString(m.GetSrvKeyword()) < 1 {
-		err := GetConfigRequestValidationError{
+		err := ParseTemplateRequestValidationError{
 			field:  "SrvKeyword",
 			reason: "value length must be at least 1 runes",
 		}
@@ -1071,7 +1071,7 @@ func (m *GetConfigRequest) validate(all bool) error {
 	}
 
 	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
-		err := GetConfigRequestValidationError{
+		err := ParseTemplateRequestValidationError{
 			field:  "EnvKeyword",
 			reason: "value length must be at least 1 runes",
 		}
@@ -1082,19 +1082,19 @@ func (m *GetConfigRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return GetConfigRequestMultiError(errors)
+		return ParseTemplateRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetConfigRequestMultiError is an error wrapping multiple validation errors
-// returned by GetConfigRequest.ValidateAll() if the designated constraints
-// aren't met.
-type GetConfigRequestMultiError []error
+// ParseTemplateRequestMultiError is an error wrapping multiple validation
+// errors returned by ParseTemplateRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ParseTemplateRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetConfigRequestMultiError) Error() string {
+func (m ParseTemplateRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1103,11 +1103,11 @@ func (m GetConfigRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetConfigRequestMultiError) AllErrors() []error { return m }
+func (m ParseTemplateRequestMultiError) AllErrors() []error { return m }
 
-// GetConfigRequestValidationError is the validation error returned by
-// GetConfigRequest.Validate if the designated constraints aren't met.
-type GetConfigRequestValidationError struct {
+// ParseTemplateRequestValidationError is the validation error returned by
+// ParseTemplateRequest.Validate if the designated constraints aren't met.
+type ParseTemplateRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1115,22 +1115,24 @@ type GetConfigRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetConfigRequestValidationError) Field() string { return e.field }
+func (e ParseTemplateRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetConfigRequestValidationError) Reason() string { return e.reason }
+func (e ParseTemplateRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetConfigRequestValidationError) Cause() error { return e.cause }
+func (e ParseTemplateRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetConfigRequestValidationError) Key() bool { return e.key }
+func (e ParseTemplateRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetConfigRequestValidationError) ErrorName() string { return "GetConfigRequestValidationError" }
+func (e ParseTemplateRequestValidationError) ErrorName() string {
+	return "ParseTemplateRequestValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e GetConfigRequestValidationError) Error() string {
+func (e ParseTemplateRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1142,14 +1144,14 @@ func (e GetConfigRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetConfigRequest.%s: %s%s",
+		"invalid %sParseTemplateRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetConfigRequestValidationError{}
+var _ error = ParseTemplateRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1157,24 +1159,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetConfigRequestValidationError{}
+} = ParseTemplateRequestValidationError{}
 
-// Validate checks the field values on GetConfigReply with the rules defined in
-// the proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *GetConfigReply) Validate() error {
+// Validate checks the field values on ParseTemplateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ParseTemplateReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetConfigReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in GetConfigReplyMultiError,
-// or nil if none found.
-func (m *GetConfigReply) ValidateAll() error {
+// ValidateAll checks the field values on ParseTemplateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ParseTemplateReplyMultiError, or nil if none found.
+func (m *ParseTemplateReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetConfigReply) validate(all bool) error {
+func (m *ParseTemplateReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1183,20 +1185,22 @@ func (m *GetConfigReply) validate(all bool) error {
 
 	// no validation rules for Content
 
+	// no validation rules for Format
+
 	if len(errors) > 0 {
-		return GetConfigReplyMultiError(errors)
+		return ParseTemplateReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetConfigReplyMultiError is an error wrapping multiple validation errors
-// returned by GetConfigReply.ValidateAll() if the designated constraints
+// ParseTemplateReplyMultiError is an error wrapping multiple validation errors
+// returned by ParseTemplateReply.ValidateAll() if the designated constraints
 // aren't met.
-type GetConfigReplyMultiError []error
+type ParseTemplateReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetConfigReplyMultiError) Error() string {
+func (m ParseTemplateReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1205,11 +1209,11 @@ func (m GetConfigReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetConfigReplyMultiError) AllErrors() []error { return m }
+func (m ParseTemplateReplyMultiError) AllErrors() []error { return m }
 
-// GetConfigReplyValidationError is the validation error returned by
-// GetConfigReply.Validate if the designated constraints aren't met.
-type GetConfigReplyValidationError struct {
+// ParseTemplateReplyValidationError is the validation error returned by
+// ParseTemplateReply.Validate if the designated constraints aren't met.
+type ParseTemplateReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1217,22 +1221,24 @@ type GetConfigReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetConfigReplyValidationError) Field() string { return e.field }
+func (e ParseTemplateReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetConfigReplyValidationError) Reason() string { return e.reason }
+func (e ParseTemplateReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetConfigReplyValidationError) Cause() error { return e.cause }
+func (e ParseTemplateReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetConfigReplyValidationError) Key() bool { return e.key }
+func (e ParseTemplateReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetConfigReplyValidationError) ErrorName() string { return "GetConfigReplyValidationError" }
+func (e ParseTemplateReplyValidationError) ErrorName() string {
+	return "ParseTemplateReplyValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e GetConfigReplyValidationError) Error() string {
+func (e ParseTemplateReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1244,14 +1250,14 @@ func (e GetConfigReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetConfigReply.%s: %s%s",
+		"invalid %sParseTemplateReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetConfigReplyValidationError{}
+var _ error = ParseTemplateReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -1259,7 +1265,235 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetConfigReplyValidationError{}
+} = ParseTemplateReplyValidationError{}
+
+// Validate checks the field values on WatchConfigRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *WatchConfigRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on WatchConfigRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// WatchConfigRequestMultiError, or nil if none found.
+func (m *WatchConfigRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *WatchConfigRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetServer()) < 1 {
+		err := WatchConfigRequestValidationError{
+			field:  "Server",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetToken()) < 1 {
+		err := WatchConfigRequestValidationError{
+			field:  "Token",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return WatchConfigRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// WatchConfigRequestMultiError is an error wrapping multiple validation errors
+// returned by WatchConfigRequest.ValidateAll() if the designated constraints
+// aren't met.
+type WatchConfigRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m WatchConfigRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m WatchConfigRequestMultiError) AllErrors() []error { return m }
+
+// WatchConfigRequestValidationError is the validation error returned by
+// WatchConfigRequest.Validate if the designated constraints aren't met.
+type WatchConfigRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e WatchConfigRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e WatchConfigRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e WatchConfigRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e WatchConfigRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e WatchConfigRequestValidationError) ErrorName() string {
+	return "WatchConfigRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e WatchConfigRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sWatchConfigRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = WatchConfigRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = WatchConfigRequestValidationError{}
+
+// Validate checks the field values on WatchConfigReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *WatchConfigReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on WatchConfigReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// WatchConfigReplyMultiError, or nil if none found.
+func (m *WatchConfigReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *WatchConfigReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Content
+
+	// no validation rules for Format
+
+	if len(errors) > 0 {
+		return WatchConfigReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// WatchConfigReplyMultiError is an error wrapping multiple validation errors
+// returned by WatchConfigReply.ValidateAll() if the designated constraints
+// aren't met.
+type WatchConfigReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m WatchConfigReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m WatchConfigReplyMultiError) AllErrors() []error { return m }
+
+// WatchConfigReplyValidationError is the validation error returned by
+// WatchConfigReply.Validate if the designated constraints aren't met.
+type WatchConfigReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e WatchConfigReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e WatchConfigReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e WatchConfigReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e WatchConfigReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e WatchConfigReplyValidationError) ErrorName() string { return "WatchConfigReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e WatchConfigReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sWatchConfigReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = WatchConfigReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = WatchConfigReplyValidationError{}
 
 // Validate checks the field values on PageTemplateReply_Template with the
 // rules defined in the proto definition for this message. If any rules are

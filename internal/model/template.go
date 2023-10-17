@@ -11,6 +11,7 @@ type Template struct {
 	Content     string  `json:"content"`
 	Version     string  `json:"version"`
 	IsUse       bool    `json:"is_use"`
+	Format      string  `json:"format"`
 	Description *string `json:"description"`
 	Operator    string  `json:"operator"`
 	OperatorID  int64   `json:"operator_id"`

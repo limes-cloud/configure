@@ -118,8 +118,8 @@ func (t *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionReque
 	return nil, template.UseVersionByID(ctx, in.ServerId, in.Id)
 }
 
-// Config 使用指定版本配置
-func (t *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetConfigReply, error) {
+// Parse 使用指定版本配置
+func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
 	// 获取指定服务
 	server := model.Server{}
 	if err := server.OneByKeyword(ctx, in.SrvKeyword); err != nil {
@@ -144,18 +144,22 @@ func (t *Template) Config(ctx kratos.Context, in *v1.GetConfigRequest) (*v1.GetC
 	}
 
 	// 进行值替换
-	reg := regexp.MustCompile(`"\{\{(\w|\.)+}}"`)
+	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
 	tempKeys := reg.FindAllString(tp.Content, -1)
 	for _, key := range tempKeys {
 		if val, ok := values[key]; ok {
+			if key == "json" {
+				key = fmt.Sprintf(`"%s"`, key)
+			}
 			tp.Content = strings.Replace(tp.Content, key, val, 1)
 		} else {
 			tp.Content = strings.Replace(tp.Content, key, "null", 1)
 		}
 	}
 
-	return &v1.GetConfigReply{
+	return &v1.ParseTemplateReply{
 		Content: tp.Content,
+		Format:  tp.Format,
 	}, nil
 }
 
@@ -191,7 +195,7 @@ func (t *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 	}
 
 	//进行增则匹配
-	reg := regexp.MustCompile(`"\{\{(\w|\.)+}}"`)
+	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
 	tempKeys := reg.FindAllString(template, -1)
 	// 进行参数判断
 	for _, key := range tempKeys {
@@ -203,7 +207,7 @@ func (t *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 }
 
 func (t *Template) fillKey(val string) string {
-	return fmt.Sprintf(`"{{%s}}"`, val)
+	return fmt.Sprintf(`{{%s}}`, val)
 }
 
 func (t *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map[string]string, error) {
@@ -230,7 +234,7 @@ func (t *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map
 		fs := map[string]any{}
 		_ = json.Unmarshal([]byte(item.Values), &fs)
 		for key, val := range fs {
-			k := fmt.Sprintf("%v.%v", item.Resource.Keyword, key)
+			k := fmt.Sprintf("%s.%s", item.Resource.Keyword, key)
 			result[t.fillKey(k)] = t.parseResourceValue(val)
 		}
 	}
@@ -269,13 +273,15 @@ func (t *Template) parseResourceValue(val any) string {
 	}
 }
 
-func (t *Template) Watch(ctx kratos.Context, req *v1.GetConfigRequest, reply v1.Service_WatchConfigServer) error {
-	index := 1
+func (t *Template) Watch(ctx kratos.Context, req *v1.WatchConfigRequest, reply v1.Service_WatchConfigServer) error {
+	// 通过token查找环境是否存在
+	env := model.Environment{}
+	if err := env.OneByToken(ctx, req.Token); err != nil {
+		return err
+	}
+
 	for {
-		reply.Send(&v1.GetConfigReply{
-			Content: fmt.Sprint(index),
-		})
-		index++
+		//
 		time.Sleep(3 * time.Second)
 	}
 }

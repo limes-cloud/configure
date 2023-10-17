@@ -30,10 +30,10 @@ func (s *Service) UseTemplateVersion(ctx context.Context, in *v1.UseTemplateVers
 	return s.Template.UseVersion(kratos.MustContext(ctx), in)
 }
 
-func (s *Service) GetConfig(ctx context.Context, in *v1.GetConfigRequest) (*v1.GetConfigReply, error) {
-	return s.Template.Config(kratos.MustContext(ctx), in)
+func (s *Service) ParseTemplate(ctx context.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
+	return s.Template.Parse(kratos.MustContext(ctx), in)
 }
 
-func (s *Service) WatchConfig(req *v1.GetConfigRequest, reply v1.Service_WatchConfigServer) error {
+func (s *Service) WatchConfig(req *v1.WatchConfigRequest, reply v1.Service_WatchConfigServer) error {
 	return s.Template.Watch(kratos.MustContext(reply.Context()), req, reply)
 }

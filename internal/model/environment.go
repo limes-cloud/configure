@@ -25,6 +25,11 @@ func (e *Environment) OneByKeyword(ctx kratos.Context, keyword string) error {
 	return ctx.DB().First(e, "keyword = ?", keyword).Error
 }
 
+// OneByToken 通过token查找指定环境
+func (e *Environment) OneByToken(ctx kratos.Context, token string) error {
+	return ctx.DB().First(e, "token = ?", token).Error
+}
+
 // OneByID 通过id查找指定环境
 func (e *Environment) OneByID(ctx kratos.Context, id int64) error {
 	return ctx.DB().First(e, "id = ?", id).Error

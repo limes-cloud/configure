@@ -44,7 +44,7 @@ func (bv *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest)
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
 	}
-	if util.Transform(in, &bv) != nil {
+	if util.Transform(in, &mbv) != nil {
 		return nil, v1.ErrorTransform()
 	}
 
@@ -57,7 +57,7 @@ func (bv *BusinessValue) Update(ctx kratos.Context, in *v1.UpdateBusinessValueRe
 		Operator:   md.GetUserName(ctx),
 		OperatorID: md.GetUserID(ctx),
 	}
-	if util.Transform(in, &bv) != nil {
+	if util.Transform(in, &mbv) != nil {
 		return nil, v1.ErrorTransform()
 	}
 

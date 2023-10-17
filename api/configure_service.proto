@@ -249,14 +249,14 @@ service Service {
     };
   }
 
-  rpc GetConfig (GetConfigRequest) returns (GetConfigReply) {
+  rpc ParseTemplate (ParseTemplateRequest) returns (ParseTemplateReply) {
     option (google.api.http) = {
-      post: "/v1/config",
+      post: "/v1/template/parse",
       body:"*"
     };
   }
 
-  rpc WatchConfig ( GetConfigRequest) returns (stream GetConfigReply);
+  rpc WatchConfig (WatchConfigRequest) returns (stream WatchConfigReply);
 
 }
 
