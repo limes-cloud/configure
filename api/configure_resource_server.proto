@@ -3,8 +3,8 @@ syntax = "proto3";
 package v1;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
-import "server.proto";
-import "resource.proto";
+import "configure_server.proto";
+import "configure_resource.proto";
 
 
 

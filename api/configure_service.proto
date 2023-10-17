@@ -5,14 +5,14 @@ option go_package = "./v1;v1";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "environment.proto";
-import "server.proto";
-import "resource.proto";
-import "resource_value.proto";
-import "resource_server.proto";
-import "business.proto";
-import "business_value.proto";
-import "template.proto";
+import "configure_environment.proto";
+import "configure_server.proto";
+import "configure_resource.proto";
+import "configure_resource_value.proto";
+import "configure_resource_server.proto";
+import "configure_business.proto";
+import "configure_business_value.proto";
+import "configure_template.proto";
 
 service Service {
 

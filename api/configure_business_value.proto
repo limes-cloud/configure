@@ -3,8 +3,8 @@ syntax = "proto3";
 package v1;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
-import "resource.proto";
-import "environment.proto";
+import "configure_resource.proto";
+import "configure_environment.proto";
 
 message AllBusinessValueRequest{
   int64 business_id = 1[(validate.rules).int64.gt = 0];
