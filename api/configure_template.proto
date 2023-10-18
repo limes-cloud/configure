@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package v1;
+package configure;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 
@@ -75,10 +75,10 @@ message UseTemplateVersionRequest {
 }
 
 
-// 获取配置
+// 解析配置
 message ParseTemplateRequest {
-  string srv_keyword = 1[(validate.rules).string = {min_len: 1}];
-  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
+  int64 server_id = 1[(validate.rules).int64 = {gt: 0}];
+  int64 environment_id = 2[(validate.rules).int64 = {gt: 0}];
 }
 
 message ParseTemplateReply {
@@ -86,14 +86,3 @@ message ParseTemplateReply {
   string format = 2;
 }
 
-
-// 监听获取配置
-message WatchConfigRequest {
-  string server = 1[(validate.rules).string = {min_len: 1}];
-  string token = 2[(validate.rules).string = {min_len: 1}];
-}
-
-message WatchConfigReply {
-  string content = 1;
-  string format = 2;
-}

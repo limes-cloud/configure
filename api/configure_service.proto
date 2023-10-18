@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package v1;
+package configure;
 option go_package = "./v1;v1";
 
 import "google/api/annotations.proto";
@@ -13,6 +13,7 @@ import "configure_resource_server.proto";
 import "configure_business.proto";
 import "configure_business_value.proto";
 import "configure_template.proto";
+import "configure_configure.proto";
 
 service Service {
 
@@ -256,7 +257,21 @@ service Service {
     };
   }
 
-  rpc WatchConfig (WatchConfigRequest) returns (stream WatchConfigReply);
+
+  rpc GetConfigure (GetConfigureRequest) returns (GetConfigureReply) {
+    option (google.api.http) = {
+      get: "/v1/configure"
+    };
+  }
+
+  rpc UpdateConfigure (UpdateConfigureRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/configure",
+      body:"*"
+    };
+  }
+
+  rpc WatchConfigure (WatchConfigureRequest) returns (stream WatchConfigureReply);
 
 }
 

@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package v1;
+package configure;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 import "configure_resource.proto";

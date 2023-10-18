@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/limes-cloud/configure/pkg/md"
 
@@ -120,25 +119,15 @@ func (t *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionReque
 
 // Parse 使用指定版本配置
 func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
-	// 获取指定服务
-	server := model.Server{}
-	if err := server.OneByKeyword(ctx, in.SrvKeyword); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
-	}
+
 	// 获取指定模板
 	tp := model.Template{}
-	if err := tp.Current(ctx, server.ID); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
-	}
-
-	// 获取环境ID
-	env := model.Environment{}
-	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
+	if err := tp.Current(ctx, in.ServerId); err != nil {
 		return nil, v1.ErrorDatabaseFormat(err.Error())
 	}
 
 	// 获取字段的配置值
-	values, err := t.getVariableValue(ctx, env.ID, tp.ServerID)
+	values, err := t.getVariableValue(ctx, in.EnvironmentId, tp.ServerID)
 	if err != nil {
 		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
 	}
@@ -270,18 +259,5 @@ func (t *Template) parseResourceValue(val any) string {
 		return str
 	default:
 		return fmt.Sprint(val)
-	}
-}
-
-func (t *Template) Watch(ctx kratos.Context, req *v1.WatchConfigRequest, reply v1.Service_WatchConfigServer) error {
-	// 通过token查找环境是否存在
-	env := model.Environment{}
-	if err := env.OneByToken(ctx, req.Token); err != nil {
-		return err
-	}
-
-	for {
-		//
-		time.Sleep(3 * time.Second)
 	}
 }

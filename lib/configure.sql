@@ -131,7 +131,7 @@ create table configure(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    unique index(`server_id`,`version`)
+    unique index(`server_id`,`environment_id`)
 )engine innodb charset utf8;
 
 

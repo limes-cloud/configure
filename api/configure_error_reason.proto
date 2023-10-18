@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package v1;
+package configure;
 
 import "errors/errors.proto";
 option go_package = "./v1;v1";
@@ -19,6 +19,7 @@ enum ErrorReason {
   CheckTemplate = 6[(errors.message)="模板检测出现错误"];
   ParseTemplate= 7[(errors.message)="模板解析出现错误"];
   VersionExist = 8[(errors.message)="此版本已存在"];
+  WatchConfigure = 9[(errors.message)="监听版本更新失败"];
 }
 
 
