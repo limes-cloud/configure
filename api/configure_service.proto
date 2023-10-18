@@ -20,7 +20,6 @@ service Service {
   rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
     option (google.api.http) = {
       get: "/v1/environments"
-      response_body:"*"
     };
   }
 
@@ -60,8 +59,7 @@ service Service {
 
   rpc PageServer (PageServerRequest) returns (PageServerReply) {
     option (google.api.http) = {
-      get: "/v1/servers",
-      response_body: "*"
+      get: "/v1/servers"
     };
   }
 
@@ -94,8 +92,7 @@ service Service {
 
   rpc PageResource (PageResourceRequest) returns (PageResourceReply) {
     option (google.api.http) = {
-      get: "/v1/resources",
-      response_body: "*"
+      get: "/v1/resources"
     };
   }
 
@@ -121,8 +118,7 @@ service Service {
 
   rpc AllResourceServer (AllResourceServerRequest) returns (AllResourceServerReply) {
     option (google.api.http) = {
-      get: "/v1/resource/servers",
-      response_body: "*"
+      get: "/v1/resource/servers"
     };
   }
 
@@ -169,8 +165,7 @@ service Service {
 
   rpc PageBusiness (PageBusinessRequest) returns (PageBusinessReply) {
     option (google.api.http) = {
-      get: "/v1/business",
-      response_body: "*"
+      get: "/v1/business"
     };
   }
 
@@ -196,8 +191,7 @@ service Service {
 
   rpc AllBusinessValue (AllBusinessValueRequest) returns (AllBusinessValueReply) {
     option (google.api.http) = {
-      get: "/v1/business/values",
-      response_body: "*"
+      get: "/v1/business/values"
     };
   }
 
