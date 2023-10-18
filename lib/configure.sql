@@ -13,7 +13,6 @@ create table environment(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    index(`created_at`),
     unique index(`keyword`),
     unique index(`token`)
 )engine innodb charset utf8;
@@ -29,7 +28,6 @@ create table `server`(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    index(`created_at`),
     unique index(`keyword`)
 )engine innodb charset utf8;
 
@@ -58,8 +56,13 @@ create table resource_server(
     `operator` varchar(32) not null comment '操作人',
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
-    unique index(`resource_id`,`server_id`)
+    unique index(`resource_id`,`server_id`),
+    foreign key (`resource_id`) references resource(`id`),
+    foreign key (`server_id`) references server(`id`)
 )engine innodb charset utf8;
+
+
+
 # resource_value 资源值
 create table resource_value(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
@@ -70,7 +73,10 @@ create table resource_value(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    unique index(`environment_id`,`resource_id`)
+    unique index(`environment_id`,`resource_id`),
+    foreign key (`environment_id`) references environment(`id`),
+    foreign key (`resource_id`) references resource(`id`)
+
 )engine innodb charset utf8;
 
 
@@ -85,7 +91,9 @@ create table `business`(
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     index(`created_at`),
-    unique index(`server_id`,`keyword`)
+    unique index(`server_id`,`keyword`),
+    foreign key (`server_id`) references server(`id`)
+
 )engine innodb charset utf8;
 
 
@@ -99,7 +107,9 @@ create table business_value(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    unique index(`environment_id`,`business_id`)
+    unique index(`environment_id`,`business_id`),
+    foreign key (`environment_id`) references environment(`id`),
+    foreign key (`business_id`) references business(`id`)
 )engine innodb charset utf8;
 
 
@@ -115,7 +125,8 @@ create table template(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    unique index(`server_id`,`version`)
+    unique index(`server_id`,`version`),
+    foreign key (`server_id`) references server(`id`)
 )engine innodb charset utf8;
 
 
@@ -131,7 +142,9 @@ create table configure(
     `operator_id` bigint unsigned not null comment '操作人id',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
-    unique index(`server_id`,`environment_id`)
+    unique index(`server_id`,`environment_id`),
+    foreign key (`server_id`) references server(`id`),
+    foreign key (`environment_id`) references environment(`id`)
 )engine innodb charset utf8;
 
 
