@@ -9,8 +9,6 @@ type Business struct {
 	ServerID    int64  `json:"server_id"`
 	Keyword     string `json:"keyword"`
 	Description string `json:"description"`
-	Operator    string `json:"operator"`
-	OperatorID  int64  `json:"operator_id"`
 }
 
 // Create 新建业务字段

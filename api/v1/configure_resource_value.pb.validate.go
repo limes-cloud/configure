@@ -547,6 +547,8 @@ func (m *AllResourceValueReply_ResourceValue) validate(all bool) error {
 
 	// no validation rules for Values
 
+	// no validation rules for CreatedAt
+
 	if all {
 		switch v := interface{}(m.GetEnvironment()).(type) {
 		case interface{ ValidateAll() error }:

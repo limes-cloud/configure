@@ -785,7 +785,7 @@ func _Service_CurrentTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		reply := out.(*CurrentTemplateReply)
-		return ctx.Result(200, reply)
+		return ctx.Result(200, reply.Template)
 	}
 }
 
@@ -1119,7 +1119,7 @@ func (c *ServiceHTTPClientImpl) CurrentTemplate(ctx context.Context, in *Current
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceCurrentTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Template, opts...)
 	if err != nil {
 		return nil, err
 	}

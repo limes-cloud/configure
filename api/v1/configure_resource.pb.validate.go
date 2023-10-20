@@ -67,6 +67,10 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Tag
 
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
 	if len(errors) > 0 {
 		return ResourceMultiError(errors)
 	}

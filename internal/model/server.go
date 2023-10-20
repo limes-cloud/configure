@@ -7,8 +7,6 @@ type Server struct {
 	Keyword     string `json:"keyword"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	Operator    string `json:"operator"`
-	OperatorID  int64  `json:"operator_id"`
 }
 
 // Create 新建资源

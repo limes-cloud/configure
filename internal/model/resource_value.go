@@ -10,8 +10,6 @@ type ResourceValue struct {
 	EnvironmentID int64       `json:"environment_id"`
 	ResourceID    int64       `json:"resource_id"`
 	Values        string      `json:"values"`
-	Operator      string      `json:"operator"`
-	OperatorID    int64       `json:"operator_id"`
 	Environment   Environment `json:"environment"`
 	Resource      Resource    `json:"resource"`
 }

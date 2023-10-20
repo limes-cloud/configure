@@ -7,7 +7,6 @@ import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
-	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -46,10 +45,7 @@ func (t *Configure) Get(ctx kratos.Context, in *v1.GetConfigureRequest) (*v1.Get
 
 // Update 更新模配置
 func (t *Configure) Update(ctx kratos.Context, in *v1.UpdateConfigureRequest) (*emptypb.Empty, error) {
-	configure := model.Configure{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	configure := model.Configure{}
 	if err := util.Transform(in, &configure); err != nil {
 		return nil, v1.ErrorTransform()
 	}

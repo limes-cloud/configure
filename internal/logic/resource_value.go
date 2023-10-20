@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/limes-cloud/configure/pkg/md"
-
 	json "github.com/json-iterator/go"
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
@@ -46,10 +44,7 @@ func (rv *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest)
 
 // Add 添加资源值
 func (rv *ResourceValue) Add(ctx kratos.Context, in *v1.AddResourceValueRequest) (*emptypb.Empty, error) {
-	resource := model.ResourceValue{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	resource := model.ResourceValue{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -90,10 +85,7 @@ func (rv *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string
 
 // Update 更新资源值
 func (rv *ResourceValue) Update(ctx kratos.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
-	resource := model.ResourceValue{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	resource := model.ResourceValue{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}

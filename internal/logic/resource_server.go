@@ -4,7 +4,6 @@ import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
-	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -59,10 +58,7 @@ func (rs *ResourceServer) AllServer(ctx kratos.Context, in *v1.AllResourceServer
 
 // Add 添加资源-服务
 func (rs *ResourceServer) Add(ctx kratos.Context, in *v1.AddResourceServerRequest) (*emptypb.Empty, error) {
-	resource := model.ResourceServer{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	resource := model.ResourceServer{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}

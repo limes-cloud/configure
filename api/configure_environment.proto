@@ -11,8 +11,8 @@ message Environment{
   string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
   optional bool status = 5;
-  optional string operator = 7;
-  optional int64 operator_id = 8;
+  int64 created_at = 6;
+  int64 updated_at = 7;
 }
 
 // 获取环境列表

@@ -11,6 +11,8 @@ message Resource{
   string description = 3;
   string fields = 4;
   string tag = 5;
+  int64 created_at = 6;
+  int64 updated_at = 7;
 }
 
 message PageResourceRequest{

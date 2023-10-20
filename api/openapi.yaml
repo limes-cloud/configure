@@ -942,6 +942,10 @@ components:
                     type: string
                 value:
                     type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
                 environment:
                     $ref: '#/components/schemas/Environment'
         AllEnvironmentReply:
@@ -966,6 +970,8 @@ components:
                     type: string
                 serverId:
                     type: string
+                createdAt:
+                    type: string
                 server:
                     $ref: '#/components/schemas/Server'
         AllResourceValueReply:
@@ -985,6 +991,8 @@ components:
                 resourceId:
                     type: string
                 values:
+                    type: string
+                createdAt:
                     type: string
                 environment:
                     $ref: '#/components/schemas/Environment'
@@ -1015,25 +1023,15 @@ components:
                     type: string
                 description:
                     type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
         CurrentTemplateReply:
             type: object
             properties:
-                id:
-                    type: string
-                serverId:
-                    type: string
-                content:
-                    type: string
-                description:
-                    type: string
-                version:
-                    type: string
-                isUse:
-                    type: boolean
-                operator:
-                    type: string
-                operatorId:
-                    type: string
+                template:
+                    $ref: '#/components/schemas/Template'
         Environment:
             type: object
             properties:
@@ -1047,9 +1045,9 @@ components:
                     type: string
                 status:
                     type: boolean
-                operator:
+                createdAt:
                     type: string
-                operatorId:
+                updatedAt:
                     type: string
         GetConfigureReply:
             type: object
@@ -1067,10 +1065,6 @@ components:
                 version:
                     type: string
                 format:
-                    type: string
-                operator:
-                    type: string
-                operatorId:
                     type: string
                 createdAt:
                     type: string
@@ -1146,26 +1140,7 @@ components:
                 list:
                     type: array
                     items:
-                        $ref: '#/components/schemas/PageTemplateReply_Template'
-        PageTemplateReply_Template:
-            type: object
-            properties:
-                id:
-                    type: string
-                serverId:
-                    type: string
-                description:
-                    type: string
-                version:
-                    type: string
-                isUse:
-                    type: boolean
-                createdAt:
-                    type: string
-                operator:
-                    type: string
-                operatorId:
-                    type: string
+                        $ref: '#/components/schemas/Template'
         ParseTemplateReply:
             type: object
             properties:
@@ -1200,6 +1175,10 @@ components:
                     type: string
                 tag:
                     type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
         Server:
             type: object
             properties:
@@ -1211,9 +1190,9 @@ components:
                     type: string
                 description:
                     type: string
-                operator:
+                createdAt:
                     type: string
-                operatorId:
+                updatedAt:
                     type: string
         Status:
             type: object
@@ -1231,6 +1210,25 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        Template:
+            type: object
+            properties:
+                id:
+                    type: string
+                serverId:
+                    type: string
+                description:
+                    type: string
+                version:
+                    type: string
+                isUse:
+                    type: boolean
+                createdAt:
+                    type: string
+                operator:
+                    type: string
+                operatorId:
+                    type: string
         UpdateBusinessRequest:
             type: object
             properties:

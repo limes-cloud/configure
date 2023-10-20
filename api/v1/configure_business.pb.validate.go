@@ -65,6 +65,10 @@ func (m *Business) validate(all bool) error {
 
 	// no validation rules for Description
 
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
 	if len(errors) > 0 {
 		return BusinessMultiError(errors)
 	}

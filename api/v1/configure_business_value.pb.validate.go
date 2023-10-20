@@ -547,6 +547,10 @@ func (m *AllBusinessValueReply_BusinessValue) validate(all bool) error {
 
 	// no validation rules for Value
 
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
 	if all {
 		switch v := interface{}(m.GetEnvironment()).(type) {
 		case interface{ ValidateAll() error }:

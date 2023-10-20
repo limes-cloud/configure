@@ -4,7 +4,6 @@ import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
-	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -76,10 +75,7 @@ func (s *Server) Page(ctx kratos.Context, in *v1.PageServerRequest) (*v1.PageSer
 
 // Add 添加服务
 func (s *Server) Add(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
-	server := model.Server{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	server := model.Server{}
 
 	if server.OneByKeyword(ctx, in.Keyword) == nil {
 		return nil, v1.ErrorAlreadyExists()
@@ -94,10 +90,7 @@ func (s *Server) Add(ctx kratos.Context, in *v1.AddServerRequest) (*emptypb.Empt
 
 // Update 更新服务
 func (s *Server) Update(ctx kratos.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {
-	server := model.Server{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	server := model.Server{}
 	if util.Transform(in, &server) != nil {
 		return nil, v1.ErrorTransform()
 	}

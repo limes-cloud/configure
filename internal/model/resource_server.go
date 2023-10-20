@@ -6,8 +6,6 @@ type ResourceServer struct {
 	CreateModel
 	ServerID   int64    `json:"server_id"`
 	ResourceID int64    `json:"resource_id"`
-	Operator   string   `json:"operator"`
-	OperatorID int64    `json:"operator_id"`
 	Resource   Resource `json:"resource"`
 	Server     Server   `json:"server"`
 }

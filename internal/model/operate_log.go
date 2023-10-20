@@ -9,8 +9,6 @@ type OperateLog struct {
 	EnvironmentID int64       `json:"environment_id"`
 	Config        string      `json:"config"`
 	Compare       string      `json:"compare"`
-	Operator      string      `json:"operator"`
-	OperatorId    int64       `json:"operator_id"`
 	Server        Server      `json:"server"`
 	Environment   Environment `json:"environment"`
 }

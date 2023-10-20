@@ -10,8 +10,6 @@ type BusinessValue struct {
 	EnvironmentID int64       `json:"environment_id"`
 	BusinessID    int64       `json:"business_id"`
 	Value         string      `json:"value"`
-	Operator      string      `json:"operator"`
-	OperatorID    int64       `json:"operator_id"`
 	Environment   Environment `json:"environment"`
 	Business      Business    `json:"business"`
 }

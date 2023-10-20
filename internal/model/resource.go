@@ -10,8 +10,6 @@ type Resource struct {
 	Description string `json:"description"`
 	Fields      string `json:"fields"`
 	Tag         string `json:"tag"`
-	Operator    string `json:"operator"`
-	OperatorID  int64  `json:"operator_id"`
 }
 
 // Create 新建资源

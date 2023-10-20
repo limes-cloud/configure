@@ -35,6 +35,125 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on Template with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Template) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Template with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in TemplateMultiError, or nil
+// if none found.
+func (m *Template) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Template) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for ServerId
+
+	// no validation rules for Description
+
+	// no validation rules for Version
+
+	// no validation rules for IsUse
+
+	// no validation rules for CreatedAt
+
+	if m.Operator != nil {
+		// no validation rules for Operator
+	}
+
+	if m.OperatorId != nil {
+		// no validation rules for OperatorId
+	}
+
+	if len(errors) > 0 {
+		return TemplateMultiError(errors)
+	}
+
+	return nil
+}
+
+// TemplateMultiError is an error wrapping multiple validation errors returned
+// by Template.ValidateAll() if the designated constraints aren't met.
+type TemplateMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m TemplateMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m TemplateMultiError) AllErrors() []error { return m }
+
+// TemplateValidationError is the validation error returned by
+// Template.Validate if the designated constraints aren't met.
+type TemplateValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e TemplateValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e TemplateValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e TemplateValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e TemplateValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e TemplateValidationError) ErrorName() string { return "TemplateValidationError" }
+
+// Error satisfies the builtin error interface
+func (e TemplateValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sTemplate.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = TemplateValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = TemplateValidationError{}
+
 // Validate checks the field values on PageTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -443,24 +562,33 @@ func (m *CurrentTemplateReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
-
-	// no validation rules for ServerId
-
-	// no validation rules for Content
-
-	// no validation rules for Description
-
-	// no validation rules for Version
-
-	// no validation rules for IsUse
-
-	if m.Operator != nil {
-		// no validation rules for Operator
-	}
-
-	if m.OperatorId != nil {
-		// no validation rules for OperatorId
+	if all {
+		switch v := interface{}(m.GetTemplate()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CurrentTemplateReplyValidationError{
+					field:  "Template",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CurrentTemplateReplyValidationError{
+					field:  "Template",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTemplate()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CurrentTemplateReplyValidationError{
+				field:  "Template",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	if len(errors) > 0 {
@@ -1266,125 +1394,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ParseTemplateReplyValidationError{}
-
-// Validate checks the field values on PageTemplateReply_Template with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *PageTemplateReply_Template) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on PageTemplateReply_Template with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// PageTemplateReply_TemplateMultiError, or nil if none found.
-func (m *PageTemplateReply_Template) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *PageTemplateReply_Template) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for ServerId
-
-	// no validation rules for Description
-
-	// no validation rules for Version
-
-	// no validation rules for IsUse
-
-	// no validation rules for CreatedAt
-
-	if m.Operator != nil {
-		// no validation rules for Operator
-	}
-
-	if m.OperatorId != nil {
-		// no validation rules for OperatorId
-	}
-
-	if len(errors) > 0 {
-		return PageTemplateReply_TemplateMultiError(errors)
-	}
-
-	return nil
-}
-
-// PageTemplateReply_TemplateMultiError is an error wrapping multiple
-// validation errors returned by PageTemplateReply_Template.ValidateAll() if
-// the designated constraints aren't met.
-type PageTemplateReply_TemplateMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m PageTemplateReply_TemplateMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m PageTemplateReply_TemplateMultiError) AllErrors() []error { return m }
-
-// PageTemplateReply_TemplateValidationError is the validation error returned
-// by PageTemplateReply_Template.Validate if the designated constraints aren't met.
-type PageTemplateReply_TemplateValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e PageTemplateReply_TemplateValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e PageTemplateReply_TemplateValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e PageTemplateReply_TemplateValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e PageTemplateReply_TemplateValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e PageTemplateReply_TemplateValidationError) ErrorName() string {
-	return "PageTemplateReply_TemplateValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e PageTemplateReply_TemplateValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sPageTemplateReply_Template.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = PageTemplateReply_TemplateValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = PageTemplateReply_TemplateValidationError{}

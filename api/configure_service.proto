@@ -226,7 +226,7 @@ service Service {
   rpc CurrentTemplate (CurrentTemplateRequest) returns (CurrentTemplateReply) {
     option (google.api.http) = {
       get: "/v1/template/current",
-      response_body: "*"
+      response_body: "template"
     };
   }
 

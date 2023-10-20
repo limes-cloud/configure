@@ -64,13 +64,9 @@ func (m *Server) validate(all bool) error {
 
 	// no validation rules for Description
 
-	if m.Operator != nil {
-		// no validation rules for Operator
-	}
+	// no validation rules for CreatedAt
 
-	if m.OperatorId != nil {
-		// no validation rules for OperatorId
-	}
+	// no validation rules for UpdatedAt
 
 	if len(errors) > 0 {
 		return ServerMultiError(errors)

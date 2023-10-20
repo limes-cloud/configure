@@ -5,6 +5,16 @@ option go_package = "./v1;v1";
 import "validate/validate.proto";
 
 
+message Template{
+  int64 id = 1;
+  int64 server_id = 2;
+  string description = 3;
+  string version = 4;
+  bool is_use = 5;
+  int64 created_at = 6;
+  optional string operator = 7;
+  optional int64 operator_id = 8;
+}
 
 message PageTemplateRequest{
   int32 page = 1[(validate.rules).int32 = {gt: 0}];
@@ -13,17 +23,6 @@ message PageTemplateRequest{
 }
 
 message PageTemplateReply {
-  message Template{
-    int64 id = 1;
-    int64 server_id = 2;
-    string description = 3;
-    string version = 4;
-    bool is_use = 5;
-    int64 created_at = 6;
-    optional string operator = 7;
-    optional int64 operator_id = 8;
-  }
-
   int64 total = 1;
   repeated Template list = 2;
 }
@@ -35,14 +34,7 @@ message CurrentTemplateRequest{
 }
 
 message CurrentTemplateReply{
-  int64 id = 1;
-  int64 server_id = 2;
-  string content = 3;
-  string description = 4;
-  string version = 5;
-  bool is_use = 6;
-  optional string operator = 7;
-  optional int64 operator_id = 8;
+    Template template = 1;
 }
 
 // 查询指定模板

@@ -4,7 +4,6 @@ import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
-	"github.com/limes-cloud/configure/pkg/md"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -40,10 +39,7 @@ func (bv *BusinessValue) All(ctx kratos.Context, in *v1.AllBusinessValueRequest)
 
 // Add 添加资源
 func (bv *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest) (*emptypb.Empty, error) {
-	mbv := model.BusinessValue{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	mbv := model.BusinessValue{}
 	if util.Transform(in, &mbv) != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -53,10 +49,7 @@ func (bv *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest)
 
 // Update 更新资源
 func (bv *BusinessValue) Update(ctx kratos.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
-	mbv := model.BusinessValue{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	mbv := model.BusinessValue{}
 	if util.Transform(in, &mbv) != nil {
 		return nil, v1.ErrorTransform()
 	}

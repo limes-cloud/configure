@@ -6,8 +6,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/limes-cloud/configure/pkg/md"
-
 	json "github.com/json-iterator/go"
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
@@ -79,10 +77,7 @@ func (t *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.Pag
 
 // Add 添加模板
 func (t *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.Empty, error) {
-	template := model.Template{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	template := model.Template{}
 	if err := util.Transform(in, &template); err != nil {
 		return nil, v1.ErrorTransform()
 	}
@@ -106,10 +101,7 @@ func (t *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.
 
 // UseVersion 使用指定版本
 func (t *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
-	template := model.Template{
-		Operator:   md.GetUserName(ctx),
-		OperatorID: md.GetUserID(ctx),
-	}
+	template := model.Template{}
 	if util.Transform(in, &template) != nil {
 		return nil, v1.ErrorTransform()
 	}

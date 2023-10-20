@@ -12,8 +12,6 @@ type Configure struct {
 	Version       string  `json:"version"`
 	Format        string  `json:"format"`
 	Description   *string `json:"description"`
-	Operator      string  `json:"operator"`
-	OperatorID    int64   `json:"operator_id"`
 }
 
 func (t *Configure) Create(ctx kratos.Context) error {

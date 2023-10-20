@@ -16,7 +16,8 @@ message AllResourceValueReply {
     int64 environment_id = 2;
     int64 resource_id = 3;
     string values = 4;
-    Environment environment = 5;
+    int64 created_at = 5;
+    Environment environment = 6;
   }
   repeated ResourceValue list = 1;
 }

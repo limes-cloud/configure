@@ -798,6 +798,8 @@ func (m *AllResourceServerReply_ResourceServer) validate(all bool) error {
 
 	// no validation rules for ServerId
 
+	// no validation rules for CreatedAt
+
 	if all {
 		switch v := interface{}(m.GetServer()).(type) {
 		case interface{ ValidateAll() error }:

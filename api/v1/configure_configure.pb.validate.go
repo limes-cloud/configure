@@ -195,10 +195,6 @@ func (m *GetConfigureReply) validate(all bool) error {
 
 	// no validation rules for Format
 
-	// no validation rules for Operator
-
-	// no validation rules for OperatorId
-
 	// no validation rules for CreatedAt
 
 	if len(errors) > 0 {

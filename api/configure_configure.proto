@@ -18,9 +18,7 @@ message GetConfigureReply{
   string description = 5;
   string version = 6;
   string format = 7;
-  string operator = 8;
-  int64 operator_id = 9;
-  int64 created_at = 10;
+  int64 created_at = 8;
 }
 
 // 新增模板

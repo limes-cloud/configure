@@ -11,8 +11,6 @@ type Environment struct {
 	Description string `json:"description"`
 	Token       string `json:"token,omitempty"`
 	Status      *bool  `json:"status"`
-	Operator    string `json:"operator"`
-	OperatorID  int64  `json:"operator_id"`
 }
 
 // Create 新建环境

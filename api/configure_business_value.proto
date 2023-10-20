@@ -16,7 +16,9 @@ message AllBusinessValueReply {
     int64 environment_id = 2;
     int64 business_id = 3;
     string value = 4;
-    Environment environment = 5;
+    int64 created_at = 5;
+    int64 updated_at = 6;
+    Environment environment = 7;
   }
   repeated BusinessValue list = 1;
 }

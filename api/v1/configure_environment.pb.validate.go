@@ -101,16 +101,12 @@ func (m *Environment) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
 	if m.Status != nil {
 		// no validation rules for Status
-	}
-
-	if m.Operator != nil {
-		// no validation rules for Operator
-	}
-
-	if m.OperatorId != nil {
-		// no validation rules for OperatorId
 	}
 
 	if len(errors) > 0 {
