@@ -37,22 +37,18 @@ func (bv *BusinessValue) All(ctx kratos.Context, in *v1.AllBusinessValueRequest)
 	return &reply, nil
 }
 
-// Add 添加资源
-func (bv *BusinessValue) Add(ctx kratos.Context, in *v1.AddBusinessValueRequest) (*emptypb.Empty, error) {
-	mbv := model.BusinessValue{}
-	if util.Transform(in, &mbv) != nil {
-		return nil, v1.ErrorTransform()
-	}
-
-	return nil, mbv.Create(ctx)
-}
-
 // Update 更新资源
 func (bv *BusinessValue) Update(ctx kratos.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
-	mbv := model.BusinessValue{}
-	if util.Transform(in, &mbv) != nil {
-		return nil, v1.ErrorTransform()
+	var bvs []*model.BusinessValue
+	for _, item := range in.List {
+		temp := model.BusinessValue{
+			BusinessID:    in.BusinessId,
+			EnvironmentID: item.EnvironmentId,
+			Value:         item.Value,
+		}
+		bvs = append(bvs, &temp)
 	}
 
-	return nil, mbv.Update(ctx)
+	value := model.BusinessValue{}
+	return nil, value.Creates(ctx, in.BusinessId, bvs)
 }

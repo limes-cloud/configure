@@ -30,6 +30,10 @@ func (s *Service) UseTemplateVersion(ctx context.Context, in *v1.UseTemplateVers
 	return s.Template.UseVersion(kratos.MustContext(ctx), in)
 }
 
+func (s *Service) ParseTemplatePreview(ctx context.Context, in *v1.ParseTemplatePreviewRequest) (*v1.ParseTemplatePreviewReply, error) {
+	return s.Template.ParsePreview(kratos.MustContext(ctx), in)
+}
+
 func (s *Service) ParseTemplate(ctx context.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
 	return s.Template.Parse(kratos.MustContext(ctx), in)
 }

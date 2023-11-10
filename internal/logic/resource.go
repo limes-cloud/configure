@@ -6,6 +6,7 @@ import (
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"gorm.io/gorm"
 )
@@ -41,7 +42,7 @@ func (r *Resource) Page(ctx kratos.Context, in *v1.PageResourceRequest) (*v1.Pag
 		return nil, v1.ErrorDatabase()
 	}
 	reply := v1.PageResourceReply{
-		Total: total,
+		Total: uint32(total),
 	}
 	if util.Transform(list, &reply.List) != nil {
 		return nil, v1.ErrorTransform()
@@ -51,22 +52,53 @@ func (r *Resource) Page(ctx kratos.Context, in *v1.PageResourceRequest) (*v1.Pag
 
 // Add 添加资源
 func (r *Resource) Add(ctx kratos.Context, in *v1.AddResourceRequest) (*emptypb.Empty, error) {
+	if in.Private == nil {
+		in.Private = proto.Bool(false)
+	}
+
 	resource := model.Resource{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}
 
-	return nil, resource.Create(ctx)
+	if err := resource.Create(ctx); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
+
+	// 私有变量进行所属服务写入
+	if *in.Private {
+		rs := model.ResourceServer{}
+		if err := rs.CreateBySrvIds(ctx, resource.ID, in.Servers); err != nil {
+			return nil, v1.ErrorDatabaseFormat(err.Error())
+		}
+	}
+
+	return nil, nil
 }
 
 // Update 更新资源
 func (r *Resource) Update(ctx kratos.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
+	if in.Private == nil {
+		in.Private = proto.Bool(false)
+	}
+
 	resource := model.Resource{}
 	if util.Transform(in, &resource) != nil {
 		return nil, v1.ErrorTransform()
 	}
 
-	return nil, resource.Update(ctx)
+	if err := resource.Update(ctx); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
+
+	// 私有变量进行所属服务写入
+	if *in.Private {
+		rs := model.ResourceServer{}
+		if err := rs.CreateBySrvIds(ctx, resource.ID, in.Servers); err != nil {
+			return nil, v1.ErrorDatabaseFormat(err.Error())
+		}
+	}
+	return nil, nil
 }
 
 // Delete 删除资源

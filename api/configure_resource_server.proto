@@ -9,40 +9,20 @@ import "configure_resource.proto";
 
 
 message AllResourceServerRequest{
-    int64 resource_id = 1[(validate.rules).int64.gt = 0];
+    uint32 resource_id = 1[(validate.rules).uint32.gt = 0];
 }
 
 message AllResourceServerReply {
-  message ResourceServer{
-    int64 resource_id = 1;
-    int64 server_id = 2;
-    int64 created_at = 3;
-    Server server = 4;
-  }
-  repeated ResourceServer list = 1;
+  repeated Server list = 1;
 }
 
-
-message AllServerResourceRequest{
-  int64 server_id = 1 [(validate.rules).int64.gt = 0];
+message PageServerResourceRequest{
+  uint32 server_id = 1 [(validate.rules).uint32.gt = 0];
+  uint32 page = 2[(validate.rules).uint32.gt = 0];
+  uint32 page_size = 3[(validate.rules).uint32 = {gt:0,lte:20}];
 }
 
-message AllServerResourceReply {
-  message ResourceServer{
-    int64 resource_id = 1;
-    int64 server_id = 2;
-    Resource resource=3;
-  }
-  repeated ResourceServer list = 1;
-}
-
-// 新增环境
-message AddResourceServerRequest {
-  int64 resource_id = 1[(validate.rules).int64 = {gt: 0}];
-  int64 server_id = 2[(validate.rules).int64 = {gt: 0}];
-}
-
-// 删除环境
-message DeleteResourceServerRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+message PageServerResourceReply {
+  uint32 total = 1;
+  repeated Resource list = 2;
 }

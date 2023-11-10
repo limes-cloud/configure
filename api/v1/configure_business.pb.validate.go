@@ -61,6 +61,8 @@ func (m *Business) validate(all bool) error {
 
 	// no validation rules for ServerId
 
+	// no validation rules for Type
+
 	// no validation rules for Keyword
 
 	// no validation rules for Description
@@ -183,6 +185,17 @@ func (m *PageBusinessRequest) validate(all bool) error {
 		err := PageBusinessRequestValidationError{
 			field:  "PageSize",
 			reason: "value must be inside range (0, 50]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetServerId() <= 0 {
+		err := PageBusinessRequestValidationError{
+			field:  "ServerId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err
@@ -467,6 +480,17 @@ func (m *AddBusinessRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if l := utf8.RuneCountInString(m.GetType()); l < 1 || l > 12 {
+		err := AddBusinessRequestValidationError{
+			field:  "Type",
+			reason: "value length must be between 1 and 12 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if len(errors) > 0 {
 		return AddBusinessRequestMultiError(errors)
 	}
@@ -595,6 +619,17 @@ func (m *UpdateBusinessRequest) validate(all bool) error {
 		err := UpdateBusinessRequestValidationError{
 			field:  "Description",
 			reason: "value length must be between 1 and 128 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetType()); l < 1 || l > 12 {
+		err := UpdateBusinessRequestValidationError{
+			field:  "Type",
+			reason: "value length must be between 1 and 12 runes, inclusive",
 		}
 		if !all {
 			return err

@@ -6,8 +6,8 @@ import (
 
 type Configure struct {
 	BaseModel
-	ServerID      int64   `json:"server_id"`
-	EnvironmentID int64   `json:"environment_id"`
+	ServerID      uint32  `json:"server_id"`
+	EnvironmentID uint32  `json:"environment_id"`
 	Content       string  `json:"content"`
 	Version       string  `json:"version"`
 	Format        string  `json:"format"`
@@ -22,6 +22,6 @@ func (t *Configure) Update(ctx kratos.Context) error {
 	return ctx.DB().Updates(t).Error
 }
 
-func (t *Configure) OneBySrvAndEnv(ctx kratos.Context, srvId, envId int64) error {
+func (t *Configure) OneBySrvAndEnv(ctx kratos.Context, srvId, envId uint32) error {
 	return ctx.DB().First(t, "server_id=? and environment_id=?", srvId, envId).Error
 }

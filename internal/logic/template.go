@@ -3,7 +3,6 @@ package logic
 import (
 	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 
 	json "github.com/json-iterator/go"
@@ -26,14 +25,20 @@ func NewTemplate(conf *config.Config) *Template {
 	}
 }
 
+type value struct {
+	value   string
+	exclude bool
+}
+
 // Current 查询指定服务的当前模板
 func (t *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
 	template := model.Template{}
-	if err := template.Current(ctx, in.ServerId); err != nil {
-		return nil, v1.ErrorDatabase()
-	}
 	reply := v1.CurrentTemplateReply{}
-	if util.Transform(template, &reply) != nil {
+
+	if template.Current(ctx, in.ServerId) != nil {
+		return &reply, nil
+	}
+	if util.Transform(template, &reply.Template) != nil {
 		return nil, v1.ErrorTransform()
 	}
 	return &reply, nil
@@ -81,7 +86,7 @@ func (t *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.
 	if err := util.Transform(in, &template); err != nil {
 		return nil, v1.ErrorTransform()
 	}
-	template.Version = util.MD5([]byte(in.Content))
+	template.Version = strings.ToUpper(util.MD5([]byte(in.Content))[:12])
 
 	// 查找当前的版本
 	temp := model.Template{}
@@ -109,8 +114,41 @@ func (t *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionReque
 	return nil, template.UseVersionByID(ctx, in.ServerId, in.Id)
 }
 
+// ParsePreview 使用指定版本配置
+func (t *Template) ParsePreview(ctx kratos.Context, in *v1.ParseTemplatePreviewRequest) (*v1.ParseTemplatePreviewReply, error) {
+	env := model.Environment{}
+	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
+
+	// 获取字段的配置值
+	values, err := t.getVariableValue(ctx, env.ID, in.ServerId)
+	if err != nil {
+		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
+	}
+
+	// 进行值替换
+	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
+	tempKeys := reg.FindAllString(in.Content, -1)
+	for _, key := range tempKeys {
+		if val, ok := values[key]; !ok {
+			return nil, fmt.Errorf("非法字段：%v", key)
+		} else {
+			in.Content = t.replace(in.Content, key, val)
+		}
+	}
+
+	return &v1.ParseTemplatePreviewReply{
+		Content: in.Content,
+	}, nil
+}
+
 // Parse 使用指定版本配置
 func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
+	env := model.Environment{}
+	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
 
 	// 获取指定模板
 	tp := model.Template{}
@@ -119,7 +157,7 @@ func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.P
 	}
 
 	// 获取字段的配置值
-	values, err := t.getVariableValue(ctx, in.EnvironmentId, tp.ServerID)
+	values, err := t.getVariableValue(ctx, env.ID, tp.ServerID)
 	if err != nil {
 		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
 	}
@@ -128,13 +166,10 @@ func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.P
 	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
 	tempKeys := reg.FindAllString(tp.Content, -1)
 	for _, key := range tempKeys {
-		if val, ok := values[key]; ok {
-			if key == "json" {
-				key = fmt.Sprintf(`"%s"`, key)
-			}
-			tp.Content = strings.Replace(tp.Content, key, val, 1)
+		if val, ok := values[key]; !ok {
+			return nil, fmt.Errorf("非法字段：%v", key)
 		} else {
-			tp.Content = strings.Replace(tp.Content, key, "null", 1)
+			tp.Content = t.replace(tp.Content, key, val)
 		}
 	}
 
@@ -145,11 +180,11 @@ func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.P
 }
 
 // checkTemplate 校验数据模板数据是否合法
-func (t *Template) checkTemplate(ctx kratos.Context, srvId int64, template string) error {
+func (t *Template) checkTemplate(ctx kratos.Context, srvId uint32, template string) error {
 	//获取指定服务的模板字段
 	bs := model.Business{}
 	bsList, err := bs.All(ctx, func(db *gorm.DB) *gorm.DB {
-		return db.Where("server_id = ?", srvId)
+		return db.Where("server_id=?", srvId)
 	})
 	if err != nil {
 		return v1.ErrorDatabase()
@@ -159,18 +194,31 @@ func (t *Template) checkTemplate(ctx kratos.Context, srvId int64, template strin
 	rs := model.ResourceServer{}
 	rsList, _ := rs.All(ctx, func(db *gorm.DB) *gorm.DB {
 		db.Preload("Resource")
-		return db.Where("server_id =?", srvId)
+		return db.Where("server_id=?", srvId)
+	})
+
+	// 获取公共的资源变量
+	prs := model.Resource{}
+	prsList, _ := prs.All(ctx, func(db *gorm.DB) *gorm.DB {
+		return db.Where("private=false")
 	})
 
 	//组合模板和模板的key
 	keys := map[string]bool{}
 	for _, item := range rsList {
-		var fields []string
-		_ = json.Unmarshal([]byte(item.Resource.Fields), &fields)
+		fields := strings.Split(item.Resource.Fields, ",")
 		for _, val := range fields {
 			keys[t.fillKey(item.Resource.Keyword+"."+val)] = true
 		}
 	}
+
+	for _, item := range prsList {
+		fields := strings.Split(item.Fields, ",")
+		for _, val := range fields {
+			keys[t.fillKey(item.Keyword+"."+val)] = true
+		}
+	}
+
 	for _, item := range bsList {
 		keys[t.fillKey(item.Keyword)] = true
 	}
@@ -191,65 +239,74 @@ func (t *Template) fillKey(val string) string {
 	return fmt.Sprintf(`{{%s}}`, val)
 }
 
-func (t *Template) getVariableValue(ctx kratos.Context, envId, srvId int64) (map[string]string, error) {
-	// 查找模板
+func (t *Template) getVariableValue(ctx kratos.Context, envId, srvId uint32) (map[string]value, error) {
+	// 获取全部业务
 	bv := model.BusinessValue{}
 	bvs, err := bv.AllByEnvAndServer(ctx, envId, srvId)
 	if err != nil {
 		return nil, err
 	}
 
+	// 获取全部资源
 	rv := model.ResourceValue{}
 	rvs, err := rv.AllByEnvAndServer(ctx, envId, srvId)
 	if err != nil {
 		return nil, err
 	}
 
-	result := make(map[string]string)
+	result := make(map[string]value)
 
+	// 解析业务字段
 	for _, item := range bvs {
-		result[t.fillKey(item.Business.Keyword)] = t.parseBusinessValue(item.Value)
+		result[t.fillKey(item.Business.Keyword)] = t.parseBusinessValue(item.Business.Type, item.Value)
 	}
 
+	// 解析资源字段
 	for _, item := range rvs {
 		fs := map[string]any{}
 		_ = json.Unmarshal([]byte(item.Values), &fs)
-		for key, val := range fs {
+
+		fields := strings.Split(item.Resource.Fields, ",")
+		for _, key := range fields {
 			k := fmt.Sprintf("%s.%s", item.Resource.Keyword, key)
-			result[t.fillKey(k)] = t.parseResourceValue(val)
+			result[t.fillKey(k)] = t.parseResourceValue(fs[key])
 		}
 	}
 
 	return result, nil
 }
 
-func (t *Template) parseBusinessValue(input string) string {
-	input = strings.ReplaceAll(input, `\"`, `"`)
-	input = strings.Trim(input, " ")
-
-	// 以"*"格式的默认为字符串
-	if input[0] == '"' && input[len(input)-1] == '"' {
-		return input
+func (t *Template) parseBusinessValue(tp, input string) value {
+	switch tp {
+	case "string":
+		return value{value: input, exclude: false}
+	case "object":
+		return value{value: input, exclude: true}
+	default:
+		return value{value: input, exclude: true}
 	}
-
-	// 不为数字，也不为json
-	if _, err := strconv.Atoi(input); err != nil && input[0] != '{' {
-		input = fmt.Sprintf(`"%s"`, input)
-	}
-
-	return input
 }
 
-func (t *Template) parseResourceValue(val any) string {
+func (t *Template) parseResourceValue(val any) value {
+	if val == nil {
+		return value{value: "null", exclude: true}
+	}
 	switch val.(type) {
-	//case int64, int32, int16, int8, uint64, uint32, uint16, uint8, int, float32, float64, bool:
-	//	return fmt.Sprint(val)
 	case string:
-		return fmt.Sprintf(`"%s"`, val)
+		return value{value: val.(string), exclude: false}
 	case map[string]interface{}, []interface{}:
 		str, _ := json.MarshalToString(val)
-		return str
+		return value{value: str, exclude: true}
 	default:
-		return fmt.Sprint(val)
+		return value{value: fmt.Sprint(val), exclude: true}
 	}
+}
+
+func (t *Template) replace(template, key string, val value) string {
+	if strings.Contains(template, fmt.Sprintf(`"%v"`, key)) && val.exclude {
+		template = strings.Replace(template, fmt.Sprintf(`"%v"`, key), val.value, 1)
+	} else {
+		template = strings.Replace(template, key, fmt.Sprintf("%v", val.value), 1)
+	}
+	return template
 }

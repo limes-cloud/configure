@@ -67,6 +67,8 @@ func (m *Resource) validate(all bool) error {
 
 	// no validation rules for Tag
 
+	// no validation rules for Private
+
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
@@ -475,6 +477,10 @@ func (m *AddResourceRequest) validate(all bool) error {
 
 	// no validation rules for Fields
 
+	if m.Private != nil {
+		// no validation rules for Private
+	}
+
 	if len(errors) > 0 {
 		return AddResourceRequestMultiError(errors)
 	}
@@ -611,6 +617,10 @@ func (m *UpdateResourceRequest) validate(all bool) error {
 	}
 
 	// no validation rules for Fields
+
+	if m.Private != nil {
+		// no validation rules for Private
+	}
 
 	if len(errors) > 0 {
 		return UpdateResourceRequestMultiError(errors)

@@ -32,8 +32,12 @@ func NewConfigure(conf *config.Config) *Configure {
 
 // Get 查询指定模板
 func (t *Configure) Get(ctx kratos.Context, in *v1.GetConfigureRequest) (*v1.GetConfigureReply, error) {
+	env := model.Environment{}
+	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
 	configure := model.Configure{}
-	if err := configure.OneBySrvAndEnv(ctx, in.ServerId, in.EnvironmentId); err != nil {
+	if err := configure.OneBySrvAndEnv(ctx, in.ServerId, env.ID); err != nil {
 		return nil, v1.ErrorDatabase()
 	}
 	reply := v1.GetConfigureReply{}
@@ -50,6 +54,12 @@ func (t *Configure) Update(ctx kratos.Context, in *v1.UpdateConfigureRequest) (*
 		return nil, v1.ErrorTransform()
 	}
 
+	// 获取环境
+	env := model.Environment{}
+	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
+
 	// 获取当前正在使用的模板
 	tp := model.Template{}
 	if err := tp.Current(ctx, in.ServerId); err != nil {
@@ -58,7 +68,7 @@ func (t *Configure) Update(ctx kratos.Context, in *v1.UpdateConfigureRequest) (*
 
 	// 进行模板解析
 	template := NewTemplate(t.conf)
-	reply, err := template.Parse(ctx, &v1.ParseTemplateRequest{ServerId: in.ServerId, EnvironmentId: in.EnvironmentId})
+	reply, err := template.Parse(ctx, &v1.ParseTemplateRequest{ServerId: in.ServerId, EnvKeyword: env.Keyword})
 	if err != nil {
 		return nil, err
 	}
@@ -67,10 +77,11 @@ func (t *Configure) Update(ctx kratos.Context, in *v1.UpdateConfigureRequest) (*
 	configure.Content = reply.Content
 	configure.Format = reply.Format
 	configure.Version = util.MD5([]byte(reply.Content))
+	configure.EnvironmentID = env.ID
 
 	// 查询往期配置
 	old := &model.Configure{}
-	if old.OneBySrvAndEnv(ctx, in.ServerId, in.EnvironmentId) == nil {
+	if err := old.OneBySrvAndEnv(ctx, in.ServerId, env.ID); err == nil {
 		//校验当前版本是否和之前版本一致
 		if old.Version == configure.Version {
 			return nil, v1.ErrorVersionExist()
@@ -89,7 +100,7 @@ func (t *Configure) Update(ctx kratos.Context, in *v1.UpdateConfigureRequest) (*
 	return nil, nil
 }
 
-func (t *Configure) channelKey(srvId, envId int64) string {
+func (t *Configure) channelKey(srvId, envId uint32) string {
 	return fmt.Sprintf("%v:%v", srvId, envId)
 }
 
@@ -123,7 +134,7 @@ func (t *Configure) Watch(ctx kratos.Context, req *v1.WatchConfigureRequest, rep
 	return v1.ErrorWatchConfigureFormat(closer)
 }
 
-func (t *Configure) registerWatch(srvId, envId int64, reply v1.Service_WatchConfigureServer) <-chan string {
+func (t *Configure) registerWatch(srvId, envId uint32, reply v1.Service_WatchConfigureServer) <-chan string {
 	t.mutex.Lock()
 	defer t.mutex.Unlock()
 

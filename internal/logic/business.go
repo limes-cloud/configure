@@ -27,6 +27,7 @@ func (l *Business) Page(ctx kratos.Context, in *v1.PageBusinessRequest) (*v1.Pag
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {
+			db = db.Where("server_id=?", in.ServerId)
 			if in.Keyword != nil {
 				db = db.Where("keyword like ?", "%"+*in.Keyword+"%")
 			}

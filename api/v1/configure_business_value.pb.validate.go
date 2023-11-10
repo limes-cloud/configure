@@ -284,123 +284,6 @@ var _ interface {
 	ErrorName() string
 } = AllBusinessValueReplyValidationError{}
 
-// Validate checks the field values on AddBusinessValueRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AddBusinessValueRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on AddBusinessValueRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// AddBusinessValueRequestMultiError, or nil if none found.
-func (m *AddBusinessValueRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *AddBusinessValueRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for EnvironmentId
-
-	// no validation rules for BusinessId
-
-	if utf8.RuneCountInString(m.GetValue()) < 7 {
-		err := AddBusinessValueRequestValidationError{
-			field:  "Value",
-			reason: "value length must be at least 7 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return AddBusinessValueRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// AddBusinessValueRequestMultiError is an error wrapping multiple validation
-// errors returned by AddBusinessValueRequest.ValidateAll() if the designated
-// constraints aren't met.
-type AddBusinessValueRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m AddBusinessValueRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m AddBusinessValueRequestMultiError) AllErrors() []error { return m }
-
-// AddBusinessValueRequestValidationError is the validation error returned by
-// AddBusinessValueRequest.Validate if the designated constraints aren't met.
-type AddBusinessValueRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e AddBusinessValueRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e AddBusinessValueRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e AddBusinessValueRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e AddBusinessValueRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e AddBusinessValueRequestValidationError) ErrorName() string {
-	return "AddBusinessValueRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e AddBusinessValueRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sAddBusinessValueRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = AddBusinessValueRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = AddBusinessValueRequestValidationError{}
-
 // Validate checks the field values on UpdateBusinessValueRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -423,9 +306,9 @@ func (m *UpdateBusinessValueRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetBusinessId() <= 0 {
 		err := UpdateBusinessValueRequestValidationError{
-			field:  "Id",
+			field:  "BusinessId",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -434,7 +317,39 @@ func (m *UpdateBusinessValueRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Value
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateBusinessValueRequestValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateBusinessValueRequestValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateBusinessValueRequestValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateBusinessValueRequestMultiError(errors)
@@ -551,35 +466,6 @@ func (m *AllBusinessValueReply_BusinessValue) validate(all bool) error {
 
 	// no validation rules for UpdatedAt
 
-	if all {
-		switch v := interface{}(m.GetEnvironment()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AllBusinessValueReply_BusinessValueValidationError{
-					field:  "Environment",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, AllBusinessValueReply_BusinessValueValidationError{
-					field:  "Environment",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetEnvironment()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AllBusinessValueReply_BusinessValueValidationError{
-				field:  "Environment",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	if len(errors) > 0 {
 		return AllBusinessValueReply_BusinessValueMultiError(errors)
 	}
@@ -661,3 +547,142 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = AllBusinessValueReply_BusinessValueValidationError{}
+
+// Validate checks the field values on UpdateBusinessValueRequest_BusinessValue
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *UpdateBusinessValueRequest_BusinessValue) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// UpdateBusinessValueRequest_BusinessValue with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in
+// UpdateBusinessValueRequest_BusinessValueMultiError, or nil if none found.
+func (m *UpdateBusinessValueRequest_BusinessValue) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateBusinessValueRequest_BusinessValue) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetEnvironmentId() <= 0 {
+		err := UpdateBusinessValueRequest_BusinessValueValidationError{
+			field:  "EnvironmentId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetValue()) < 1 {
+		err := UpdateBusinessValueRequest_BusinessValueValidationError{
+			field:  "Value",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+		err := UpdateBusinessValueRequest_BusinessValueValidationError{
+			field:  "EnvKeyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return UpdateBusinessValueRequest_BusinessValueMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateBusinessValueRequest_BusinessValueMultiError is an error wrapping
+// multiple validation errors returned by
+// UpdateBusinessValueRequest_BusinessValue.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateBusinessValueRequest_BusinessValueMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateBusinessValueRequest_BusinessValueMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateBusinessValueRequest_BusinessValueMultiError) AllErrors() []error { return m }
+
+// UpdateBusinessValueRequest_BusinessValueValidationError is the validation
+// error returned by UpdateBusinessValueRequest_BusinessValue.Validate if the
+// designated constraints aren't met.
+type UpdateBusinessValueRequest_BusinessValueValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateBusinessValueRequest_BusinessValueValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateBusinessValueRequest_BusinessValueValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateBusinessValueRequest_BusinessValueValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateBusinessValueRequest_BusinessValueValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateBusinessValueRequest_BusinessValueValidationError) ErrorName() string {
+	return "UpdateBusinessValueRequest_BusinessValueValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateBusinessValueRequest_BusinessValueValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateBusinessValueRequest_BusinessValue.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateBusinessValueRequest_BusinessValueValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateBusinessValueRequest_BusinessValueValidationError{}

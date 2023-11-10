@@ -68,10 +68,10 @@ func (m *GetConfigureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetEnvironmentId() <= 0 {
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 0 {
 		err := GetConfigureRequestValidationError{
-			field:  "EnvironmentId",
-			reason: "value must be greater than 0",
+			field:  "EnvKeyword",
+			reason: "value length must be at least 0 runes",
 		}
 		if !all {
 			return err
@@ -310,10 +310,10 @@ func (m *UpdateConfigureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetEnvironmentId() <= 0 {
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
 		err := UpdateConfigureRequestValidationError{
-			field:  "EnvironmentId",
-			reason: "value must be greater than 0",
+			field:  "EnvKeyword",
+			reason: "value length must be at least 1 runes",
 		}
 		if !all {
 			return err

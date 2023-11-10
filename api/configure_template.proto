@@ -4,33 +4,31 @@ package configure;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 
-
 message Template{
-  int64 id = 1;
-  int64 server_id = 2;
+  uint32 id = 1;
+  uint32 server_id = 2;
   string description = 3;
   string version = 4;
   bool is_use = 5;
-  int64 created_at = 6;
-  optional string operator = 7;
-  optional int64 operator_id = 8;
+  string content = 6;
+  uint32 created_at = 7;
 }
 
 message PageTemplateRequest{
-  int32 page = 1[(validate.rules).int32 = {gt: 0}];
-  int32 page_size = 2[(validate.rules).int32 = {gt: 0,lte:50}];
-  int64 server_id = 3[(validate.rules).int64 = {gt: 0}];
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  uint32 server_id = 3[(validate.rules).uint32 = {gt: 0}];
 }
 
 message PageTemplateReply {
-  int64 total = 1;
+  uint32 total = 1;
   repeated Template list = 2;
 }
 
 
 // 查询指定模板
 message CurrentTemplateRequest{
-  int64 server_id = 1[(validate.rules).int64 = {gt: 0}];
+  uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
 }
 
 message CurrentTemplateReply{
@@ -39,42 +37,52 @@ message CurrentTemplateReply{
 
 // 查询指定模板
 message GetTemplateRequest{
-   int64 id = 1[(validate.rules).int64 = {gt: 0}];
+   uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
 }
 
 message GetTemplateReply{
-  int64 id = 1;
-  int64 server_id = 2;
+  uint32 id = 1;
+  uint32 server_id = 2;
   string content = 3;
   string description = 4;
   string version = 5;
   optional bool is_use = 6;
   optional string operator = 7;
-  optional int64 operator_id = 8;
+  optional uint32 operator_id = 8;
 }
 
 // 新增模板
 message AddTemplateRequest {
-  int64 server_id = 1[(validate.rules).int64 = {gt: 0}];
+  uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
   string content = 2[(validate.rules).string = {min_len: 3}];
-  string description = 3[(validate.rules).string = {min_len: 3, max_len: 64}];
+  string description = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
+  string format = 4 [(validate.rules).string = {min_len: 1, max_len: 64, in: ["json","yaml"]}];
 }
 
 // 修改模板
 message UseTemplateVersionRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
-  int64 server_id = 2[(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  uint32 server_id = 2[(validate.rules).uint32 = {gt: 0}];
 }
 
+// 解析配置
+message ParseTemplatePreviewRequest {
+  string content = 1[(validate.rules).string = {min_len: 7}];
+  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
+  uint32 server_id = 3[(validate.rules).uint32 = {gt: 0}];
+}
+
+message ParseTemplatePreviewReply {
+  string content = 1;
+}
 
 // 解析配置
 message ParseTemplateRequest {
-  int64 server_id = 1[(validate.rules).int64 = {gt: 0}];
-  int64 environment_id = 2[(validate.rules).int64 = {gt: 0}];
+  uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
+  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
 }
 
 message ParseTemplateReply {
   string content = 1;
   string format = 2;
 }
-

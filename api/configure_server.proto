@@ -5,34 +5,33 @@ option go_package = "./v1;v1";
 import "validate/validate.proto";
 
 message Server{
-  int64 id = 1;
+  uint32 id = 1;
   string keyword = 2;
   string name = 3;
   string description = 4;
-  int64 created_at = 5;
-  int64 updated_at = 6;
+  uint32 created_at = 5;
+  uint32 updated_at = 6;
 }
 
 message PageServerRequest{
-    int32 page = 1[(validate.rules).int32 = {gt: 0}];
-    int32 page_size = 2[(validate.rules).int32 = {gt: 0,lte:50}];
+    uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+    uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
     optional string keyword = 3;
 }
 
 message PageServerReply {
-  int64 total = 1;
+  uint32 total = 1;
   repeated Server list = 2;
 }
 
 message GetServerRequest{
-  optional int64 id = 1;
+  optional uint32 id = 1;
   optional string keyword = 2;
 }
 
 message GetServerReply{
     Server server = 1;
 }
-
 
 // 新增环境
 message AddServerRequest {
@@ -43,7 +42,7 @@ message AddServerRequest {
 
 // 修改环境
 message UpdateServerRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
   string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
@@ -51,5 +50,5 @@ message UpdateServerRequest {
 
 // 删除环境
 message DeleteServerRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
 }

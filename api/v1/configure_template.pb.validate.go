@@ -67,15 +67,9 @@ func (m *Template) validate(all bool) error {
 
 	// no validation rules for IsUse
 
+	// no validation rules for Content
+
 	// no validation rules for CreatedAt
-
-	if m.Operator != nil {
-		// no validation rules for Operator
-	}
-
-	if m.OperatorId != nil {
-		// no validation rules for OperatorId
-	}
 
 	if len(errors) > 0 {
 		return TemplateMultiError(errors)
@@ -950,10 +944,32 @@ func (m *AddTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetDescription()); l < 3 || l > 64 {
+	if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 64 {
 		err := AddTemplateRequestValidationError{
 			field:  "Description",
-			reason: "value length must be between 3 and 64 runes, inclusive",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _AddTemplateRequest_Format_InLookup[m.GetFormat()]; !ok {
+		err := AddTemplateRequestValidationError{
+			field:  "Format",
+			reason: "value must be in list [json yaml]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetFormat()); l < 1 || l > 64 {
+		err := AddTemplateRequestValidationError{
+			field:  "Format",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -1040,6 +1056,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = AddTemplateRequestValidationError{}
+
+var _AddTemplateRequest_Format_InLookup = map[string]struct{}{
+	"json": {},
+	"yaml": {},
+}
 
 // Validate checks the field values on UseTemplateVersionRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1165,6 +1186,246 @@ var _ interface {
 	ErrorName() string
 } = UseTemplateVersionRequestValidationError{}
 
+// Validate checks the field values on ParseTemplatePreviewRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ParseTemplatePreviewRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ParseTemplatePreviewRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ParseTemplatePreviewRequestMultiError, or nil if none found.
+func (m *ParseTemplatePreviewRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ParseTemplatePreviewRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetContent()) < 7 {
+		err := ParseTemplatePreviewRequestValidationError{
+			field:  "Content",
+			reason: "value length must be at least 7 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+		err := ParseTemplatePreviewRequestValidationError{
+			field:  "EnvKeyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetServerId() <= 0 {
+		err := ParseTemplatePreviewRequestValidationError{
+			field:  "ServerId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ParseTemplatePreviewRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ParseTemplatePreviewRequestMultiError is an error wrapping multiple
+// validation errors returned by ParseTemplatePreviewRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ParseTemplatePreviewRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ParseTemplatePreviewRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ParseTemplatePreviewRequestMultiError) AllErrors() []error { return m }
+
+// ParseTemplatePreviewRequestValidationError is the validation error returned
+// by ParseTemplatePreviewRequest.Validate if the designated constraints
+// aren't met.
+type ParseTemplatePreviewRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ParseTemplatePreviewRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ParseTemplatePreviewRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ParseTemplatePreviewRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ParseTemplatePreviewRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ParseTemplatePreviewRequestValidationError) ErrorName() string {
+	return "ParseTemplatePreviewRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ParseTemplatePreviewRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sParseTemplatePreviewRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ParseTemplatePreviewRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ParseTemplatePreviewRequestValidationError{}
+
+// Validate checks the field values on ParseTemplatePreviewReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ParseTemplatePreviewReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ParseTemplatePreviewReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ParseTemplatePreviewReplyMultiError, or nil if none found.
+func (m *ParseTemplatePreviewReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ParseTemplatePreviewReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Content
+
+	if len(errors) > 0 {
+		return ParseTemplatePreviewReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ParseTemplatePreviewReplyMultiError is an error wrapping multiple validation
+// errors returned by ParseTemplatePreviewReply.ValidateAll() if the
+// designated constraints aren't met.
+type ParseTemplatePreviewReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ParseTemplatePreviewReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ParseTemplatePreviewReplyMultiError) AllErrors() []error { return m }
+
+// ParseTemplatePreviewReplyValidationError is the validation error returned by
+// ParseTemplatePreviewReply.Validate if the designated constraints aren't met.
+type ParseTemplatePreviewReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ParseTemplatePreviewReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ParseTemplatePreviewReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ParseTemplatePreviewReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ParseTemplatePreviewReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ParseTemplatePreviewReplyValidationError) ErrorName() string {
+	return "ParseTemplatePreviewReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ParseTemplatePreviewReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sParseTemplatePreviewReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ParseTemplatePreviewReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ParseTemplatePreviewReplyValidationError{}
+
 // Validate checks the field values on ParseTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1198,10 +1459,10 @@ func (m *ParseTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetEnvironmentId() <= 0 {
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
 		err := ParseTemplateRequestValidationError{
-			field:  "EnvironmentId",
-			reason: "value must be greater than 0",
+			field:  "EnvKeyword",
+			reason: "value length must be at least 1 runes",
 		}
 		if !all {
 			return err

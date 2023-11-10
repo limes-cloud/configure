@@ -14,10 +14,6 @@ func (s *Service) AllBusinessValue(ctx context.Context, in *v1.AllBusinessValueR
 	return s.BusinessValue.All(kratos.MustContext(ctx), in)
 }
 
-func (s *Service) AddBusinessValue(ctx context.Context, in *v1.AddBusinessValueRequest) (*emptypb.Empty, error) {
-	return s.BusinessValue.Add(kratos.MustContext(ctx), in)
-}
-
 func (s *Service) UpdateBusinessValue(ctx context.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
 	return s.BusinessValue.Update(kratos.MustContext(ctx), in)
 }

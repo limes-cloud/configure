@@ -7,6 +7,7 @@ import (
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratos"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -49,6 +50,8 @@ func (e *Environment) Add(ctx kratos.Context, in *v1.AddEnvironmentRequest) (*em
 	if util.Transform(in, env) != nil {
 		return nil, v1.ErrorTransform()
 	}
+
+	env.Status = proto.Bool(true)
 
 	if err := env.Create(ctx); err != nil {
 		return nil, v1.ErrorDatabase()
@@ -99,7 +102,7 @@ func (e *Environment) GetToken(ctx kratos.Context, in *v1.GetEnvironmentTokenReq
 }
 
 // ResetToken 重置环境token
-func (e *Environment) ResetToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
+func (e *Environment) ResetToken(ctx kratos.Context, in *v1.ResetEnvironmentTokenRequest) (*v1.ResetEnvironmentTokenReply, error) {
 	env := &model.Environment{
 		Token: util.MD5ToUpper([]byte(uuid.NewString()))}
 
@@ -107,5 +110,7 @@ func (e *Environment) ResetToken(ctx kratos.Context, in *v1.ResetEnvironmentToke
 		return nil, v1.ErrorDatabase()
 	}
 
-	return nil, nil
+	return &v1.ResetEnvironmentTokenReply{
+		Token: env.Token,
+	}, nil
 }

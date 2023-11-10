@@ -19,234 +19,217 @@ service Service {
 
   rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
     option (google.api.http) = {
-      get: "/v1/environments"
+      get: "/configure/v1/environments",
+      response_body: "list"
     };
   }
 
   rpc AddEnvironment (AddEnvironmentRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/environment",
+      post: "/configure/v1/environment",
       body:"*",
     };
   }
 
   rpc UpdateEnvironment (UpdateEnvironmentRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/environment",
+      put: "/configure/v1/environment",
       body:"*"
     };
   }
 
   rpc DeleteEnvironment (DeleteEnvironmentRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/environment"
+      delete: "/configure/v1/environment"
     };
   }
-
 
   rpc GetEnvironmentToken (GetEnvironmentTokenRequest) returns (GetEnvironmentTokenReply) {
     option (google.api.http) = {
-      get: "/v1/environment/token"
+      get: "/configure/v1/environment/token"
     };
   }
 
-  rpc ResetEnvironmentToken (ResetEnvironmentTokenRequest) returns (google.protobuf.Empty) {
+  rpc ResetEnvironmentToken (ResetEnvironmentTokenRequest) returns (ResetEnvironmentTokenReply) {
     option (google.api.http) = {
-      post: "/v1/environment/resetToken",
+      put: "/configure/v1/environment/token",
       body:"*"
     };
   }
 
   rpc PageServer (PageServerRequest) returns (PageServerReply) {
     option (google.api.http) = {
-      get: "/v1/servers"
+      get: "/configure/v1/servers",
     };
   }
 
   rpc GetServer (GetServerRequest) returns (GetServerReply) {
     option (google.api.http) = {
-      get: "/v1/server",
+      get: "/configure/v1/server",
       response_body: "server"
     };
   }
 
   rpc AddServer (AddServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/server",
+      post: "/configure/v1/server",
       body:"*"
     };
   }
 
   rpc UpdateServer (UpdateServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/server",
+      put: "/configure/v1/server",
       body:"*"
     };
   }
 
   rpc DeleteServer (DeleteServerRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/server"
+      delete: "/configure/v1/server"
     };
   }
 
   rpc PageResource (PageResourceRequest) returns (PageResourceReply) {
     option (google.api.http) = {
-      get: "/v1/resources"
+      get: "/configure/v1/resources"
     };
   }
 
   rpc AddResource (AddResourceRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/resource",
+      post: "/configure/v1/resource",
       body:"*"
     };
   }
 
   rpc UpdateResource (UpdateResourceRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/resource",
+      put: "/configure/v1/resource",
       body:"*"
     };
   }
 
   rpc DeleteResource (DeleteResourceRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/resource"
+      delete: "/configure/v1/resource"
     };
   }
 
   rpc AllResourceServer (AllResourceServerRequest) returns (AllResourceServerReply) {
     option (google.api.http) = {
-      get: "/v1/resource/servers"
+      get: "/configure/v1/resource/servers",
+      response_body:"list"
     };
   }
 
-  rpc AddResourceServer (AddResourceServerRequest) returns (google.protobuf.Empty) {
+  rpc PageServerResource (PageServerResourceRequest) returns (PageServerResourceReply) {
     option (google.api.http) = {
-      post: "/v1/resource/server",
-      body:"*"
-    };
-  }
-
-  rpc DeleteResourceServer (DeleteResourceServerRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      delete: "/v1/resource/server"
-    };
-  }
-
-  rpc AllServerResource (AllServerResourceRequest) returns (AllServerResourceReply) {
-    option (google.api.http) = {
-      get: "/v1/server/resources",
+      get: "/configure/v1/server/resources",
       response_body: "*"
     };
   }
 
   rpc AllResourceValue (AllResourceValueRequest) returns (AllResourceValueReply) {
     option (google.api.http) = {
-      get: "/v1/resource/values",
-      response_body: "*"
-    };
-  }
-
-  rpc AddResourceValue (AddResourceValueRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      post: "/v1/resource/value",
-      body:"*"
+      get: "/configure/v1/resource/values",
+      response_body: "list"
     };
   }
 
   rpc UpdateResourceValue (UpdateResourceValueRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/resource/value",
+      put: "/configure/v1/resource/value",
       body:"*"
     };
   }
 
   rpc PageBusiness (PageBusinessRequest) returns (PageBusinessReply) {
     option (google.api.http) = {
-      get: "/v1/business"
+      get: "/configure/v1/business"
     };
   }
 
   rpc AddBusiness (AddBusinessRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/business",
+      post: "/configure/v1/business",
       body:"*"
     };
   }
 
   rpc UpdateBusiness (UpdateBusinessRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/business",
+      put: "/configure/v1/business",
       body:"*"
     };
   }
 
   rpc DeleteBusiness (DeleteBusinessRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/v1/business"
+      delete: "/configure/v1/business"
     };
   }
 
   rpc AllBusinessValue (AllBusinessValueRequest) returns (AllBusinessValueReply) {
     option (google.api.http) = {
-      get: "/v1/business/values"
+      get: "/configure/v1/business/values",
+      response_body:"list"
     };
   }
 
-  rpc AddBusinessValue (AddBusinessValueRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      post: "/v1/business/value",
-      body:"*"
-    };
-  }
 
   rpc UpdateBusinessValue (UpdateBusinessValueRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/business/value",
+      put: "/configure/v1/business/value",
       body:"*"
     };
   }
 
   rpc PageTemplate (PageTemplateRequest) returns (PageTemplateReply) {
     option (google.api.http) = {
-      get: "/v1/templates",
+      get: "/configure/v1/templates",
       response_body: "*"
     };
   }
 
   rpc GetTemplate (GetTemplateRequest) returns (GetTemplateReply) {
     option (google.api.http) = {
-      get: "/v1/template",
+      get: "/configure/v1/template",
       response_body: "*"
     };
   }
 
   rpc CurrentTemplate (CurrentTemplateRequest) returns (CurrentTemplateReply) {
     option (google.api.http) = {
-      get: "/v1/template/current",
+      get: "/configure/v1/template/current",
       response_body: "template"
     };
   }
 
   rpc AddTemplate (AddTemplateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/v1/template",
+      post: "/configure/v1/template",
       body:"*"
     };
   }
 
   rpc UpdateTemplateVersion (UseTemplateVersionRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/template",
+      put: "/configure/v1/template",
+      body:"*"
+    };
+  }
+
+  rpc ParseTemplatePreview (ParseTemplatePreviewRequest) returns (ParseTemplatePreviewReply) {
+    option (google.api.http) = {
+      post: "/configure/v1/template/preview/{env_keyword}",
       body:"*"
     };
   }
 
   rpc ParseTemplate (ParseTemplateRequest) returns (ParseTemplateReply) {
     option (google.api.http) = {
-      post: "/v1/template/parse",
+      post: "/configure/v1/template/parse/{env_keyword}",
       body:"*"
     };
   }
@@ -254,13 +237,13 @@ service Service {
 
   rpc GetConfigure (GetConfigureRequest) returns (GetConfigureReply) {
     option (google.api.http) = {
-      get: "/v1/configure"
+      get: "/configure/v1/configure/{env_keyword}"
     };
   }
 
   rpc UpdateConfigure (UpdateConfigureRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/v1/configure",
+      put: "/configure/v1/configure/{env_keyword}",
       body:"*"
     };
   }
@@ -268,5 +251,3 @@ service Service {
   rpc WatchConfigure (WatchConfigureRequest) returns (stream WatchConfigureReply);
 
 }
-
-

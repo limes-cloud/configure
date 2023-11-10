@@ -28,6 +28,6 @@ func (s *Service) GetEnvironmentToken(ctx context.Context, in *v1.GetEnvironment
 	return s.Environment.GetToken(kratos.MustContext(ctx), in)
 }
 
-func (s *Service) ResetEnvironmentToken(ctx context.Context, in *v1.ResetEnvironmentTokenRequest) (*emptypb.Empty, error) {
+func (s *Service) ResetEnvironmentToken(ctx context.Context, in *v1.ResetEnvironmentTokenRequest) (*v1.ResetEnvironmentTokenReply, error) {
 	return s.Environment.ResetToken(kratos.MustContext(ctx), in)
 }

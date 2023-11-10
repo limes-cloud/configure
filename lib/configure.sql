@@ -34,6 +34,7 @@ create table `resource`(
     `keyword` char(32) binary not null comment '资源标识',
     `fields` text not null comment '资源字段',
     `tag` char(32) not null comment '资源标签;mysql/mongo/consul..',
+    `private` bool not null default true comment '是否为私有字段',
     `description` varchar(256) not null  comment '资源描述',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
@@ -47,10 +48,9 @@ create table resource_server(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
     `resource_id` bigint unsigned not null comment '资源id',
     `server_id` bigint unsigned not null comment '服务id',
-    `created_at` bigint unsigned default null  comment '创建时间',
     unique index(`resource_id`,`server_id`),
-    foreign key (`resource_id`) references resource(`id`),
-    foreign key (`server_id`) references server(`id`)
+    foreign key (`resource_id`) references resource(`id`) on delete cascade ,
+    foreign key (`server_id`) references server(`id`) on delete cascade
 )engine innodb charset utf8;
 
 
@@ -64,9 +64,8 @@ create table resource_value(
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     unique index(`environment_id`,`resource_id`),
-    foreign key (`environment_id`) references environment(`id`),
-    foreign key (`resource_id`) references resource(`id`)
-
+    foreign key (`environment_id`) references environment(`id`) on delete cascade,
+    foreign key (`resource_id`) references resource(`id`) on delete cascade
 )engine innodb charset utf8;
 
 
@@ -75,13 +74,14 @@ create table `business`(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
     `server_id` bigint unsigned not null comment '服务id',
     `keyword` char(32) binary not null comment '业务标识',
+    `type` char(12) binary not null comment '字段类型',
+    `option` text default null  comment '字段扩展数据',
     `description` varchar(256) not null  comment '业务描述',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     index(`created_at`),
     unique index(`server_id`,`keyword`),
     foreign key (`server_id`) references server(`id`)
-
 )engine innodb charset utf8;
 
 
@@ -89,15 +89,14 @@ create table `business`(
 create table business_value(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
     `environment_id` bigint unsigned not null comment '环境id',
-    `business_id` bigint unsigned not null comment '业务id',
-    `value` text not null comment '业务值',
+    `business_id` bigint unsigned not null comment '业务变量id',
+    `value` text not null comment '变量值',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     unique index(`environment_id`,`business_id`),
     foreign key (`environment_id`) references environment(`id`),
     foreign key (`business_id`) references business(`id`)
 )engine innodb charset utf8;
-
 
 create table template(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
@@ -112,7 +111,6 @@ create table template(
     unique index(`server_id`,`version`),
     foreign key (`server_id`) references server(`id`)
 )engine innodb charset utf8;
-
 
 create table configure(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',

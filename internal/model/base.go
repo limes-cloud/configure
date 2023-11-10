@@ -5,25 +5,25 @@ import "gorm.io/gorm"
 type Scopes func(db *gorm.DB) *gorm.DB
 
 type PageOptions struct {
-	Page     int32
-	PageSize int32
+	Page     uint32
+	PageSize uint32
 	Scopes   Scopes
 }
 
 type CreateModel struct {
-	ID        int64 `json:"id"`
-	CreatedAt int64 `json:"created_at,omitempty"`
+	ID        uint32 `json:"id"`
+	CreatedAt uint32 `json:"created_at,omitempty"`
 }
 
 type BaseModel struct {
-	ID        int64 `json:"id"`
-	CreatedAt int64 `json:"created_at,omitempty"`
-	UpdatedAt int64 `json:"updated_at,omitempty"`
+	ID        uint32 `json:"id"`
+	CreatedAt uint32 `json:"created_at,omitempty"`
+	UpdatedAt uint32 `json:"updated_at,omitempty"`
 }
 
 type DeleteModel struct {
-	ID        int64          `json:"id"`
-	CreatedAt int64          `json:"created_at,omitempty"`
-	UpdatedAt int64          `json:"updated_at,omitempty"`
+	ID        uint32         `json:"id"`
+	CreatedAt uint32         `json:"created_at,omitempty"`
+	UpdatedAt uint32         `json:"updated_at,omitempty"`
 	DeletedAt gorm.DeletedAt `json:"-"`
 }

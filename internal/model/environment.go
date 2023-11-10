@@ -29,7 +29,7 @@ func (e *Environment) OneByToken(ctx kratos.Context, token string) error {
 }
 
 // OneByID 通过id查找指定环境
-func (e *Environment) OneByID(ctx kratos.Context, id int64) error {
+func (e *Environment) OneByID(ctx kratos.Context, id uint32) error {
 	return ctx.DB().First(e, "id = ?", id).Error
 }
 
@@ -40,11 +40,11 @@ func (e *Environment) All(ctx kratos.Context) ([]*Environment, error) {
 }
 
 // UpdateByID 更新指定id的环境
-func (e *Environment) UpdateByID(ctx kratos.Context, id int64) error {
+func (e *Environment) UpdateByID(ctx kratos.Context, id uint32) error {
 	return ctx.DB().Model(e).Where("id = ?", id).Updates(e).Error
 }
 
 // DeleteByID 删除指定id的环境
-func (e *Environment) DeleteByID(ctx kratos.Context, id int64) error {
+func (e *Environment) DeleteByID(ctx kratos.Context, id uint32) error {
 	return ctx.DB().Model(e).Delete(e, "id = ?", id).Error
 }

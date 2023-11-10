@@ -7,32 +7,29 @@ import "configure_resource.proto";
 import "configure_environment.proto";
 
 message AllBusinessValueRequest{
-  int64 business_id = 1[(validate.rules).int64.gt = 0];
+  uint32 business_id = 1[(validate.rules).uint32.gt = 0];
 }
 
 message AllBusinessValueReply {
   message BusinessValue{
-    int64 id = 1;
-    int64 environment_id = 2;
-    int64 business_id = 3;
+    uint32 id = 1;
+    uint32 environment_id = 2;
+    uint32 business_id = 3;
     string value = 4;
-    int64 created_at = 5;
-    int64 updated_at = 6;
-    Environment environment = 7;
+    uint32 created_at = 5;
+    uint32 updated_at = 6;
   }
   repeated BusinessValue list = 1;
 }
 
-// 新增资源值
-message AddBusinessValueRequest {
-  int64 environment_id = 1;
-  int64 business_id = 2;
-  string value = 3[(validate.rules).string = {min_len: 7}];
-}
-
 // 修改资源值
 message UpdateBusinessValueRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
-  string value = 4;
+  message BusinessValue{
+    uint32 environment_id = 1[(validate.rules).uint32 = {gt: 0}];
+    string value = 2[(validate.rules).string = {min_len: 1}];
+    string env_keyword = 3[(validate.rules).string = {min_len: 1}];
+  }
+  uint32 business_id = 1 [(validate.rules).uint32 = {gt: 0}];
+  repeated BusinessValue list = 2;
 }
 

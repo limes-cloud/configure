@@ -284,123 +284,6 @@ var _ interface {
 	ErrorName() string
 } = AllResourceValueReplyValidationError{}
 
-// Validate checks the field values on AddResourceValueRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *AddResourceValueRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on AddResourceValueRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// AddResourceValueRequestMultiError, or nil if none found.
-func (m *AddResourceValueRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *AddResourceValueRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for EnvironmentId
-
-	// no validation rules for ResourceId
-
-	if utf8.RuneCountInString(m.GetValues()) < 7 {
-		err := AddResourceValueRequestValidationError{
-			field:  "Values",
-			reason: "value length must be at least 7 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return AddResourceValueRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// AddResourceValueRequestMultiError is an error wrapping multiple validation
-// errors returned by AddResourceValueRequest.ValidateAll() if the designated
-// constraints aren't met.
-type AddResourceValueRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m AddResourceValueRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m AddResourceValueRequestMultiError) AllErrors() []error { return m }
-
-// AddResourceValueRequestValidationError is the validation error returned by
-// AddResourceValueRequest.Validate if the designated constraints aren't met.
-type AddResourceValueRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e AddResourceValueRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e AddResourceValueRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e AddResourceValueRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e AddResourceValueRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e AddResourceValueRequestValidationError) ErrorName() string {
-	return "AddResourceValueRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e AddResourceValueRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sAddResourceValueRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = AddResourceValueRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = AddResourceValueRequestValidationError{}
-
 // Validate checks the field values on UpdateResourceValueRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -423,9 +306,9 @@ func (m *UpdateResourceValueRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetResourceId() <= 0 {
 		err := UpdateResourceValueRequestValidationError{
-			field:  "Id",
+			field:  "ResourceId",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -434,7 +317,39 @@ func (m *UpdateResourceValueRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Values
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateResourceValueRequestValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateResourceValueRequestValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateResourceValueRequestValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateResourceValueRequestMultiError(errors)
@@ -549,35 +464,6 @@ func (m *AllResourceValueReply_ResourceValue) validate(all bool) error {
 
 	// no validation rules for CreatedAt
 
-	if all {
-		switch v := interface{}(m.GetEnvironment()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, AllResourceValueReply_ResourceValueValidationError{
-					field:  "Environment",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, AllResourceValueReply_ResourceValueValidationError{
-					field:  "Environment",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetEnvironment()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return AllResourceValueReply_ResourceValueValidationError{
-				field:  "Environment",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
 	if len(errors) > 0 {
 		return AllResourceValueReply_ResourceValueMultiError(errors)
 	}
@@ -659,3 +545,142 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = AllResourceValueReply_ResourceValueValidationError{}
+
+// Validate checks the field values on UpdateResourceValueRequest_ResourceValue
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *UpdateResourceValueRequest_ResourceValue) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// UpdateResourceValueRequest_ResourceValue with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in
+// UpdateResourceValueRequest_ResourceValueMultiError, or nil if none found.
+func (m *UpdateResourceValueRequest_ResourceValue) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateResourceValueRequest_ResourceValue) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetEnvironmentId() <= 0 {
+		err := UpdateResourceValueRequest_ResourceValueValidationError{
+			field:  "EnvironmentId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetValues()) < 7 {
+		err := UpdateResourceValueRequest_ResourceValueValidationError{
+			field:  "Values",
+			reason: "value length must be at least 7 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+		err := UpdateResourceValueRequest_ResourceValueValidationError{
+			field:  "EnvKeyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return UpdateResourceValueRequest_ResourceValueMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateResourceValueRequest_ResourceValueMultiError is an error wrapping
+// multiple validation errors returned by
+// UpdateResourceValueRequest_ResourceValue.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateResourceValueRequest_ResourceValueMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateResourceValueRequest_ResourceValueMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateResourceValueRequest_ResourceValueMultiError) AllErrors() []error { return m }
+
+// UpdateResourceValueRequest_ResourceValueValidationError is the validation
+// error returned by UpdateResourceValueRequest_ResourceValue.Validate if the
+// designated constraints aren't met.
+type UpdateResourceValueRequest_ResourceValueValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateResourceValueRequest_ResourceValueValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateResourceValueRequest_ResourceValueValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateResourceValueRequest_ResourceValueValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateResourceValueRequest_ResourceValueValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateResourceValueRequest_ResourceValueValidationError) ErrorName() string {
+	return "UpdateResourceValueRequest_ResourceValueValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateResourceValueRequest_ResourceValueValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateResourceValueRequest_ResourceValue.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateResourceValueRequest_ResourceValueValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateResourceValueRequest_ResourceValueValidationError{}

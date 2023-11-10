@@ -3,6 +3,7 @@ package logic
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	json "github.com/json-iterator/go"
 	v1 "github.com/limes-cloud/configure/api/v1"
@@ -28,7 +29,6 @@ func NewResourceValue(conf *config.Config) *ResourceValue {
 func (rv *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest) (*v1.AllResourceValueReply, error) {
 	resource := model.ResourceValue{}
 	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
-		db.Preload("Environment")
 		return db.Where("resource_id =?", in.ResourceId)
 	})
 
@@ -42,22 +42,7 @@ func (rv *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest)
 	return &reply, nil
 }
 
-// Add 添加资源值
-func (rv *ResourceValue) Add(ctx kratos.Context, in *v1.AddResourceValueRequest) (*emptypb.Empty, error) {
-	resource := model.ResourceValue{}
-	if util.Transform(in, &resource) != nil {
-		return nil, v1.ErrorTransform()
-	}
-
-	// 判断值是否复合字段
-	if err := rv.checkValue(ctx, in.ResourceId, in.Values); err != nil {
-		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
-	}
-
-	return nil, resource.Create(ctx)
-}
-
-func (rv *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string) error {
+func (rv *ResourceValue) checkValue(ctx kratos.Context, rid uint32, values string) error {
 	m := make(map[string]any)
 	if err := json.Unmarshal([]byte(values), &m); err != nil {
 		return err
@@ -71,7 +56,7 @@ func (rv *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string
 	if err := resource.OneByID(ctx, rid); err != nil {
 		return err
 	}
-	_ = json.Unmarshal([]byte(resource.Fields), &fields)
+	fields = strings.Split(resource.Fields, ",")
 
 	// 判断值是否复合字段
 	for _, key := range fields {
@@ -85,10 +70,21 @@ func (rv *ResourceValue) checkValue(ctx kratos.Context, rid int64, values string
 
 // Update 更新资源值
 func (rv *ResourceValue) Update(ctx kratos.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
-	resource := model.ResourceValue{}
-	if util.Transform(in, &resource) != nil {
-		return nil, v1.ErrorTransform()
+	var rvs []*model.ResourceValue
+	// 遍历
+	for _, item := range in.List {
+		temp := model.ResourceValue{
+			ResourceID:    in.ResourceId,
+			EnvironmentID: item.EnvironmentId,
+			Values:        item.Values,
+		}
+		rvs = append(rvs, &temp)
+
+		if err := rv.checkValue(ctx, in.ResourceId, item.Values); err != nil {
+			return nil, v1.ErrorResourceFormatValueFormat("[%v]%v", item.EnvKeyword, err.Error())
+		}
 	}
 
-	return nil, resource.Update(ctx)
+	value := model.ResourceValue{}
+	return nil, value.Creates(ctx, in.ResourceId, rvs)
 }

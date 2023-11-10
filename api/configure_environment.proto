@@ -6,13 +6,13 @@ import "validate/validate.proto";
 
 
 message Environment{
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
   string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
   optional bool status = 5;
-  int64 created_at = 6;
-  int64 updated_at = 7;
+  uint32 created_at = 6;
+  uint32 updated_at = 7;
 }
 
 // 获取环境列表
@@ -25,12 +25,11 @@ message AddEnvironmentRequest {
   string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
-  optional bool status = 4;
 }
 
 // 修改环境
 message UpdateEnvironmentRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
   string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
@@ -39,18 +38,21 @@ message UpdateEnvironmentRequest {
 
 // 获取指定环境token
 message GetEnvironmentTokenRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
 }
 message GetEnvironmentTokenReply {
   string token = 1;
 }
 
+message ResetEnvironmentTokenReply{
+  string token = 1;
+}
 // 重置token
 message ResetEnvironmentTokenRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
 }
 
 // 删除环境
 message DeleteEnvironmentRequest {
-  int64 id = 1 [(validate.rules).int64 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
 }
