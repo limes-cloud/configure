@@ -17,4 +17,4 @@ WORKDIR /go/build
 COPY ./config/config-prod.yaml /go/build/config/config.yaml
 COPY ./static /go/build/static
 COPY --from=build /go/build/configure /go/build/configure
-CMD ["./basic-platform"]
+CMD ["./configure"]
