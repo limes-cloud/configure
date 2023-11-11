@@ -6,7 +6,7 @@ server:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: 0.0.0.0:7003
+    addr: 0.0.0.0:8003
     timeout: 5s
 log:
   level: 0 #日志输出等级

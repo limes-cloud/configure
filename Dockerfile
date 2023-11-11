@@ -11,7 +11,8 @@ ADD . .
 RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o configure cmd/configure/main.go
 
 FROM alpine
-EXPOSE 7002
+EXPOSE 7003
+EXPOSE 8003
 WORKDIR /go/build
 COPY ./config/ /go/build/config/
 COPY ./static /go/build/static
