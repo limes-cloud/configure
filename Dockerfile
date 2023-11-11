@@ -14,7 +14,7 @@ FROM alpine
 EXPOSE 7003
 EXPOSE 8003
 WORKDIR /go/build
-COPY ./config/ /go/build/config/
+COPY ./config/config-prod.yaml /go/build/config/config.yaml
 COPY ./static /go/build/static
 COPY --from=build /go/build/configure /go/build/configure
-CMD ["./basic-platform","-c","config/config-prod.yaml"]
+CMD ["./basic-platform"]
