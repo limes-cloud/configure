@@ -86,6 +86,7 @@ create table `business`(
 
 
 # 业务字段值
+drop table business_value;
 create table business_value(
     `id` bigint unsigned not null primary key auto_increment comment '自增id',
     `environment_id` bigint unsigned not null comment '环境id',
@@ -94,8 +95,8 @@ create table business_value(
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     unique index(`environment_id`,`business_id`),
-    foreign key (`environment_id`) references environment(`id`),
-    foreign key (`business_id`) references business(`id`)
+    foreign key (`environment_id`) references environment(`id`) on delete  cascade,
+    foreign key (`business_id`) references business(`id`)  on delete  cascade
 )engine innodb charset utf8;
 
 create table template(

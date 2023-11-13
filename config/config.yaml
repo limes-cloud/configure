@@ -1,12 +1,12 @@
 server:
   http:
-    addr: 0.0.0.0:7003
+    addr: 0.0.0.0:7081
     timeout: 5s
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: 0.0.0.0:8003
+    addr: 0.0.0.0:7082
     timeout: 5s
 log:
   level: 0 #日志输出等级
