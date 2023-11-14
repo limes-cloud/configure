@@ -38,6 +38,7 @@ const OperationServiceGetConfigure = "/configure.Service/GetConfigure"
 const OperationServiceGetEnvironmentToken = "/configure.Service/GetEnvironmentToken"
 const OperationServiceGetServer = "/configure.Service/GetServer"
 const OperationServiceGetTemplate = "/configure.Service/GetTemplate"
+const OperationServiceLogin = "/configure.Service/Login"
 const OperationServicePageBusiness = "/configure.Service/PageBusiness"
 const OperationServicePageResource = "/configure.Service/PageResource"
 const OperationServicePageServer = "/configure.Service/PageServer"
@@ -45,6 +46,7 @@ const OperationServicePageServerResource = "/configure.Service/PageServerResourc
 const OperationServicePageTemplate = "/configure.Service/PageTemplate"
 const OperationServiceParseTemplate = "/configure.Service/ParseTemplate"
 const OperationServiceParseTemplatePreview = "/configure.Service/ParseTemplatePreview"
+const OperationServiceRefreshToken = "/configure.Service/RefreshToken"
 const OperationServiceResetEnvironmentToken = "/configure.Service/ResetEnvironmentToken"
 const OperationServiceUpdateBusiness = "/configure.Service/UpdateBusiness"
 const OperationServiceUpdateBusinessValue = "/configure.Service/UpdateBusinessValue"
@@ -74,6 +76,7 @@ type ServiceHTTPServer interface {
 	GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error)
 	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error)
+	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	PageBusiness(context.Context, *PageBusinessRequest) (*PageBusinessReply, error)
 	PageResource(context.Context, *PageResourceRequest) (*PageResourceReply, error)
 	PageServer(context.Context, *PageServerRequest) (*PageServerReply, error)
@@ -81,6 +84,7 @@ type ServiceHTTPServer interface {
 	PageTemplate(context.Context, *PageTemplateRequest) (*PageTemplateReply, error)
 	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
 	ParseTemplatePreview(context.Context, *ParseTemplatePreviewRequest) (*ParseTemplatePreviewReply, error)
+	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
 	ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*ResetEnvironmentTokenReply, error)
 	UpdateBusiness(context.Context, *UpdateBusinessRequest) (*emptypb.Empty, error)
 	UpdateBusinessValue(context.Context, *UpdateBusinessValueRequest) (*emptypb.Empty, error)
@@ -94,6 +98,8 @@ type ServiceHTTPServer interface {
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r := s.Route("/")
+	r.POST("/configure/v1/login", _Service_Login0_HTTP_Handler(srv))
+	r.POST("/configure/v1/token/refresh", _Service_RefreshToken0_HTTP_Handler(srv))
 	r.GET("/configure/v1/environments", _Service_AllEnvironment0_HTTP_Handler(srv))
 	r.POST("/configure/v1/environment", _Service_AddEnvironment0_HTTP_Handler(srv))
 	r.PUT("/configure/v1/environment", _Service_UpdateEnvironment0_HTTP_Handler(srv))
@@ -128,6 +134,47 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/configure/v1/template/parse/{env_keyword}", _Service_ParseTemplate0_HTTP_Handler(srv))
 	r.GET("/configure/v1/configure/{env_keyword}", _Service_GetConfigure0_HTTP_Handler(srv))
 	r.PUT("/configure/v1/configure/{env_keyword}", _Service_UpdateConfigure0_HTTP_Handler(srv))
+}
+
+func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceLogin)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Login(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_RefreshToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceRefreshToken)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RefreshTokenReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Service_AllEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
@@ -855,6 +902,7 @@ type ServiceHTTPClient interface {
 	GetEnvironmentToken(ctx context.Context, req *GetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *GetEnvironmentTokenReply, err error)
 	GetServer(ctx context.Context, req *GetServerRequest, opts ...http.CallOption) (rsp *GetServerReply, err error)
 	GetTemplate(ctx context.Context, req *GetTemplateRequest, opts ...http.CallOption) (rsp *GetTemplateReply, err error)
+	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	PageBusiness(ctx context.Context, req *PageBusinessRequest, opts ...http.CallOption) (rsp *PageBusinessReply, err error)
 	PageResource(ctx context.Context, req *PageResourceRequest, opts ...http.CallOption) (rsp *PageResourceReply, err error)
 	PageServer(ctx context.Context, req *PageServerRequest, opts ...http.CallOption) (rsp *PageServerReply, err error)
@@ -862,6 +910,7 @@ type ServiceHTTPClient interface {
 	PageTemplate(ctx context.Context, req *PageTemplateRequest, opts ...http.CallOption) (rsp *PageTemplateReply, err error)
 	ParseTemplate(ctx context.Context, req *ParseTemplateRequest, opts ...http.CallOption) (rsp *ParseTemplateReply, err error)
 	ParseTemplatePreview(ctx context.Context, req *ParseTemplatePreviewRequest, opts ...http.CallOption) (rsp *ParseTemplatePreviewReply, err error)
+	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *RefreshTokenReply, err error)
 	ResetEnvironmentToken(ctx context.Context, req *ResetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *ResetEnvironmentTokenReply, err error)
 	UpdateBusiness(ctx context.Context, req *UpdateBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateBusinessValue(ctx context.Context, req *UpdateBusinessValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -1115,6 +1164,19 @@ func (c *ServiceHTTPClientImpl) GetTemplate(ctx context.Context, in *GetTemplate
 	return &out, err
 }
 
+func (c *ServiceHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, opts ...http.CallOption) (*LoginReply, error) {
+	var out LoginReply
+	pattern := "/configure/v1/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ServiceHTTPClientImpl) PageBusiness(ctx context.Context, in *PageBusinessRequest, opts ...http.CallOption) (*PageBusinessReply, error) {
 	var out PageBusinessReply
 	pattern := "/configure/v1/business"
@@ -1200,6 +1262,19 @@ func (c *ServiceHTTPClientImpl) ParseTemplatePreview(ctx context.Context, in *Pa
 	opts = append(opts, http.Operation(OperationServiceParseTemplatePreview))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*RefreshTokenReply, error) {
+	var out RefreshTokenReply
+	pattern := "/configure/v1/token/refresh"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceRefreshToken))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

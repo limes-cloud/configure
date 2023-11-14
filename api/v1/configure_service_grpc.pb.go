@@ -20,6 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Service_Login_FullMethodName                 = "/configure.Service/Login"
+	Service_RefreshToken_FullMethodName          = "/configure.Service/RefreshToken"
 	Service_AllEnvironment_FullMethodName        = "/configure.Service/AllEnvironment"
 	Service_AddEnvironment_FullMethodName        = "/configure.Service/AddEnvironment"
 	Service_UpdateEnvironment_FullMethodName     = "/configure.Service/UpdateEnvironment"
@@ -61,6 +63,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error)
 	AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvironmentReply, error)
 	AddEnvironment(ctx context.Context, in *AddEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateEnvironment(ctx context.Context, in *UpdateEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -104,6 +108,24 @@ type serviceClient struct {
 
 func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
+}
+
+func (c *serviceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
+	out := new(LoginReply)
+	err := c.cc.Invoke(ctx, Service_Login_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error) {
+	out := new(RefreshTokenReply)
+	err := c.cc.Invoke(ctx, Service_RefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *serviceClient) AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvironmentReply, error) {
@@ -448,6 +470,8 @@ func (x *serviceWatchConfigureClient) Recv() (*WatchConfigureReply, error) {
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
+	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
 	AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error)
 	AddEnvironment(context.Context, *AddEnvironmentRequest) (*emptypb.Empty, error)
 	UpdateEnvironment(context.Context, *UpdateEnvironmentRequest) (*emptypb.Empty, error)
@@ -490,6 +514,12 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
+func (UnimplementedServiceServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
 func (UnimplementedServiceServer) AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllEnvironment not implemented")
 }
@@ -606,6 +636,42 @@ type UnsafeServiceServer interface {
 
 func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 	s.RegisterService(&Service_ServiceDesc, srv)
+}
+
+func _Service_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RefreshToken(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Service_AllEnvironment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1248,6 +1314,14 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "configure.Service",
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Login",
+			Handler:    _Service_Login_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _Service_RefreshToken_Handler,
+		},
 		{
 			MethodName: "AllEnvironment",
 			Handler:    _Service_AllEnvironment_Handler,

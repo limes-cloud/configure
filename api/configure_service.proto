@@ -3,6 +3,7 @@ syntax = "proto3";
 package configure;
 option go_package = "./v1;v1";
 
+import "configure_auth.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "configure_environment.proto";
@@ -16,6 +17,19 @@ import "configure_template.proto";
 import "configure_configure.proto";
 
 service Service {
+
+  rpc Login(LoginRequest) returns(LoginReply){
+    option (google.api.http) = {
+      post: "/configure/v1/login",
+      body: "*"
+    };
+  }
+
+  rpc RefreshToken(google.protobuf.Empty) returns(RefreshTokenReply){
+    option (google.api.http) = {
+      post: "/configure/v1/token/refresh",
+    };
+  }
 
   rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
     option (google.api.http) = {

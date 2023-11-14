@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
+	github.com/forgoer/openssl v1.6.0
 	github.com/google/uuid v1.3.1
 	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/kratos v1.0.23
@@ -94,4 +95,8 @@ require (
 	modernc.org/mathutil v1.5.0 // indirect
 	modernc.org/memory v1.5.0 // indirect
 	modernc.org/sqlite v1.23.1 // indirect
+)
+
+replace (
+	github.com/limes-cloud/kratos v1.0.23 => ../kratos
 )

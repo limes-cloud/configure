@@ -18,6 +18,7 @@ type Service struct {
 	BusinessValue  *logic.BusinessValue
 	Template       *logic.Template
 	Configure      *logic.Configure
+	Auth           *logic.Auth
 }
 
 func New(config *config.Config) *Service {
@@ -31,5 +32,6 @@ func New(config *config.Config) *Service {
 		BusinessValue:  logic.NewBusinessValue(config),
 		Template:       logic.NewTemplate(config),
 		Configure:      logic.NewConfigure(config),
+		Auth:           logic.NewAuth(config),
 	}
 }

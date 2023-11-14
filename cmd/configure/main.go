@@ -53,9 +53,9 @@ func main() {
 
 func RegisterServer(hs *http.Server, gs *grpc.Server, c config.Config) {
 	ccfIns := &ccf.Config{}
-	//if err := c.ScanKey("business", ccfIns); err != nil {
-	//	panic("business config format error:" + err.Error())
-	//}
+	if err := c.ScanKey("author", ccfIns); err != nil {
+		panic("author config format error:" + err.Error())
+	}
 
 	srv := handler.New(ccfIns)
 	v1.RegisterServiceHTTPServer(hs, srv)

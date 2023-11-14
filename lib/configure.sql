@@ -36,6 +36,7 @@ create table `resource`(
     `tag` char(32) not null comment '资源标签;mysql/mongo/consul..',
     `private` bool not null default true comment '是否为私有字段',
     `description` varchar(256) not null  comment '资源描述',
+    `custom` bool default false comment '是否自定义资源',
     `created_at` bigint unsigned default null  comment '创建时间',
     `updated_at`bigint unsigned default null  comment '修改时间',
     index(`created_at`),
