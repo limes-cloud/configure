@@ -20,11 +20,11 @@ enum ErrorReason {
   ParseTemplate= 7[(errors.message)="模板解析出现错误"];
   VersionExist = 8[(errors.message)="此版本已存在"];
   WatchConfigure = 9[(errors.message)="监听版本更新失败"];
-  RSA_DECODE = 10[(errors.message)="rsa解密失败"];
-  PASSWORD_FORMAT = 11[(errors.message)="密码格式错误"];
-  PASSWORD_EXPIRE = 12[(errors.message)="密码已过期"];
-  USER_PASSWORD = 13[(errors.message)="用户密码错误"];
-  NEW_TOKEN = 14[(errors.message)="token生成失败"];
+  RSA_DECODE = 10[(errors.code)=400,(errors.message)="rsa解密失败"];
+  PASSWORD_FORMAT = 11[(errors.code)=400,(errors.message)="密码格式错误"];
+  PASSWORD_EXPIRE = 12[(errors.code)=400,(errors.message)="密码已过期"];
+  USER_PASSWORD = 13[(errors.code)=400,(errors.message)="用户密码错误"];
+  NEW_TOKEN = 14[(errors.code)=400,(errors.message)="token生成失败"];
   REFRESH_TOKEN = 15 [(errors.code)=401,(errors.message)="刷新token失败"];
 }
 

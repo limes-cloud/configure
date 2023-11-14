@@ -176,15 +176,15 @@ func IsRsaDecode(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_RSA_DECODE.String() && e.Code == 200
+	return e.Reason == ErrorReason_RSA_DECODE.String() && e.Code == 400
 }
 
 func ErrorRsaDecodeFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_RSA_DECODE.String(), "rsa解密失败:"+fmt.Sprintf(format, args...))
+	return errors.New(400, ErrorReason_RSA_DECODE.String(), "rsa解密失败:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorRsaDecode() *errors.Error {
-	return errors.New(200, ErrorReason_RSA_DECODE.String(), "rsa解密失败")
+	return errors.New(400, ErrorReason_RSA_DECODE.String(), "rsa解密失败")
 }
 
 func IsPasswordFormat(err error) bool {
@@ -192,15 +192,15 @@ func IsPasswordFormat(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PASSWORD_FORMAT.String() && e.Code == 200
+	return e.Reason == ErrorReason_PASSWORD_FORMAT.String() && e.Code == 400
 }
 
 func ErrorPasswordFormatFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误:"+fmt.Sprintf(format, args...))
+	return errors.New(400, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorPasswordFormat() *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误")
+	return errors.New(400, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误")
 }
 
 func IsPasswordExpire(err error) bool {
@@ -208,15 +208,15 @@ func IsPasswordExpire(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PASSWORD_EXPIRE.String() && e.Code == 200
+	return e.Reason == ErrorReason_PASSWORD_EXPIRE.String() && e.Code == 400
 }
 
 func ErrorPasswordExpireFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期:"+fmt.Sprintf(format, args...))
+	return errors.New(400, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorPasswordExpire() *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期")
+	return errors.New(400, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期")
 }
 
 func IsUserPassword(err error) bool {
@@ -224,15 +224,15 @@ func IsUserPassword(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_PASSWORD.String() && e.Code == 200
+	return e.Reason == ErrorReason_USER_PASSWORD.String() && e.Code == 400
 }
 
 func ErrorUserPasswordFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_USER_PASSWORD.String(), "用户密码错误:"+fmt.Sprintf(format, args...))
+	return errors.New(400, ErrorReason_USER_PASSWORD.String(), "用户密码错误:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorUserPassword() *errors.Error {
-	return errors.New(200, ErrorReason_USER_PASSWORD.String(), "用户密码错误")
+	return errors.New(400, ErrorReason_USER_PASSWORD.String(), "用户密码错误")
 }
 
 func IsNewToken(err error) bool {
@@ -240,15 +240,15 @@ func IsNewToken(err error) bool {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NEW_TOKEN.String() && e.Code == 200
+	return e.Reason == ErrorReason_NEW_TOKEN.String() && e.Code == 400
 }
 
 func ErrorNewTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_NEW_TOKEN.String(), "token生成失败:"+fmt.Sprintf(format, args...))
+	return errors.New(400, ErrorReason_NEW_TOKEN.String(), "token生成失败:"+fmt.Sprintf(format, args...))
 }
 
 func ErrorNewToken() *errors.Error {
-	return errors.New(200, ErrorReason_NEW_TOKEN.String(), "token生成失败")
+	return errors.New(400, ErrorReason_NEW_TOKEN.String(), "token生成失败")
 }
 
 func IsRefreshToken(err error) bool {
