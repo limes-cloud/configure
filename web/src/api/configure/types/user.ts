@@ -4,6 +4,7 @@ export interface User {
   role_id: number;
   role_ids: number[];
   name: string;
+  role: any;
   nickname: string;
   gender: string;
   phone: string;

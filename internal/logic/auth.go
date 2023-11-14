@@ -61,7 +61,7 @@ func (a *Auth) Login(ctx kratos.Context, in *v1.LoginRequest) (*v1.LoginReply, e
 		return nil, v1.ErrorPasswordExpire()
 	}
 
-	if a.conf.AdminPassword != pw.Password || a.conf.AdminUser != in.Username {
+	if a.conf.Author.AdminPassword != pw.Password || a.conf.Author.AdminUser != in.Username {
 		return nil, v1.ErrorUserPassword()
 	}
 

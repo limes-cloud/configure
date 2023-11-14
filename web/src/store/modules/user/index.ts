@@ -27,8 +27,6 @@ const useUserStore = defineStore('user', {
     created_at: 0,
     updated_at: 0,
     role: undefined,
-    roles: undefined,
-    department: undefined,
   }),
 
   getters: {
@@ -50,7 +48,7 @@ const useUserStore = defineStore('user', {
 
     // Get user's information
     async info() {
-      const { data } = await currentUser();
+      const data = await currentUser();
       this.setInfo(data);
     },
 

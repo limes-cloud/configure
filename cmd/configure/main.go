@@ -2,8 +2,11 @@ package main
 
 import (
 	"os"
+	"strings"
 
-	"github.com/limes-cloud/kratos/transport/http"
+	"github.com/gin-contrib/static"
+	"github.com/gin-gonic/gin"
+	thttp "github.com/limes-cloud/kratos/transport/http"
 
 	"github.com/limes-cloud/configure/internal/handler"
 
@@ -15,7 +18,6 @@ import (
 	"github.com/limes-cloud/kratos/log"
 	"github.com/limes-cloud/kratos/middleware/tracing"
 	"github.com/limes-cloud/kratos/transport/grpc"
-
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -51,13 +53,37 @@ func main() {
 	}
 }
 
-func RegisterServer(hs *http.Server, gs *grpc.Server, c config.Config) {
+func RegisterServer(hs *thttp.Server, gs *grpc.Server, c config.Config) {
 	ccfIns := &ccf.Config{}
-	if err := c.ScanKey("author", ccfIns); err != nil {
+	if err := c.ScanKey("business", ccfIns); err != nil {
 		panic("author config format error:" + err.Error())
 	}
-
+	go RegisterWebServer(ccfIns)
 	srv := handler.New(ccfIns)
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
+}
+
+func RegisterWebServer(config *ccf.Config) {
+	r := gin.Default()
+	r.Use(static.Serve("/", static.LocalFile("web/dist/", true)))
+	r.NoRoute(func(c *gin.Context) {
+		accept := c.Request.Header.Get("Accept")
+		flag := strings.Contains(accept, "text/html")
+		if flag {
+			content, err := os.ReadFile("web/dist/index.html")
+			if (err) != nil {
+				c.Writer.WriteHeader(404)
+				_, _ = c.Writer.WriteString("Not Found")
+				return
+			}
+			c.Writer.WriteHeader(200)
+			c.Writer.Header().Add("Accept", "text/html")
+			_, _ = c.Writer.Write((content))
+			c.Writer.Flush()
+		}
+	})
+	if err := r.Run(config.WebUI.Addr); err != nil {
+		panic("start web ui error:" + err.Error())
+	}
 }

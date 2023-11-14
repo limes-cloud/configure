@@ -85,7 +85,7 @@
 </template>
 
 <script lang="tsx" setup>
-  import { computed, ref, inject } from 'vue';
+  import { computed, inject } from 'vue';
   import { useDark, useToggle, useFullscreen } from '@vueuse/core';
   import { useAppStore, useUserStore } from '@/store';
   import useUser from '@/hooks/user';
@@ -119,15 +119,6 @@
     toggleTheme();
   };
 
-  const refBtn = ref();
-  const setPopoverVisible = () => {
-    const event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    refBtn.value.dispatchEvent(event);
-  };
   const handleLogout = () => {
     logout();
   };

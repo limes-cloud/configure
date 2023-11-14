@@ -44,6 +44,12 @@ jwt:
     POST:/configure/v1/token/refresh: true # 刷新
 loader:
   login: static/cert/login.pem
-author:
-  adminUser: 1280291001@qq.com
-  adminPassword: 123456
+
+business:
+  webui:
+    addr: ":7080"
+  author:
+    adminUser: 1280291001@qq.com
+    adminPassword: 123456
+
+

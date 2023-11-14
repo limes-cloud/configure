@@ -1,6 +1,11 @@
 package config
 
 type Config struct {
-	AdminUser     string
-	AdminPassword string
+	Author struct {
+		AdminUser     string
+		AdminPassword string
+	}
+	WebUI struct {
+		Addr string
+	}
 }
