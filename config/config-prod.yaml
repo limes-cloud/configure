@@ -1,12 +1,12 @@
 server:
   http:
-    addr: 0.0.0.0:7081
+    addr: 0.0.0.0:6081
     timeout: 5s
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: 0.0.0.0:7082
+    addr: 0.0.0.0:6082
     timeout: 5s
 log:
   level: 0 #日志输出等级
@@ -40,7 +40,7 @@ loader:
   login: static/cert/login.pem
 business:
   webui:
-    addr: ":7080"
+    addr: ":6080"
   author:
     adminUser: 1280291001@qq.com
     adminPassword: xrxy0852
