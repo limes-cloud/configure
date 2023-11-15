@@ -5,6 +5,12 @@ server:
     marshal:
       emitUnpopulated: true
       useProtoNames: true
+    cors:
+      allowCredentials: true
+      allowOrigins: [ "*" ]
+      allowMethods: [ "GET","POST","PUT","DELETE","OPTIONS" ]
+      AllowHeaders: [ "Content-Type", "Content-Length", "Authorization" ]
+      ExposeHeaders: [ "Content-Length", "Access-Control-Allow-Headers" ]
   grpc:
     addr: 0.0.0.0:6082
     timeout: 5s
