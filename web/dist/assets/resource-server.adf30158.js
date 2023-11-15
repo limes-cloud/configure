@@ -1,0 +1,1 @@
+import{n as e}from"./index.f90c2f0c.js";function o(r){return e.get("/configure/v1/resource/servers",{params:{resource_id:r}})}function a(r){return e.get("/configure/v1/server/resources",{params:{...r}})}export{o as a,a as p};
