@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import { setToken, clearToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import rsa from '@/utils/rsa';
-import Message from '@arco-design/web-vue/es/message';
 import { currentUser } from '@/api/configure/user';
 import { login as userLogin, logout as userLogout } from '@/api/configure/auth';
 import { LoginReq } from '@/api/configure/types/auth';

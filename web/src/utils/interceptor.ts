@@ -47,7 +47,7 @@ axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
     const res = response.data;
 
-    if (response.status === 200) {
+    if (response.status === 200 && !response.data.reason) {
       return { data: res };
     }
 
