@@ -2,6 +2,12 @@ server:
   http:
     addr: 0.0.0.0:6081
     timeout: 5s
+    cors:
+      allowCredentials: true
+      allowOrigins: [ "*" ]
+      allowMethods: [ "GET","POST","PUT","DELETE","OPTIONS" ]
+      AllowHeaders: [ "Content-Type", "Content-Length", "Authorization" ]
+      ExposeHeaders: [ "Content-Length", "Access-Control-Allow-Headers" ]
     marshal:
       emitUnpopulated: true
       useProtoNames: true
