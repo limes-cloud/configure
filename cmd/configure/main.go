@@ -18,18 +18,7 @@ import (
 	_ "go.uber.org/automaxprocs"
 )
 
-// go build -ldflags "-X main.Version=x.y.z"
-var (
-	// Name is the name of the compiled software.
-	Name string
-	// Version is the version of the compiled software.
-	Version string
-
-	id, _ = os.Hostname()
-)
-
 func main() {
-
 	app := kratosx.New(
 		kratosx.Config(file.NewSource("config/config.yaml")),
 		kratosx.RegistrarServer(RegisterServer),
