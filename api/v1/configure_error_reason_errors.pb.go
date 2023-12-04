@@ -4,265 +4,265 @@ package v1
 
 import (
 	fmt "fmt"
-	errors "github.com/limes-cloud/kratos/errors"
+	errors "github.com/go-kratos/kratos/v2/errors"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
 const _ = errors.SupportPackageIsVersion1
 
-func IsDatabase(err error) bool {
+func IsDatabaseError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_Database.String() && e.Code == 200
+	return e.Reason == ErrorReason_DatabaseError.String() && e.Code == 200
 }
 
-func ErrorDatabaseFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_Database.String(), "数据库错误:"+fmt.Sprintf(format, args...))
+func DatabaseErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DatabaseError.String(), "数据库错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDatabase() *errors.Error {
-	return errors.New(200, ErrorReason_Database.String(), "数据库错误")
+func DatabaseError() *errors.Error {
+	return errors.New(200, ErrorReason_DatabaseError.String(), "数据库错误")
 }
 
-func IsTransform(err error) bool {
+func IsTransformError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_Transform.String() && e.Code == 200
+	return e.Reason == ErrorReason_TransformError.String() && e.Code == 200
 }
 
-func ErrorTransformFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_Transform.String(), "数据转换失败:"+fmt.Sprintf(format, args...))
+func TransformErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_TransformError.String(), "数据转换失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorTransform() *errors.Error {
-	return errors.New(200, ErrorReason_Transform.String(), "数据转换失败")
+func TransformError() *errors.Error {
+	return errors.New(200, ErrorReason_TransformError.String(), "数据转换失败")
 }
 
-func IsAlreadyExists(err error) bool {
+func IsAlreadyExistsError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_AlreadyExists.String() && e.Code == 200
+	return e.Reason == ErrorReason_AlreadyExistsError.String() && e.Code == 200
 }
 
-func ErrorAlreadyExistsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_AlreadyExists.String(), "数据已存在:"+fmt.Sprintf(format, args...))
+func AlreadyExistsErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_AlreadyExistsError.String(), "数据已存在:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorAlreadyExists() *errors.Error {
-	return errors.New(200, ErrorReason_AlreadyExists.String(), "数据已存在")
+func AlreadyExistsError() *errors.Error {
+	return errors.New(200, ErrorReason_AlreadyExistsError.String(), "数据已存在")
 }
 
-func IsParams(err error) bool {
+func IsParamsError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_Params.String() && e.Code == 200
+	return e.Reason == ErrorReason_ParamsError.String() && e.Code == 200
 }
 
-func ErrorParamsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_Params.String(), "参数错误:"+fmt.Sprintf(format, args...))
+func ParamsErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ParamsError.String(), "参数错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorParams() *errors.Error {
-	return errors.New(200, ErrorReason_Params.String(), "参数错误")
+func ParamsError() *errors.Error {
+	return errors.New(200, ErrorReason_ParamsError.String(), "参数错误")
 }
 
-func IsNotRecord(err error) bool {
+func IsNotRecordError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NotRecord.String() && e.Code == 200
+	return e.Reason == ErrorReason_NotRecordError.String() && e.Code == 200
 }
 
-func ErrorNotRecordFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_NotRecord.String(), "暂无数据记录:"+fmt.Sprintf(format, args...))
+func NotRecordErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_NotRecordError.String(), "暂无数据记录:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorNotRecord() *errors.Error {
-	return errors.New(200, ErrorReason_NotRecord.String(), "暂无数据记录")
+func NotRecordError() *errors.Error {
+	return errors.New(200, ErrorReason_NotRecordError.String(), "暂无数据记录")
 }
 
-func IsResourceFormatValue(err error) bool {
+func IsResourceFormatValueError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_ResourceFormatValue.String() && e.Code == 200
+	return e.Reason == ErrorReason_ResourceFormatValueError.String() && e.Code == 200
 }
 
-func ErrorResourceFormatValueFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_ResourceFormatValue.String(), "资源字段值格式错误:"+fmt.Sprintf(format, args...))
+func ResourceFormatValueErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ResourceFormatValueError.String(), "资源字段值格式错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorResourceFormatValue() *errors.Error {
-	return errors.New(200, ErrorReason_ResourceFormatValue.String(), "资源字段值格式错误")
+func ResourceFormatValueError() *errors.Error {
+	return errors.New(200, ErrorReason_ResourceFormatValueError.String(), "资源字段值格式错误")
 }
 
-func IsCheckTemplate(err error) bool {
+func IsCheckTemplateError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_CheckTemplate.String() && e.Code == 200
+	return e.Reason == ErrorReason_CheckTemplateError.String() && e.Code == 200
 }
 
-func ErrorCheckTemplateFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_CheckTemplate.String(), "模板检测出现错误:"+fmt.Sprintf(format, args...))
+func CheckTemplateErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_CheckTemplateError.String(), "模板检测出现错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorCheckTemplate() *errors.Error {
-	return errors.New(200, ErrorReason_CheckTemplate.String(), "模板检测出现错误")
+func CheckTemplateError() *errors.Error {
+	return errors.New(200, ErrorReason_CheckTemplateError.String(), "模板检测出现错误")
 }
 
-func IsParseTemplate(err error) bool {
+func IsParseTemplateError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_ParseTemplate.String() && e.Code == 200
+	return e.Reason == ErrorReason_ParseTemplateError.String() && e.Code == 200
 }
 
-func ErrorParseTemplateFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_ParseTemplate.String(), "模板解析出现错误:"+fmt.Sprintf(format, args...))
+func ParseTemplateErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ParseTemplateError.String(), "模板解析出现错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorParseTemplate() *errors.Error {
-	return errors.New(200, ErrorReason_ParseTemplate.String(), "模板解析出现错误")
+func ParseTemplateError() *errors.Error {
+	return errors.New(200, ErrorReason_ParseTemplateError.String(), "模板解析出现错误")
 }
 
-func IsVersionExist(err error) bool {
+func IsVersionExistError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_VersionExist.String() && e.Code == 200
+	return e.Reason == ErrorReason_VersionExistError.String() && e.Code == 200
 }
 
-func ErrorVersionExistFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_VersionExist.String(), "此版本已存在:"+fmt.Sprintf(format, args...))
+func VersionExistErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_VersionExistError.String(), "此版本已存在:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorVersionExist() *errors.Error {
-	return errors.New(200, ErrorReason_VersionExist.String(), "此版本已存在")
+func VersionExistError() *errors.Error {
+	return errors.New(200, ErrorReason_VersionExistError.String(), "此版本已存在")
 }
 
-func IsWatchConfigure(err error) bool {
+func IsWatchConfigureError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_WatchConfigure.String() && e.Code == 200
+	return e.Reason == ErrorReason_WatchConfigureError.String() && e.Code == 200
 }
 
-func ErrorWatchConfigureFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_WatchConfigure.String(), "监听版本更新失败:"+fmt.Sprintf(format, args...))
+func WatchConfigureErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_WatchConfigureError.String(), "监听版本更新失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorWatchConfigure() *errors.Error {
-	return errors.New(200, ErrorReason_WatchConfigure.String(), "监听版本更新失败")
+func WatchConfigureError() *errors.Error {
+	return errors.New(200, ErrorReason_WatchConfigureError.String(), "监听版本更新失败")
 }
 
-func IsRsaDecode(err error) bool {
+func IsRsaDecodeError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_RSA_DECODE.String() && e.Code == 400
+	return e.Reason == ErrorReason_RsaDecodeError.String() && e.Code == 400
 }
 
-func ErrorRsaDecodeFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_RSA_DECODE.String(), "rsa解密失败:"+fmt.Sprintf(format, args...))
+func RsaDecodeErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(400, ErrorReason_RsaDecodeError.String(), "rsa解密失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorRsaDecode() *errors.Error {
-	return errors.New(400, ErrorReason_RSA_DECODE.String(), "rsa解密失败")
+func RsaDecodeError() *errors.Error {
+	return errors.New(400, ErrorReason_RsaDecodeError.String(), "rsa解密失败")
 }
 
-func IsPasswordFormat(err error) bool {
+func IsPasswordFormatError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PASSWORD_FORMAT.String() && e.Code == 400
+	return e.Reason == ErrorReason_PasswordFormatError.String() && e.Code == 400
 }
 
-func ErrorPasswordFormatFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误:"+fmt.Sprintf(format, args...))
+func PasswordFormatErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(400, ErrorReason_PasswordFormatError.String(), "密码格式错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorPasswordFormat() *errors.Error {
-	return errors.New(400, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误")
+func PasswordFormatError() *errors.Error {
+	return errors.New(400, ErrorReason_PasswordFormatError.String(), "密码格式错误")
 }
 
-func IsPasswordExpire(err error) bool {
+func IsPasswordExpireError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PASSWORD_EXPIRE.String() && e.Code == 400
+	return e.Reason == ErrorReason_PasswordExpireError.String() && e.Code == 400
 }
 
-func ErrorPasswordExpireFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期:"+fmt.Sprintf(format, args...))
+func PasswordExpireErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(400, ErrorReason_PasswordExpireError.String(), "密码已过期:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorPasswordExpire() *errors.Error {
-	return errors.New(400, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期")
+func PasswordExpireError() *errors.Error {
+	return errors.New(400, ErrorReason_PasswordExpireError.String(), "密码已过期")
 }
 
-func IsUserPassword(err error) bool {
+func IsUserPasswordError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_PASSWORD.String() && e.Code == 400
+	return e.Reason == ErrorReason_UserPasswordError.String() && e.Code == 400
 }
 
-func ErrorUserPasswordFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_USER_PASSWORD.String(), "用户密码错误:"+fmt.Sprintf(format, args...))
+func UserPasswordErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(400, ErrorReason_UserPasswordError.String(), "用户密码错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorUserPassword() *errors.Error {
-	return errors.New(400, ErrorReason_USER_PASSWORD.String(), "用户密码错误")
+func UserPasswordError() *errors.Error {
+	return errors.New(400, ErrorReason_UserPasswordError.String(), "用户密码错误")
 }
 
-func IsNewToken(err error) bool {
+func IsNewTokenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NEW_TOKEN.String() && e.Code == 400
+	return e.Reason == ErrorReason_NewTokenError.String() && e.Code == 400
 }
 
-func ErrorNewTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(400, ErrorReason_NEW_TOKEN.String(), "token生成失败:"+fmt.Sprintf(format, args...))
+func NewTokenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(400, ErrorReason_NewTokenError.String(), "token生成失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorNewToken() *errors.Error {
-	return errors.New(400, ErrorReason_NEW_TOKEN.String(), "token生成失败")
+func NewTokenError() *errors.Error {
+	return errors.New(400, ErrorReason_NewTokenError.String(), "token生成失败")
 }
 
-func IsRefreshToken(err error) bool {
+func IsRefreshTokenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_REFRESH_TOKEN.String() && e.Code == 401
+	return e.Reason == ErrorReason_RefreshTokenError.String() && e.Code == 401
 }
 
-func ErrorRefreshTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(401, ErrorReason_REFRESH_TOKEN.String(), "刷新token失败:"+fmt.Sprintf(format, args...))
+func RefreshTokenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorRefreshToken() *errors.Error {
-	return errors.New(401, ErrorReason_REFRESH_TOKEN.String(), "刷新token失败")
+func RefreshTokenError() *errors.Error {
+	return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败")
 }

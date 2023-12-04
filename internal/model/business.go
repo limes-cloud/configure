@@ -1,8 +1,6 @@
 package model
 
-import (
-	"github.com/limes-cloud/kratos"
-)
+import "github.com/limes-cloud/kratosx"
 
 type Business struct {
 	BaseModel
@@ -14,17 +12,17 @@ type Business struct {
 }
 
 // Create 新建业务字段
-func (b *Business) Create(ctx kratos.Context) error {
+func (b *Business) Create(ctx kratosx.Context) error {
 	return ctx.DB().Model(b).Create(b).Error
 }
 
 // OneByID 通过关键词查找指定业务字段
-func (b *Business) OneByID(ctx kratos.Context, id uint32) error {
+func (b *Business) OneByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().First(b, "id = ?", id).Error
 }
 
 // Page 查询分页资源
-func (b *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, uint32, error) {
+func (b *Business) Page(ctx kratosx.Context, options *PageOptions) ([]*Business, uint32, error) {
 	var list []*Business
 	total := int64(0)
 
@@ -42,7 +40,7 @@ func (b *Business) Page(ctx kratos.Context, options *PageOptions) ([]*Business, 
 }
 
 // All 查询所有业务字段
-func (b *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
+func (b *Business) All(ctx kratosx.Context, scopes Scopes) ([]*Business, error) {
 	var list []*Business
 
 	db := ctx.DB().Model(b)
@@ -54,11 +52,11 @@ func (b *Business) All(ctx kratos.Context, scopes Scopes) ([]*Business, error) {
 }
 
 // Update 更新指定id的业务字段
-func (b *Business) Update(ctx kratos.Context) error {
+func (b *Business) Update(ctx kratosx.Context) error {
 	return ctx.DB().Model(b).Updates(b).Error
 }
 
 // DeleteByID 删除指定id的业务字段
-func (b *Business) DeleteByID(ctx kratos.Context, id uint32) error {
+func (b *Business) DeleteByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Model(b).Delete(b, "id = ?", id).Error
 }

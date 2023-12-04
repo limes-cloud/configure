@@ -1,8 +1,6 @@
 package model
 
-import (
-	"github.com/limes-cloud/kratos"
-)
+import "github.com/limes-cloud/kratosx"
 
 type Resource struct {
 	BaseModel
@@ -14,17 +12,17 @@ type Resource struct {
 }
 
 // Create 新建资源
-func (r *Resource) Create(ctx kratos.Context) error {
+func (r *Resource) Create(ctx kratosx.Context) error {
 	return ctx.DB().Model(r).Create(r).Error
 }
 
 // OneByID 通过关键词查找指定资源
-func (r *Resource) OneByID(ctx kratos.Context, id uint32) error {
+func (r *Resource) OneByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().First(r, "id = ?", id).Error
 }
 
 // Page 查询分页资源
-func (r *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, uint32, error) {
+func (r *Resource) Page(ctx kratosx.Context, options *PageOptions) ([]*Resource, uint32, error) {
 	var list []*Resource
 	total := int64(0)
 
@@ -42,7 +40,7 @@ func (r *Resource) Page(ctx kratos.Context, options *PageOptions) ([]*Resource, 
 }
 
 // All 查询全部资源
-func (r *Resource) All(ctx kratos.Context, scopes Scopes) ([]*Resource, error) {
+func (r *Resource) All(ctx kratosx.Context, scopes Scopes) ([]*Resource, error) {
 	var list []*Resource
 
 	db := ctx.DB().Model(r)
@@ -54,11 +52,11 @@ func (r *Resource) All(ctx kratos.Context, scopes Scopes) ([]*Resource, error) {
 }
 
 // Update 更新指定id的资源
-func (r *Resource) Update(ctx kratos.Context) error {
+func (r *Resource) Update(ctx kratosx.Context) error {
 	return ctx.DB().Model(r).Updates(r).Error
 }
 
 // DeleteByID 删除指定id的资源
-func (r *Resource) DeleteByID(ctx kratos.Context, id uint32) error {
+func (r *Resource) DeleteByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Model(r).Delete(r, "id = ?", id).Error
 }

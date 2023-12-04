@@ -8,8 +8,8 @@ package v1
 
 import (
 	context "context"
-	http "github.com/limes-cloud/kratos/transport/http"
-	binding "github.com/limes-cloud/kratos/transport/http/binding"
+	http "github.com/go-kratos/kratos/v2/transport/http"
+	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -146,7 +146,7 @@ func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) 
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceLogin)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
 		out, err := h(ctx, &in)
@@ -165,7 +165,7 @@ func _Service_RefreshToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceRefreshToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -184,7 +184,7 @@ func _Service_AllEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAllEnvironment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AllEnvironment(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -206,7 +206,7 @@ func _Service_AddEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddEnvironment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddEnvironment(ctx, req.(*AddEnvironmentRequest))
 		})
 		out, err := h(ctx, &in)
@@ -228,7 +228,7 @@ func _Service_UpdateEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateEnvironment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateEnvironment(ctx, req.(*UpdateEnvironmentRequest))
 		})
 		out, err := h(ctx, &in)
@@ -247,7 +247,7 @@ func _Service_DeleteEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteEnvironment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteEnvironment(ctx, req.(*DeleteEnvironmentRequest))
 		})
 		out, err := h(ctx, &in)
@@ -266,7 +266,7 @@ func _Service_GetEnvironmentToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx 
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetEnvironmentToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetEnvironmentToken(ctx, req.(*GetEnvironmentTokenRequest))
 		})
 		out, err := h(ctx, &in)
@@ -288,7 +288,7 @@ func _Service_ResetEnvironmentToken0_HTTP_Handler(srv ServiceHTTPServer) func(ct
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceResetEnvironmentToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ResetEnvironmentToken(ctx, req.(*ResetEnvironmentTokenRequest))
 		})
 		out, err := h(ctx, &in)
@@ -307,7 +307,7 @@ func _Service_PageServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServicePageServer)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.PageServer(ctx, req.(*PageServerRequest))
 		})
 		out, err := h(ctx, &in)
@@ -326,7 +326,7 @@ func _Service_GetServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Conte
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetServer)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetServer(ctx, req.(*GetServerRequest))
 		})
 		out, err := h(ctx, &in)
@@ -348,7 +348,7 @@ func _Service_AddServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Conte
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddServer)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddServer(ctx, req.(*AddServerRequest))
 		})
 		out, err := h(ctx, &in)
@@ -370,7 +370,7 @@ func _Service_UpdateServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateServer)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateServer(ctx, req.(*UpdateServerRequest))
 		})
 		out, err := h(ctx, &in)
@@ -389,7 +389,7 @@ func _Service_DeleteServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteServer)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteServer(ctx, req.(*DeleteServerRequest))
 		})
 		out, err := h(ctx, &in)
@@ -408,7 +408,7 @@ func _Service_PageResource0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServicePageResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.PageResource(ctx, req.(*PageResourceRequest))
 		})
 		out, err := h(ctx, &in)
@@ -430,7 +430,7 @@ func _Service_AddResource0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddResource(ctx, req.(*AddResourceRequest))
 		})
 		out, err := h(ctx, &in)
@@ -452,7 +452,7 @@ func _Service_UpdateResource0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateResource(ctx, req.(*UpdateResourceRequest))
 		})
 		out, err := h(ctx, &in)
@@ -471,7 +471,7 @@ func _Service_DeleteResource0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteResource(ctx, req.(*DeleteResourceRequest))
 		})
 		out, err := h(ctx, &in)
@@ -490,7 +490,7 @@ func _Service_AllResourceServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAllResourceServer)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AllResourceServer(ctx, req.(*AllResourceServerRequest))
 		})
 		out, err := h(ctx, &in)
@@ -509,7 +509,7 @@ func _Service_PageServerResource0_HTTP_Handler(srv ServiceHTTPServer) func(ctx h
 			return err
 		}
 		http.SetOperation(ctx, OperationServicePageServerResource)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.PageServerResource(ctx, req.(*PageServerResourceRequest))
 		})
 		out, err := h(ctx, &in)
@@ -528,7 +528,7 @@ func _Service_AllResourceValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAllResourceValue)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AllResourceValue(ctx, req.(*AllResourceValueRequest))
 		})
 		out, err := h(ctx, &in)
@@ -550,7 +550,7 @@ func _Service_UpdateResourceValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx 
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateResourceValue)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateResourceValue(ctx, req.(*UpdateResourceValueRequest))
 		})
 		out, err := h(ctx, &in)
@@ -569,7 +569,7 @@ func _Service_PageBusiness0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServicePageBusiness)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.PageBusiness(ctx, req.(*PageBusinessRequest))
 		})
 		out, err := h(ctx, &in)
@@ -591,7 +591,7 @@ func _Service_AddBusiness0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddBusiness)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddBusiness(ctx, req.(*AddBusinessRequest))
 		})
 		out, err := h(ctx, &in)
@@ -613,7 +613,7 @@ func _Service_UpdateBusiness0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateBusiness)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateBusiness(ctx, req.(*UpdateBusinessRequest))
 		})
 		out, err := h(ctx, &in)
@@ -632,7 +632,7 @@ func _Service_DeleteBusiness0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteBusiness)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteBusiness(ctx, req.(*DeleteBusinessRequest))
 		})
 		out, err := h(ctx, &in)
@@ -651,7 +651,7 @@ func _Service_AllBusinessValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAllBusinessValue)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AllBusinessValue(ctx, req.(*AllBusinessValueRequest))
 		})
 		out, err := h(ctx, &in)
@@ -673,7 +673,7 @@ func _Service_UpdateBusinessValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx 
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateBusinessValue)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateBusinessValue(ctx, req.(*UpdateBusinessValueRequest))
 		})
 		out, err := h(ctx, &in)
@@ -692,7 +692,7 @@ func _Service_PageTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServicePageTemplate)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.PageTemplate(ctx, req.(*PageTemplateRequest))
 		})
 		out, err := h(ctx, &in)
@@ -711,7 +711,7 @@ func _Service_GetTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetTemplate)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetTemplate(ctx, req.(*GetTemplateRequest))
 		})
 		out, err := h(ctx, &in)
@@ -730,7 +730,7 @@ func _Service_CurrentTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceCurrentTemplate)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.CurrentTemplate(ctx, req.(*CurrentTemplateRequest))
 		})
 		out, err := h(ctx, &in)
@@ -752,7 +752,7 @@ func _Service_AddTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddTemplate)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddTemplate(ctx, req.(*AddTemplateRequest))
 		})
 		out, err := h(ctx, &in)
@@ -774,7 +774,7 @@ func _Service_UpdateTemplateVersion0_HTTP_Handler(srv ServiceHTTPServer) func(ct
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateTemplateVersion)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateTemplateVersion(ctx, req.(*UseTemplateVersionRequest))
 		})
 		out, err := h(ctx, &in)
@@ -799,7 +799,7 @@ func _Service_ParseTemplatePreview0_HTTP_Handler(srv ServiceHTTPServer) func(ctx
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceParseTemplatePreview)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ParseTemplatePreview(ctx, req.(*ParseTemplatePreviewRequest))
 		})
 		out, err := h(ctx, &in)
@@ -824,7 +824,7 @@ func _Service_ParseTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.C
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceParseTemplate)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ParseTemplate(ctx, req.(*ParseTemplateRequest))
 		})
 		out, err := h(ctx, &in)
@@ -846,7 +846,7 @@ func _Service_GetConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetConfigure)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetConfigure(ctx, req.(*GetConfigureRequest))
 		})
 		out, err := h(ctx, &in)
@@ -871,7 +871,7 @@ func _Service_UpdateConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateConfigure)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateConfigure(ctx, req.(*UpdateConfigureRequest))
 		})
 		out, err := h(ctx, &in)

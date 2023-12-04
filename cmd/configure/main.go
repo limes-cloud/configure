@@ -1,21 +1,20 @@
 package main
 
 import (
+	"log"
 	"os"
 	"strings"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/go-kratos/kratos/v2/config/file"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	v1 "github.com/limes-cloud/configure/api/v1"
-	ccf "github.com/limes-cloud/configure/config"
+	systemConfig "github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/handler"
-	"github.com/limes-cloud/kratos"
-	"github.com/limes-cloud/kratos/config"
-	"github.com/limes-cloud/kratos/config/file"
-	"github.com/limes-cloud/kratos/log"
-	"github.com/limes-cloud/kratos/middleware/tracing"
-	"github.com/limes-cloud/kratos/transport/grpc"
-	thttp "github.com/limes-cloud/kratos/transport/http"
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/config"
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -30,39 +29,39 @@ var (
 )
 
 func main() {
-	app := kratos.New(
-		kratos.ID(id),
-		kratos.Name(Name),
-		kratos.Version(Version),
-		kratos.Metadata(map[string]string{}),
-		kratos.Config(file.NewSource("config/config.yaml")),
-		kratos.RegistrarServer(RegisterServer),
-		kratos.LoggerWith(kratos.LogField{
-			"id":      id,
-			"name":    Name,
-			"version": Version,
-			"trace":   tracing.TraceID(),
-			"span":    tracing.SpanID(),
-		}),
+
+	app := kratosx.New(
+		kratosx.Config(file.NewSource("config/config.yaml")),
+		kratosx.RegistrarServer(RegisterServer),
 	)
 
 	if err := app.Run(); err != nil {
-		log.Errorf("run service fail: %v", err)
+		log.Fatal("run service fail", err.Error())
 	}
 }
 
-func RegisterServer(hs *thttp.Server, gs *grpc.Server, c config.Config) {
-	ccfIns := &ccf.Config{}
-	if err := c.ScanKey("business", ccfIns); err != nil {
+func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
+	conf := &systemConfig.Config{}
+
+	// 配置初始化
+	if err := c.Value("business").Scan(conf); err != nil {
 		panic("author config format error:" + err.Error())
 	}
-	go RegisterWebServer(ccfIns)
-	srv := handler.New(ccfIns)
+
+	// 监听服务
+	c.Watch("business", func(value config.Value) {
+		if err := value.Scan(conf); err != nil {
+			log.Printf("business配置变更失败：%s", err.Error())
+		}
+	})
+
+	go RegisterWebServer(conf)
+	srv := handler.New(conf)
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
 }
 
-func RegisterWebServer(config *ccf.Config) {
+func RegisterWebServer(config *systemConfig.Config) {
 	r := gin.Default()
 	r.Use(static.Serve("/", static.LocalFile("web/dist/", true)))
 	r.NoRoute(func(c *gin.Context) {

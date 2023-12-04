@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +14,7 @@ type ResourceServer struct {
 }
 
 // CreateBySrvIds 新建资源服务
-func (rs *ResourceServer) CreateBySrvIds(ctx kratos.Context, rid uint32, srvIds []uint32) error {
+func (rs *ResourceServer) CreateBySrvIds(ctx kratosx.Context, rid uint32, srvIds []uint32) error {
 	var list []*ResourceServer
 	for _, srvId := range srvIds {
 		list = append(list, &ResourceServer{
@@ -32,7 +32,7 @@ func (rs *ResourceServer) CreateBySrvIds(ctx kratos.Context, rid uint32, srvIds 
 }
 
 // All 查询全部资源
-func (rs *ResourceServer) All(ctx kratos.Context, scopes Scopes) ([]*ResourceServer, error) {
+func (rs *ResourceServer) All(ctx kratosx.Context, scopes Scopes) ([]*ResourceServer, error) {
 	var list []*ResourceServer
 
 	db := ctx.DB().Model(rs)
@@ -43,6 +43,6 @@ func (rs *ResourceServer) All(ctx kratos.Context, scopes Scopes) ([]*ResourceSer
 }
 
 // DeleteByID 删除指定id的资源
-func (rs *ResourceServer) DeleteByID(ctx kratos.Context, id uint32) error {
+func (rs *ResourceServer) DeleteByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Model(rs).Delete(rs, "id = ?", id).Error
 }

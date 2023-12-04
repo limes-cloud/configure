@@ -10,7 +10,7 @@ import (
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"gorm.io/gorm"
 )
@@ -31,7 +31,7 @@ type value struct {
 }
 
 // Current 查询指定服务的当前模板
-func (t *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
+func (t *Template) Current(ctx kratosx.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
 	template := model.Template{}
 	reply := v1.CurrentTemplateReply{}
 
@@ -39,26 +39,26 @@ func (t *Template) Current(ctx kratos.Context, in *v1.CurrentTemplateRequest) (*
 		return &reply, nil
 	}
 	if util.Transform(template, &reply.Template) != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 	return &reply, nil
 }
 
 // Get 查询指定模板
-func (t *Template) Get(ctx kratos.Context, in *v1.GetTemplateRequest) (*v1.GetTemplateReply, error) {
+func (t *Template) Get(ctx kratosx.Context, in *v1.GetTemplateRequest) (*v1.GetTemplateReply, error) {
 	template := model.Template{}
 	if err := template.OneById(ctx, in.Id); err != nil {
-		return nil, v1.ErrorDatabase()
+		return nil, v1.DatabaseError()
 	}
 	reply := v1.GetTemplateReply{}
 	if util.Transform(template, &reply) != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 	return &reply, nil
 }
 
 // Page 查询分页模板
-func (t *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
+func (t *Template) Page(ctx kratosx.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
 	template := model.Template{}
 	list, total, err := template.Page(ctx, &model.PageOptions{
 		Page:     in.Page,
@@ -69,22 +69,22 @@ func (t *Template) Page(ctx kratos.Context, in *v1.PageTemplateRequest) (*v1.Pag
 	})
 
 	if err != nil {
-		return nil, v1.ErrorDatabase()
+		return nil, v1.DatabaseError()
 	}
 	reply := v1.PageTemplateReply{
 		Total: total,
 	}
 	if util.Transform(list, &reply.List) != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 	return &reply, nil
 }
 
 // Add 添加模板
-func (t *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.Empty, error) {
+func (t *Template) Add(ctx kratosx.Context, in *v1.AddTemplateRequest) (*emptypb.Empty, error) {
 	template := model.Template{}
 	if err := util.Transform(in, &template); err != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 	template.Version = strings.ToUpper(util.MD5([]byte(in.Content))[:12])
 
@@ -93,38 +93,38 @@ func (t *Template) Add(ctx kratos.Context, in *v1.AddTemplateRequest) (*emptypb.
 	if temp.Current(ctx, in.ServerId) == nil {
 		// 判断两个版本之前是否有差异
 		if template.Version == temp.Version {
-			return nil, v1.ErrorVersionExist()
+			return nil, v1.VersionExistError()
 		}
 	}
 
 	if err := t.checkTemplate(ctx, in.ServerId, in.Content); err != nil {
-		return nil, v1.ErrorCheckTemplateFormat(err.Error())
+		return nil, v1.CheckTemplateErrorFormat(err.Error())
 	}
 	template.IsUse = true
 	return nil, template.Create(ctx)
 }
 
 // UseVersion 使用指定版本
-func (t *Template) UseVersion(ctx kratos.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
+func (t *Template) UseVersion(ctx kratosx.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
 	template := model.Template{}
 	if util.Transform(in, &template) != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 
 	return nil, template.UseVersionByID(ctx, in.ServerId, in.Id)
 }
 
 // ParsePreview 使用指定版本配置
-func (t *Template) ParsePreview(ctx kratos.Context, in *v1.ParseTemplatePreviewRequest) (*v1.ParseTemplatePreviewReply, error) {
+func (t *Template) ParsePreview(ctx kratosx.Context, in *v1.ParseTemplatePreviewRequest) (*v1.ParseTemplatePreviewReply, error) {
 	env := model.Environment{}
 	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 获取字段的配置值
 	values, err := t.getVariableValue(ctx, env.ID, in.ServerId)
 	if err != nil {
-		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
+		return nil, v1.ResourceFormatValueErrorFormat(err.Error())
 	}
 
 	// 进行值替换
@@ -144,22 +144,22 @@ func (t *Template) ParsePreview(ctx kratos.Context, in *v1.ParseTemplatePreviewR
 }
 
 // Parse 使用指定版本配置
-func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
+func (t *Template) Parse(ctx kratosx.Context, in *v1.ParseTemplateRequest) (*v1.ParseTemplateReply, error) {
 	env := model.Environment{}
 	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 获取指定模板
 	tp := model.Template{}
 	if err := tp.Current(ctx, in.ServerId); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 获取字段的配置值
 	values, err := t.getVariableValue(ctx, env.ID, tp.ServerID)
 	if err != nil {
-		return nil, v1.ErrorResourceFormatValueFormat(err.Error())
+		return nil, v1.ResourceFormatValueErrorFormat(err.Error())
 	}
 
 	// 进行值替换
@@ -180,14 +180,14 @@ func (t *Template) Parse(ctx kratos.Context, in *v1.ParseTemplateRequest) (*v1.P
 }
 
 // checkTemplate 校验数据模板数据是否合法
-func (t *Template) checkTemplate(ctx kratos.Context, srvId uint32, template string) error {
+func (t *Template) checkTemplate(ctx kratosx.Context, srvId uint32, template string) error {
 	//获取指定服务的模板字段
 	bs := model.Business{}
 	bsList, err := bs.All(ctx, func(db *gorm.DB) *gorm.DB {
 		return db.Where("server_id=?", srvId)
 	})
 	if err != nil {
-		return v1.ErrorDatabase()
+		return v1.DatabaseError()
 	}
 
 	// 获取指定服务的模板字段
@@ -239,7 +239,7 @@ func (t *Template) fillKey(val string) string {
 	return fmt.Sprintf(`{{%s}}`, val)
 }
 
-func (t *Template) getVariableValue(ctx kratos.Context, envId, srvId uint32) (map[string]value, error) {
+func (t *Template) getVariableValue(ctx kratosx.Context, envId, srvId uint32) (map[string]value, error) {
 	// 获取全部业务
 	bv := model.BusinessValue{}
 	bvs, err := bv.AllByEnvAndServer(ctx, envId, srvId)

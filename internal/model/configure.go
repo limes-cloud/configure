@@ -1,8 +1,6 @@
 package model
 
-import (
-	"github.com/limes-cloud/kratos"
-)
+import "github.com/limes-cloud/kratosx"
 
 type Configure struct {
 	BaseModel
@@ -14,14 +12,14 @@ type Configure struct {
 	Description   *string `json:"description"`
 }
 
-func (t *Configure) Create(ctx kratos.Context) error {
+func (t *Configure) Create(ctx kratosx.Context) error {
 	return ctx.DB().Create(t).Error
 }
 
-func (t *Configure) Update(ctx kratos.Context) error {
+func (t *Configure) Update(ctx kratosx.Context) error {
 	return ctx.DB().Updates(t).Error
 }
 
-func (t *Configure) OneBySrvAndEnv(ctx kratos.Context, srvId, envId uint32) error {
+func (t *Configure) OneBySrvAndEnv(ctx kratosx.Context, srvId, envId uint32) error {
 	return ctx.DB().First(t, "server_id=? and environment_id=?", srvId, envId).Error
 }

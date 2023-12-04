@@ -1,8 +1,6 @@
 package model
 
-import (
-	"github.com/limes-cloud/kratos"
-)
+import "github.com/limes-cloud/kratosx"
 
 type OperateLog struct {
 	ServerID      uint32      `json:"server_id"`
@@ -13,11 +11,11 @@ type OperateLog struct {
 	Environment   Environment `json:"environment"`
 }
 
-func (ol *OperateLog) Create(ctx kratos.Context) error {
+func (ol *OperateLog) Create(ctx kratosx.Context) error {
 	return ctx.DB().Create(ol).Error
 }
 
-func (ol *OperateLog) Page(ctx kratos.Context, options PageOptions) ([]*OperateLog, uint32, error) {
+func (ol *OperateLog) Page(ctx kratosx.Context, options PageOptions) ([]*OperateLog, uint32, error) {
 	var list []*OperateLog
 	total := int64(0)
 
@@ -34,6 +32,6 @@ func (ol *OperateLog) Page(ctx kratos.Context, options PageOptions) ([]*OperateL
 	return list, uint32(total), db.Find(&list).Error
 }
 
-func (ol *OperateLog) OneById(ctx kratos.Context, id uint32) error {
+func (ol *OperateLog) OneById(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().First(ol, "id = ?", id).Error
 }

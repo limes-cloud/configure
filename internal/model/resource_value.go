@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"
 )
 
@@ -15,12 +15,12 @@ type ResourceValue struct {
 }
 
 // Create 新建资源
-func (rv *ResourceValue) Create(ctx kratos.Context) error {
+func (rv *ResourceValue) Create(ctx kratosx.Context) error {
 	return ctx.DB().Model(rv).Create(rv).Error
 }
 
 // Creates 批量创建资源
-func (rv *ResourceValue) Creates(ctx kratos.Context, rid uint32, list []*ResourceValue) error {
+func (rv *ResourceValue) Creates(ctx kratosx.Context, rid uint32, list []*ResourceValue) error {
 	db := ctx.DB()
 	return db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Delete(ResourceValue{}, "resource_id=?", rid).Error; err != nil {
@@ -31,7 +31,7 @@ func (rv *ResourceValue) Creates(ctx kratos.Context, rid uint32, list []*Resourc
 }
 
 // All 查询全部资源
-func (rv *ResourceValue) All(ctx kratos.Context, scopes Scopes) ([]*ResourceValue, error) {
+func (rv *ResourceValue) All(ctx kratosx.Context, scopes Scopes) ([]*ResourceValue, error) {
 	var list []*ResourceValue
 
 	db := ctx.DB().Model(rv)
@@ -43,11 +43,11 @@ func (rv *ResourceValue) All(ctx kratos.Context, scopes Scopes) ([]*ResourceValu
 }
 
 // Update 更新指定id的资源值
-func (rv *ResourceValue) Update(ctx kratos.Context) error {
+func (rv *ResourceValue) Update(ctx kratosx.Context) error {
 	return ctx.DB().Model(rv).Updates(rv).Error
 }
 
-func (rv *ResourceValue) AllByEnvAndServer(ctx kratos.Context, envId, srvId uint32) ([]*ResourceValue, error) {
+func (rv *ResourceValue) AllByEnvAndServer(ctx kratosx.Context, envId, srvId uint32) ([]*ResourceValue, error) {
 	return rv.All(ctx, func(db *gorm.DB) *gorm.DB {
 		db.Preload("Resource")
 		db = db.Where("resource_id in (select resource_id from resource_server where server_id=? "+

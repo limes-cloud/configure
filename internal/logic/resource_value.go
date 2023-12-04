@@ -10,7 +10,7 @@ import (
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"gorm.io/gorm"
 )
@@ -26,23 +26,23 @@ func NewResourceValue(conf *config.Config) *ResourceValue {
 }
 
 // All 分页字段值
-func (rv *ResourceValue) All(ctx kratos.Context, in *v1.AllResourceValueRequest) (*v1.AllResourceValueReply, error) {
+func (rv *ResourceValue) All(ctx kratosx.Context, in *v1.AllResourceValueRequest) (*v1.AllResourceValueReply, error) {
 	resource := model.ResourceValue{}
 	list, err := resource.All(ctx, func(db *gorm.DB) *gorm.DB {
 		return db.Where("resource_id =?", in.ResourceId)
 	})
 
 	if err != nil {
-		return nil, v1.ErrorDatabase()
+		return nil, v1.DatabaseError()
 	}
 	reply := v1.AllResourceValueReply{}
 	if util.Transform(list, &reply.List) != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 	return &reply, nil
 }
 
-func (rv *ResourceValue) checkValue(ctx kratos.Context, rid uint32, values string) error {
+func (rv *ResourceValue) checkValue(ctx kratosx.Context, rid uint32, values string) error {
 	m := make(map[string]any)
 	if err := json.Unmarshal([]byte(values), &m); err != nil {
 		return err
@@ -69,7 +69,7 @@ func (rv *ResourceValue) checkValue(ctx kratos.Context, rid uint32, values strin
 }
 
 // Update 更新资源值
-func (rv *ResourceValue) Update(ctx kratos.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
+func (rv *ResourceValue) Update(ctx kratosx.Context, in *v1.UpdateResourceValueRequest) (*emptypb.Empty, error) {
 	var rvs []*model.ResourceValue
 	// 遍历
 	for _, item := range in.List {
@@ -81,7 +81,7 @@ func (rv *ResourceValue) Update(ctx kratos.Context, in *v1.UpdateResourceValueRe
 		rvs = append(rvs, &temp)
 
 		if err := rv.checkValue(ctx, in.ResourceId, item.Values); err != nil {
-			return nil, v1.ErrorResourceFormatValueFormat("[%v]%v", item.EnvKeyword, err.Error())
+			return nil, v1.ResourceFormatValueErrorFormat("[%s]%s", item.EnvKeyword, err.Error())
 		}
 	}
 
