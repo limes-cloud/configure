@@ -1,4 +1,4 @@
-package configure
+package client
 
 import (
 	"context"
