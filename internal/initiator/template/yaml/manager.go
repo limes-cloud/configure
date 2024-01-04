@@ -33,7 +33,7 @@ database:
       host: {{ManagerDatabase.Host}}
       port: {{ManagerDatabase.Port}}
       dbName: {{ManagerDatabase.Database}}
-      option: ?{{ManagerDatabase.Option}}
+      option: {{ManagerDatabase.Option}}
     config:
       transformError:
         enable: true

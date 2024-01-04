@@ -33,7 +33,7 @@ database:
       host: {{ResourceDatabase.Host}}
       port: {{ResourceDatabase.Port}}
       dbName: {{ResourceDatabase.Database}}
-      option: ?{{ResourceDatabase.Option}}
+      option: {{ResourceDatabase.Option}}
     config:
       transformError:
         enable: true
