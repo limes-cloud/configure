@@ -2,16 +2,17 @@ package model
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 )
 
 type BusinessValue struct {
-	BaseModel
-	EnvironmentID uint32      `json:"environment_id"`
-	BusinessID    uint32      `json:"business_id"`
-	Value         string      `json:"value"`
-	Environment   Environment `json:"environment"`
-	Business      Business    `json:"business"`
+	types.BaseModel
+	EnvironmentID uint32       `json:"environment_id" gorm:"not null;comment:环境id"`
+	BusinessID    uint32       `json:"business_id" gorm:"not null;comment:业务变量id"`
+	Value         string       `json:"value" gorm:"not null;type:text;comment:业务变量值"`
+	Environment   *Environment `json:"environment" gorm:"constraint:onDelete:cascade"`
+	Business      *Business    `json:"business" gorm:"constraint:onDelete:cascade"`
 }
 
 // Create 新建业务字段
@@ -20,7 +21,7 @@ func (bv *BusinessValue) Create(ctx kratosx.Context) error {
 }
 
 // Creates 批量创建资源
-func (rv *BusinessValue) Creates(ctx kratosx.Context, rid uint32, list []*BusinessValue) error {
+func (bv *BusinessValue) Creates(ctx kratosx.Context, rid uint32, list []*BusinessValue) error {
 	db := ctx.DB()
 	return db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Delete(BusinessValue{}, "business_id=?", rid).Error; err != nil {
@@ -36,7 +37,7 @@ func (bv *BusinessValue) OneByID(ctx kratosx.Context, id uint32) error {
 }
 
 // All 查询所有业务字段
-func (bv *BusinessValue) All(ctx kratosx.Context, scopes Scopes) ([]*BusinessValue, error) {
+func (bv *BusinessValue) All(ctx kratosx.Context, scopes types.Scopes) ([]*BusinessValue, error) {
 	var list []*BusinessValue
 
 	db := ctx.DB().Model(bv)

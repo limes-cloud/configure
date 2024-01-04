@@ -266,3 +266,35 @@ func RefreshTokenErrorFormat(format string, args ...any) *errors.Error {
 func RefreshTokenError() *errors.Error {
 	return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败")
 }
+
+func IsTokenAuthError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_TokenAuthError.String() && e.Code == 401
+}
+
+func TokenAuthErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(401, ErrorReason_TokenAuthError.String(), "token验证失败:"+fmt.Sprintf(format, args...))
+}
+
+func TokenAuthError() *errors.Error {
+	return errors.New(401, ErrorReason_TokenAuthError.String(), "token验证失败")
+}
+
+func IsServerNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ServerNotFound.String() && e.Code == 401
+}
+
+func ServerNotFoundFormat(format string, args ...any) *errors.Error {
+	return errors.New(401, ErrorReason_ServerNotFound.String(), "服务不存在:"+fmt.Sprintf(format, args...))
+}
+
+func ServerNotFound() *errors.Error {
+	return errors.New(401, ErrorReason_ServerNotFound.String(), "服务不存在")
+}

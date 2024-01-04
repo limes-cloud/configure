@@ -9,9 +9,10 @@ message Template{
   uint32 server_id = 2;
   string description = 3;
   string version = 4;
-  bool is_use = 5;
-  string content = 6;
-  uint32 created_at = 7;
+  string format = 5;
+  bool is_use = 6;
+  string content = 7;
+  uint32 created_at = 8;
 }
 
 message PageTemplateRequest{
@@ -67,9 +68,10 @@ message UseTemplateVersionRequest {
 
 // 解析配置
 message ParseTemplatePreviewRequest {
-  string content = 1[(validate.rules).string = {min_len: 7}];
-  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
-  uint32 server_id = 3[(validate.rules).uint32 = {gt: 0}];
+  string env_keyword = 1[(validate.rules).string = {min_len: 1}];
+  uint32 server_id = 2[(validate.rules).uint32 = {gt: 0}];
+  string format = 3[(validate.rules).string = {min_len: 1}];
+  string content = 4[(validate.rules).string = {min_len: 7}];
 }
 
 message ParseTemplatePreviewReply {

@@ -1,13 +1,15 @@
 package logic
 
 import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"gorm.io/gorm"
 )
 
 type Server struct {
@@ -49,7 +51,7 @@ func (s *Server) Get(ctx kratosx.Context, in *v1.GetServerRequest) (*v1.GetServe
 // Page 分页查询服务
 func (s *Server) Page(ctx kratosx.Context, in *v1.PageServerRequest) (*v1.PageServerReply, error) {
 	server := model.Server{}
-	list, total, err := server.Page(ctx, &model.PageOptions{
+	list, total, err := server.Page(ctx, &types.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {

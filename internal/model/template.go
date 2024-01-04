@@ -2,17 +2,19 @@ package model
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 )
 
 type Template struct {
-	BaseModel
-	ServerID    uint32  `json:"server_id"`
-	Content     string  `json:"content"`
-	Version     string  `json:"version"`
-	IsUse       bool    `json:"is_use"`
-	Format      string  `json:"format"`
-	Description *string `json:"description"`
+	types.BaseModel
+	ServerID    uint32  `json:"server_id" gorm:"uniqueIndex:sv;not null;comment:服务id"`
+	Content     string  `json:"content" gorm:"not null;type:text;comment:模板内容"`
+	Version     string  `json:"version" gorm:"uniqueIndex:sv;not null;size:32;comment:模板版本"`
+	IsUse       bool    `json:"is_use" gorm:"default:false;comment:是否使用"`
+	Format      string  `json:"format" gorm:"not null;size:32;comment:模板格式"`
+	Description string  `json:"description" gorm:"not null;size:128;comment:模板描述"`
+	Server      *Server `json:"server" gorm:"constraint:onDelete:cascade"`
 }
 
 func (t *Template) Create(ctx kratosx.Context) error {
@@ -34,7 +36,7 @@ func (t *Template) Current(ctx kratosx.Context, srvId uint32) error {
 }
 
 // Page 查询分页资源
-func (t *Template) Page(ctx kratosx.Context, options *PageOptions) ([]*Template, uint32, error) {
+func (t *Template) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Template, uint32, error) {
 	var list []*Template
 	total := int64(0)
 

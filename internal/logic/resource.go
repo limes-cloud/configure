@@ -1,14 +1,16 @@
 package logic
 
 import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"gorm.io/gorm"
 )
 
 type Resource struct {
@@ -24,7 +26,7 @@ func NewResource(conf *config.Config) *Resource {
 // Page 分页查询资源
 func (r *Resource) Page(ctx kratosx.Context, in *v1.PageResourceRequest) (*v1.PageResourceReply, error) {
 	resource := model.Resource{}
-	list, total, err := resource.Page(ctx, &model.PageOptions{
+	list, total, err := resource.Page(ctx, &types.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {

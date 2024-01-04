@@ -2,15 +2,16 @@ package model
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 )
 
 type ResourceServer struct {
-	ID         uint32   `json:"id"`
-	ServerID   uint32   `json:"server_id"`
-	ResourceID uint32   `json:"resource_id"`
-	Resource   Resource `json:"resource"`
-	Server     Server   `json:"server"`
+	types.CreateModel
+	ServerID   uint32   `json:"server_id" gorm:"not null;comment:服务id"`
+	ResourceID uint32   `json:"resource_id" gorm:"not null;comment:资源id"`
+	Resource   Resource `json:"resource" gorm:"constraint:onDelete:cascade"`
+	Server     Server   `json:"server" gorm:"constraint:onDelete:cascade"`
 }
 
 // CreateBySrvIds 新建资源服务
@@ -32,7 +33,7 @@ func (rs *ResourceServer) CreateBySrvIds(ctx kratosx.Context, rid uint32, srvIds
 }
 
 // All 查询全部资源
-func (rs *ResourceServer) All(ctx kratosx.Context, scopes Scopes) ([]*ResourceServer, error) {
+func (rs *ResourceServer) All(ctx kratosx.Context, scopes types.Scopes) ([]*ResourceServer, error) {
 	var list []*ResourceServer
 
 	db := ctx.DB().Model(rs)

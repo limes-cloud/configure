@@ -65,6 +65,8 @@ func (m *Template) validate(all bool) error {
 
 	// no validation rules for Version
 
+	// no validation rules for Format
+
 	// no validation rules for IsUse
 
 	// no validation rules for Content
@@ -1208,17 +1210,6 @@ func (m *ParseTemplatePreviewRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetContent()) < 7 {
-		err := ParseTemplatePreviewRequestValidationError{
-			field:  "Content",
-			reason: "value length must be at least 7 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
 		err := ParseTemplatePreviewRequestValidationError{
 			field:  "EnvKeyword",
@@ -1234,6 +1225,28 @@ func (m *ParseTemplatePreviewRequest) validate(all bool) error {
 		err := ParseTemplatePreviewRequestValidationError{
 			field:  "ServerId",
 			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetFormat()) < 1 {
+		err := ParseTemplatePreviewRequestValidationError{
+			field:  "Format",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetContent()) < 7 {
+		err := ParseTemplatePreviewRequestValidationError{
+			field:  "Content",
+			reason: "value length must be at least 7 runes",
 		}
 		if !all {
 			return err

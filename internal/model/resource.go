@@ -1,14 +1,19 @@
 package model
 
-import "github.com/limes-cloud/kratosx"
+import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+)
 
 type Resource struct {
-	BaseModel
-	Keyword     string `json:"keyword"`
-	Description string `json:"description"`
-	Fields      string `json:"fields"`
-	Tag         string `json:"tag"`
-	Private     *bool  `json:"private"`
+	types.BaseModel
+	Keyword        string            `json:"keyword" gorm:"not null;type:char(32) binary;comment:变量标识"`
+	Description    string            `json:"description" gorm:"not null;size:128;comment:变量描述"`
+	Fields         string            `json:"fields" gorm:"not null;size:256;comment:变量字段集合"`
+	Tag            string            `json:"tag" gorm:"not null;size:32;comment:变量标签"`
+	Private        *bool             `json:"private" gorm:"default:false;comment:是否私有"`
+	ResourceServer []*ResourceServer `json:"-" gorm:"-"`
+	ResourceValue  []*ResourceValue  `json:"-" gorm:"-"`
 }
 
 // Create 新建资源
@@ -22,7 +27,7 @@ func (r *Resource) OneByID(ctx kratosx.Context, id uint32) error {
 }
 
 // Page 查询分页资源
-func (r *Resource) Page(ctx kratosx.Context, options *PageOptions) ([]*Resource, uint32, error) {
+func (r *Resource) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Resource, uint32, error) {
 	var list []*Resource
 	total := int64(0)
 
@@ -40,7 +45,7 @@ func (r *Resource) Page(ctx kratosx.Context, options *PageOptions) ([]*Resource,
 }
 
 // All 查询全部资源
-func (r *Resource) All(ctx kratosx.Context, scopes Scopes) ([]*Resource, error) {
+func (r *Resource) All(ctx kratosx.Context, scopes types.Scopes) ([]*Resource, error) {
 	var list []*Resource
 
 	db := ctx.DB().Model(r)

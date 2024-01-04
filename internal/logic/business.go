@@ -1,13 +1,15 @@
 package logic
 
 import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"gorm.io/gorm"
 )
 
 type Business struct {
@@ -23,7 +25,7 @@ func NewBusiness(conf *config.Config) *Business {
 // Page 查询分页业务
 func (l *Business) Page(ctx kratosx.Context, in *v1.PageBusinessRequest) (*v1.PageBusinessReply, error) {
 	business := model.Business{}
-	list, total, err := business.Page(ctx, &model.PageOptions{
+	list, total, err := business.Page(ctx, &types.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {

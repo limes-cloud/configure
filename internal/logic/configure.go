@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/limes-cloud/kratosx"
+	"google.golang.org/protobuf/types/known/emptypb"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type watcher struct {
@@ -82,7 +83,7 @@ func (t *Configure) Update(ctx kratosx.Context, in *v1.UpdateConfigureRequest) (
 	// 查询往期配置
 	old := &model.Configure{}
 	if err := old.OneBySrvAndEnv(ctx, in.ServerId, env.ID); err == nil {
-		//校验当前版本是否和之前版本一致
+		// 校验当前版本是否和之前版本一致
 		if old.Version == configure.Version {
 			return nil, v1.VersionExistError()
 		}
@@ -108,12 +109,12 @@ func (t *Configure) Watch(ctx kratosx.Context, req *v1.WatchConfigureRequest, re
 	// 通过token查找环境是否存在
 	env := model.Environment{}
 	if err := env.OneByToken(ctx, req.Token); err != nil {
-		return v1.DatabaseErrorFormat(err.Error())
+		return v1.TokenAuthError()
 	}
 
 	srv := model.Server{}
 	if err := srv.OneByKeyword(ctx, req.Server); err != nil {
-		return v1.DatabaseErrorFormat(err.Error())
+		return v1.ServerNotFound()
 	}
 
 	configure := model.Configure{}

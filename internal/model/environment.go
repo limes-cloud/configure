@@ -1,14 +1,17 @@
 package model
 
-import "github.com/limes-cloud/kratosx"
+import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+)
 
 type Environment struct {
-	BaseModel
-	Keyword     string `json:"keyword"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Token       string `json:"token,omitempty"`
-	Status      *bool  `json:"status"`
+	types.BaseModel
+	Keyword     string `json:"keyword" gorm:"not null;type:char(32) binary;comment:环境标识"`
+	Name        string `json:"name" gorm:"not null;size:64;comment:环境名称"`
+	Description string `json:"description" gorm:"not null;size:128;comment:环境描述"`
+	Token       string `json:"token,omitempty" gorm:"not null;size:128;comment:环境token"`
+	Status      *bool  `json:"status" gorm:"default:false;comment:环境状态"`
 }
 
 // Create 新建环境
@@ -23,7 +26,7 @@ func (e *Environment) OneByKeyword(ctx kratosx.Context, keyword string) error {
 
 // OneByToken 通过token查找指定环境
 func (e *Environment) OneByToken(ctx kratosx.Context, token string) error {
-	return ctx.DB().First(e, "token = ?", token).Error
+	return ctx.DB().First(e, "token=? and status=true", token).Error
 }
 
 // OneByID 通过id查找指定环境

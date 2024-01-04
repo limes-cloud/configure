@@ -8,7 +8,7 @@ import (
 	json "github.com/json-iterator/go"
 )
 
-func Transform(in interface{}, dst interface{}) error {
+func Transform(in any, dst any) error {
 	b, err := json.Marshal(in)
 	if err != nil {
 		return err
@@ -23,4 +23,9 @@ func MD5(in []byte) string {
 
 func MD5ToUpper(in []byte) string {
 	return strings.ToUpper(MD5(in))
+}
+
+func MarshalString(in any) string {
+	b, _ := json.Marshal(in)
+	return string(b)
 }

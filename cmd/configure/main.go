@@ -1,27 +1,41 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config/file"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	v1 "github.com/limes-cloud/configure/api/v1"
-	systemConfig "github.com/limes-cloud/configure/config"
-	"github.com/limes-cloud/configure/internal/handler"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/config"
 	_ "go.uber.org/automaxprocs"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
+	systemConfig "github.com/limes-cloud/configure/config"
+	"github.com/limes-cloud/configure/internal/handler"
+	"github.com/limes-cloud/configure/internal/initiator"
+	"github.com/limes-cloud/configure/pkg/pt"
+)
+
+const (
+	AppName = "Configure"
 )
 
 func main() {
 	app := kratosx.New(
 		kratosx.Config(file.NewSource("config/config.yaml")),
 		kratosx.RegistrarServer(RegisterServer),
+		kratosx.Options(kratos.AfterStart(func(_ context.Context) error {
+			pt.ArtFont(fmt.Sprintf("Hello %s !", AppName))
+			return nil
+		})),
 	)
 
 	if err := app.Run(); err != nil {
@@ -44,6 +58,12 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 		}
 	})
 
+	// 初始化逻辑
+	ior := initiator.New(conf)
+	if err := ior.Run(); err != nil {
+		panic("initiator error:" + err.Error())
+	}
+
 	go RegisterWebServer(conf)
 	srv := handler.New(conf)
 	v1.RegisterServiceHTTPServer(hs, srv)
@@ -65,7 +85,7 @@ func RegisterWebServer(config *systemConfig.Config) {
 			}
 			c.Writer.WriteHeader(200)
 			c.Writer.Header().Add("Accept", "text/html")
-			_, _ = c.Writer.Write((content))
+			_, _ = c.Writer.Write(content)
 			c.Writer.Flush()
 		}
 	})

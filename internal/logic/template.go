@@ -6,13 +6,15 @@ import (
 	"strings"
 
 	json "github.com/json-iterator/go"
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"gorm.io/gorm"
 )
 
 type Template struct {
@@ -29,6 +31,11 @@ type value struct {
 	value   string
 	exclude bool
 }
+
+const (
+	FormatJson = "json"
+	FormatYaml = "yaml"
+)
 
 // Current 查询指定服务的当前模板
 func (t *Template) Current(ctx kratosx.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
@@ -60,7 +67,7 @@ func (t *Template) Get(ctx kratosx.Context, in *v1.GetTemplateRequest) (*v1.GetT
 // Page 查询分页模板
 func (t *Template) Page(ctx kratosx.Context, in *v1.PageTemplateRequest) (*v1.PageTemplateReply, error) {
 	template := model.Template{}
-	list, total, err := template.Page(ctx, &model.PageOptions{
+	list, total, err := template.Page(ctx, &types.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {
@@ -134,7 +141,11 @@ func (t *Template) ParsePreview(ctx kratosx.Context, in *v1.ParseTemplatePreview
 		if val, ok := values[key]; !ok {
 			return nil, fmt.Errorf("非法字段：%v", key)
 		} else {
-			in.Content = t.replace(in.Content, key, val)
+			if in.Format == FormatJson {
+				in.Content = t.replaceByFormatJson(in.Content, key, val)
+			} else {
+				in.Content = t.replaceByFormatYaml(in.Content, key, val)
+			}
 		}
 	}
 
@@ -169,7 +180,11 @@ func (t *Template) Parse(ctx kratosx.Context, in *v1.ParseTemplateRequest) (*v1.
 		if val, ok := values[key]; !ok {
 			return nil, fmt.Errorf("非法字段：%v", key)
 		} else {
-			tp.Content = t.replace(tp.Content, key, val)
+			if tp.Format == FormatJson {
+				tp.Content = t.replaceByFormatJson(tp.Content, key, val)
+			} else {
+				tp.Content = t.replaceByFormatYaml(tp.Content, key, val)
+			}
 		}
 	}
 
@@ -181,7 +196,7 @@ func (t *Template) Parse(ctx kratosx.Context, in *v1.ParseTemplateRequest) (*v1.
 
 // checkTemplate 校验数据模板数据是否合法
 func (t *Template) checkTemplate(ctx kratosx.Context, srvId uint32, template string) error {
-	//获取指定服务的模板字段
+	// 获取指定服务的模板字段
 	bs := model.Business{}
 	bsList, err := bs.All(ctx, func(db *gorm.DB) *gorm.DB {
 		return db.Where("server_id=?", srvId)
@@ -203,7 +218,7 @@ func (t *Template) checkTemplate(ctx kratosx.Context, srvId uint32, template str
 		return db.Where("private=false")
 	})
 
-	//组合模板和模板的key
+	// 组合模板和模板的key
 	keys := map[string]bool{}
 	for _, item := range rsList {
 		fields := strings.Split(item.Resource.Fields, ",")
@@ -223,7 +238,7 @@ func (t *Template) checkTemplate(ctx kratosx.Context, srvId uint32, template str
 		keys[t.fillKey(item.Keyword)] = true
 	}
 
-	//进行增则匹配
+	// 进行增则匹配
 	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
 	tempKeys := reg.FindAllString(template, -1)
 	// 进行参数判断
@@ -294,7 +309,7 @@ func (t *Template) parseResourceValue(val any) value {
 	switch val.(type) {
 	case string:
 		return value{value: val.(string), exclude: false}
-	case map[string]interface{}, []interface{}:
+	case map[string]any, []any:
 		str, _ := json.MarshalToString(val)
 		return value{value: str, exclude: true}
 	default:
@@ -302,11 +317,17 @@ func (t *Template) parseResourceValue(val any) value {
 	}
 }
 
-func (t *Template) replace(template, key string, val value) string {
-	if strings.Contains(template, fmt.Sprintf(`"%v"`, key)) && val.exclude {
+func (t *Template) replaceByFormatJson(template, key string, val value) string {
+	isQuote := strings.Contains(template, fmt.Sprintf(`"%v"`, key)) && strings.Contains(template, fmt.Sprintf(`'%v'`, key))
+	if isQuote && val.exclude {
 		template = strings.Replace(template, fmt.Sprintf(`"%v"`, key), val.value, 1)
+		template = strings.Replace(template, fmt.Sprintf(`'%v'`, key), val.value, 1)
 	} else {
 		template = strings.Replace(template, key, fmt.Sprintf("%v", val.value), 1)
 	}
 	return template
+}
+
+func (t *Template) replaceByFormatYaml(template, key string, val value) string {
+	return strings.Replace(template, key, fmt.Sprintf("%v", val.value), 1)
 }

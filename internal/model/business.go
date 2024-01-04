@@ -1,14 +1,17 @@
 package model
 
-import "github.com/limes-cloud/kratosx"
+import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+)
 
 type Business struct {
-	BaseModel
-	ServerID    uint32 `json:"server_id"`
-	Keyword     string `json:"keyword"`
-	Type        string `json:"type"`
-	Option      string `json:"option"`
-	Description string `json:"description"`
+	types.BaseModel
+	ServerID    uint32  `json:"server_id" gorm:"not null;comment:服务id"`
+	Keyword     string  `json:"keyword" gorm:"not null;type:char(32) binary;comment:变量标识"`
+	Type        string  `json:"type" gorm:"not null;size:32;comment:变量类型"`
+	Description string  `json:"description" gorm:"not null;size:128;comment:变量描述"`
+	Server      *Server `json:"server" gorm:"constraint:onDelete:cascade"`
 }
 
 // Create 新建业务字段
@@ -22,7 +25,7 @@ func (b *Business) OneByID(ctx kratosx.Context, id uint32) error {
 }
 
 // Page 查询分页资源
-func (b *Business) Page(ctx kratosx.Context, options *PageOptions) ([]*Business, uint32, error) {
+func (b *Business) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Business, uint32, error) {
 	var list []*Business
 	total := int64(0)
 
@@ -40,7 +43,7 @@ func (b *Business) Page(ctx kratosx.Context, options *PageOptions) ([]*Business,
 }
 
 // All 查询所有业务字段
-func (b *Business) All(ctx kratosx.Context, scopes Scopes) ([]*Business, error) {
+func (b *Business) All(ctx kratosx.Context, scopes types.Scopes) ([]*Business, error) {
 	var list []*Business
 
 	db := ctx.DB().Model(b)

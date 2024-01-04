@@ -2,16 +2,17 @@ package model
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 )
 
 type ResourceValue struct {
-	BaseModel
-	EnvironmentID uint32      `json:"environment_id"`
-	ResourceID    uint32      `json:"resource_id"`
-	Values        string      `json:"values"`
-	Environment   Environment `json:"environment"`
-	Resource      Resource    `json:"resource"`
+	types.BaseModel
+	EnvironmentID uint32      `json:"environment_id" gorm:"not null;comment:环境id"`
+	ResourceID    uint32      `json:"resource_id" gorm:"not null;comment:资源id"`
+	Values        string      `json:"values" gorm:"not null;type:text;comment:资源id"`
+	Environment   Environment `json:"environment" gorm:"constraint:onDelete:cascade"`
+	Resource      Resource    `json:"resource" gorm:"constraint:onDelete:cascade"`
 }
 
 // Create 新建资源
@@ -31,7 +32,7 @@ func (rv *ResourceValue) Creates(ctx kratosx.Context, rid uint32, list []*Resour
 }
 
 // All 查询全部资源
-func (rv *ResourceValue) All(ctx kratosx.Context, scopes Scopes) ([]*ResourceValue, error) {
+func (rv *ResourceValue) All(ctx kratosx.Context, scopes types.Scopes) ([]*ResourceValue, error) {
 	var list []*ResourceValue
 
 	db := ctx.DB().Model(rv)

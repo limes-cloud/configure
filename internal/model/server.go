@@ -1,12 +1,15 @@
 package model
 
-import "github.com/limes-cloud/kratosx"
+import (
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+)
 
 type Server struct {
-	BaseModel
-	Keyword     string `json:"keyword"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	types.BaseModel
+	Keyword     string `json:"keyword" gorm:"not null;type:char(32) binary;comment:服务标识"`
+	Name        string `json:"name" gorm:"not null;size:64;comment:服务名称"`
+	Description string `json:"description" gorm:"not null;size:128;comment:服务描述"`
 }
 
 // Create 新建资源
@@ -24,7 +27,7 @@ func (s *Server) OneByKeyword(ctx kratosx.Context, keyword string) error {
 }
 
 // Page 查询分页资源
-func (s *Server) Page(ctx kratosx.Context, options *PageOptions) ([]*Server, uint32, error) {
+func (s *Server) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Server, uint32, error) {
 	var list []*Server
 	total := int64(0)
 
@@ -42,7 +45,7 @@ func (s *Server) Page(ctx kratosx.Context, options *PageOptions) ([]*Server, uin
 }
 
 // All 查询全部资源
-func (s *Server) All(ctx kratosx.Context, scopes Scopes) ([]*Server, error) {
+func (s *Server) All(ctx kratosx.Context, scopes types.Scopes) ([]*Server, error) {
 	var list []*Server
 
 	db := ctx.DB().Model(s)

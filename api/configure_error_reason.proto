@@ -26,6 +26,8 @@ enum ErrorReason {
   UserPasswordError = 13[(errors.code)=400,(errors.message)="用户密码错误"];
   NewTokenError = 14[(errors.code)=400,(errors.message)="token生成失败"];
   RefreshTokenError = 15 [(errors.code)=401,(errors.message)="刷新token失败"];
+  TokenAuthError = 16 [(errors.code)=401,(errors.message)="token验证失败"];
+  ServerNotFound = 17 [(errors.code)=401,(errors.message)="服务不存在"];
 }
 
 
