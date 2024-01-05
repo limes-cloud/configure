@@ -1,6 +1,7 @@
 package yaml
 
 var Manager = `
+env: {{Env.Keyword}}
 server:
   http:
     addr: {{ManagerServer.Host}}:{{ManagerServer.HttpPort}}

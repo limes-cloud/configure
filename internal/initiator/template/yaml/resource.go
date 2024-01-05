@@ -1,6 +1,7 @@
 package yaml
 
 var Resource = `
+env: {{Env.Keyword}}
 server:
   http:
     addr: {{ResourceServer.Host}}:{{ResourceServer.HttpPort}}

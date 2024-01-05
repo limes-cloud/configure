@@ -6,6 +6,7 @@ import (
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/internal/initiator/resource/configure"
 	"github.com/limes-cloud/configure/internal/initiator/resource/email"
+	"github.com/limes-cloud/configure/internal/initiator/resource/env"
 	"github.com/limes-cloud/configure/internal/initiator/resource/gateway"
 	"github.com/limes-cloud/configure/internal/initiator/resource/jwt"
 	"github.com/limes-cloud/configure/internal/initiator/resource/manager"
@@ -17,6 +18,9 @@ import (
 
 func Init(ctx kratosx.Context, config *config.Config) {
 	var resourceList []*model.Resource
+
+	// env
+	resourceList = append(resourceList, env.Resources...)
 	// jwt
 	resourceList = append(resourceList, jwt.Resources...)
 	// redis
