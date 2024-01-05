@@ -19,6 +19,7 @@ import (
 
 	v1 "github.com/limes-cloud/configure/api/v1"
 	systemConfig "github.com/limes-cloud/configure/config"
+	"github.com/limes-cloud/configure/consts"
 	"github.com/limes-cloud/configure/internal/handler"
 	"github.com/limes-cloud/configure/internal/initiator"
 	"github.com/limes-cloud/configure/pkg/pt"
@@ -64,20 +65,27 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 		panic("initiator error:" + err.Error())
 	}
 
-	go RegisterWebServer(conf)
+	go RegisterWebServer(c, conf)
 	srv := handler.New(conf)
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
 }
 
-func RegisterWebServer(config *systemConfig.Config) {
+func RegisterWebServer(c config.Config, config *systemConfig.Config) {
 	r := gin.Default()
-	r.Use(static.Serve("/", static.LocalFile("web/dist/", true)))
+
+	mode := c.App().Env
+	if c.App().Env != consts.ENV_TEST {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
+	rootPath := fmt.Sprintf("web/dist/%s/", strings.ToLower(mode))
+	r.Use(static.Serve("/", static.LocalFile(rootPath, true)))
 	r.NoRoute(func(c *gin.Context) {
 		accept := c.Request.Header.Get("Accept")
 		flag := strings.Contains(accept, "text/html")
 		if flag {
-			content, err := os.ReadFile("web/dist/index.html")
+			content, err := os.ReadFile(rootPath + "index.html")
 			if (err) != nil {
 				c.Writer.WriteHeader(404)
 				_, _ = c.Writer.WriteString("Not Found")

@@ -1,3 +1,4 @@
+env: PROD
 server:
   http:
     addr: 0.0.0.0:6081

@@ -11,7 +11,7 @@ require (
 	github.com/google/uuid v1.5.0
 	github.com/gookit/color v1.5.4
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratosx v1.0.6
+	github.com/limes-cloud/kratosx v1.0.7
 	github.com/mbndr/figlet4go v0.0.0-20190224160619-d6cef5b186ea
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917
