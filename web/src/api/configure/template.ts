@@ -1,26 +1,42 @@
 import axios from 'axios';
 import {
-  Template,
-  addTemplateReq,
-  parseTemplateTestReq,
-  parseTemplateTestRes,
+	Template,
+	AddTemplateReq,
+	ParseTemplateReq,
+	ParseTemplateRes,
+	PageTemplateReq,
+	PageTemplateRes,
+	SwitchTemplateReq,
+	CompareTemplateReq,
+	CompareTemplateInfo
 } from './types/template';
 
 export function currentTemplate(id: number) {
-  return axios.get<Template>('/configure/v1/template/current', {
-    params: { server_id: id },
-  });
+	return axios.get<Template>('/configure/v1/template/current', {
+		params: { server_id: id }
+	});
 }
 
-export function addTemplate(req: addTemplateReq) {
-  return axios.post('/configure/v1/template', req);
+export function switchTemplate(data: SwitchTemplateReq) {
+	return axios.post<Template>('/configure/v1/template/switch', data);
 }
 
-export function parseTemplateTest(req: parseTemplateTestReq) {
-  return axios.post<parseTemplateTestRes>(
-    `/configure/v1/template/preview/${req.env_keyword}`,
-    req
-  );
+export function addTemplate(req: AddTemplateReq) {
+	return axios.post('/configure/v1/template', req);
+}
+
+export function parseTemplate(req: ParseTemplateReq) {
+	return axios.post<ParseTemplateRes>(`/configure/v1/template/preview/${req.env_keyword}`, req);
+}
+
+export function pageTemplate(req: PageTemplateReq) {
+	return axios.get<PageTemplateRes>('/configure/v1/templates', {
+		params: { ...req }
+	});
+}
+
+export function compareTemplate(req: CompareTemplateReq) {
+	return axios.post<CompareTemplateInfo[]>('/configure/v1/template/compare', req);
 }
 
 export default null;

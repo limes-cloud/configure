@@ -126,4 +126,3 @@ require (
 	gorm.io/driver/postgres v1.5.2 // indirect
 	gorm.io/driver/sqlserver v1.5.2 // indirect
 )
-

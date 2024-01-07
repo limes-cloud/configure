@@ -49,7 +49,7 @@ func (t *Template) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Tem
 		return nil, uint32(total), err
 	}
 
-	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
+	db = db.Offset(int((options.Page - 1) * options.PageSize)).Order("created_at desc").Limit(int(options.PageSize))
 
 	return list, uint32(total), db.Find(&list).Error
 }
