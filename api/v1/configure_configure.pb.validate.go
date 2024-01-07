@@ -277,6 +277,376 @@ var _ interface {
 	ErrorName() string
 } = GetConfigureReplyValidationError{}
 
+// Validate checks the field values on CompareConfigureRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CompareConfigureRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CompareConfigureRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompareConfigureRequestMultiError, or nil if none found.
+func (m *CompareConfigureRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CompareConfigureRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetServerId() <= 0 {
+		err := CompareConfigureRequestValidationError{
+			field:  "ServerId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+		err := CompareConfigureRequestValidationError{
+			field:  "EnvKeyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return CompareConfigureRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CompareConfigureRequestMultiError is an error wrapping multiple validation
+// errors returned by CompareConfigureRequest.ValidateAll() if the designated
+// constraints aren't met.
+type CompareConfigureRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CompareConfigureRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CompareConfigureRequestMultiError) AllErrors() []error { return m }
+
+// CompareConfigureRequestValidationError is the validation error returned by
+// CompareConfigureRequest.Validate if the designated constraints aren't met.
+type CompareConfigureRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CompareConfigureRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CompareConfigureRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CompareConfigureRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CompareConfigureRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CompareConfigureRequestValidationError) ErrorName() string {
+	return "CompareConfigureRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CompareConfigureRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCompareConfigureRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CompareConfigureRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CompareConfigureRequestValidationError{}
+
+// Validate checks the field values on CompareConfigureInfo with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CompareConfigureInfo) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CompareConfigureInfo with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompareConfigureInfoMultiError, or nil if none found.
+func (m *CompareConfigureInfo) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CompareConfigureInfo) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Type
+
+	// no validation rules for Key
+
+	// no validation rules for Old
+
+	// no validation rules for Cur
+
+	if len(errors) > 0 {
+		return CompareConfigureInfoMultiError(errors)
+	}
+
+	return nil
+}
+
+// CompareConfigureInfoMultiError is an error wrapping multiple validation
+// errors returned by CompareConfigureInfo.ValidateAll() if the designated
+// constraints aren't met.
+type CompareConfigureInfoMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CompareConfigureInfoMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CompareConfigureInfoMultiError) AllErrors() []error { return m }
+
+// CompareConfigureInfoValidationError is the validation error returned by
+// CompareConfigureInfo.Validate if the designated constraints aren't met.
+type CompareConfigureInfoValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CompareConfigureInfoValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CompareConfigureInfoValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CompareConfigureInfoValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CompareConfigureInfoValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CompareConfigureInfoValidationError) ErrorName() string {
+	return "CompareConfigureInfoValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CompareConfigureInfoValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCompareConfigureInfo.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CompareConfigureInfoValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CompareConfigureInfoValidationError{}
+
+// Validate checks the field values on CompareConfigureReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CompareConfigureReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CompareConfigureReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompareConfigureReplyMultiError, or nil if none found.
+func (m *CompareConfigureReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CompareConfigureReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CompareConfigureReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CompareConfigureReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CompareConfigureReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return CompareConfigureReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// CompareConfigureReplyMultiError is an error wrapping multiple validation
+// errors returned by CompareConfigureReply.ValidateAll() if the designated
+// constraints aren't met.
+type CompareConfigureReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CompareConfigureReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CompareConfigureReplyMultiError) AllErrors() []error { return m }
+
+// CompareConfigureReplyValidationError is the validation error returned by
+// CompareConfigureReply.Validate if the designated constraints aren't met.
+type CompareConfigureReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CompareConfigureReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CompareConfigureReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CompareConfigureReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CompareConfigureReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CompareConfigureReplyValidationError) ErrorName() string {
+	return "CompareConfigureReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CompareConfigureReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCompareConfigureReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CompareConfigureReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CompareConfigureReplyValidationError{}
+
 // Validate checks the field values on UpdateConfigureRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -321,10 +691,10 @@ func (m *UpdateConfigureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetDescription()); l < 3 || l > 64 {
+	if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 64 {
 		err := UpdateConfigureRequestValidationError{
 			field:  "Description",
-			reason: "value length must be between 3 and 64 runes, inclusive",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err

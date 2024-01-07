@@ -29,6 +29,8 @@ const OperationServiceAllBusinessValue = "/configure.Service/AllBusinessValue"
 const OperationServiceAllEnvironment = "/configure.Service/AllEnvironment"
 const OperationServiceAllResourceServer = "/configure.Service/AllResourceServer"
 const OperationServiceAllResourceValue = "/configure.Service/AllResourceValue"
+const OperationServiceCompareConfigure = "/configure.Service/CompareConfigure"
+const OperationServiceCompareTemplate = "/configure.Service/CompareTemplate"
 const OperationServiceCurrentTemplate = "/configure.Service/CurrentTemplate"
 const OperationServiceDeleteBusiness = "/configure.Service/DeleteBusiness"
 const OperationServiceDeleteEnvironment = "/configure.Service/DeleteEnvironment"
@@ -48,6 +50,7 @@ const OperationServiceParseTemplate = "/configure.Service/ParseTemplate"
 const OperationServiceParseTemplatePreview = "/configure.Service/ParseTemplatePreview"
 const OperationServiceRefreshToken = "/configure.Service/RefreshToken"
 const OperationServiceResetEnvironmentToken = "/configure.Service/ResetEnvironmentToken"
+const OperationServiceSwitchTemplate = "/configure.Service/SwitchTemplate"
 const OperationServiceUpdateBusiness = "/configure.Service/UpdateBusiness"
 const OperationServiceUpdateBusinessValue = "/configure.Service/UpdateBusinessValue"
 const OperationServiceUpdateConfigure = "/configure.Service/UpdateConfigure"
@@ -55,7 +58,6 @@ const OperationServiceUpdateEnvironment = "/configure.Service/UpdateEnvironment"
 const OperationServiceUpdateResource = "/configure.Service/UpdateResource"
 const OperationServiceUpdateResourceValue = "/configure.Service/UpdateResourceValue"
 const OperationServiceUpdateServer = "/configure.Service/UpdateServer"
-const OperationServiceUpdateTemplateVersion = "/configure.Service/UpdateTemplateVersion"
 
 type ServiceHTTPServer interface {
 	AddBusiness(context.Context, *AddBusinessRequest) (*emptypb.Empty, error)
@@ -67,6 +69,8 @@ type ServiceHTTPServer interface {
 	AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error)
 	AllResourceServer(context.Context, *AllResourceServerRequest) (*AllResourceServerReply, error)
 	AllResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error)
+	CompareConfigure(context.Context, *CompareConfigureRequest) (*CompareConfigureReply, error)
+	CompareTemplate(context.Context, *CompareTemplateRequest) (*CompareTemplateReply, error)
 	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error)
 	DeleteBusiness(context.Context, *DeleteBusinessRequest) (*emptypb.Empty, error)
 	DeleteEnvironment(context.Context, *DeleteEnvironmentRequest) (*emptypb.Empty, error)
@@ -86,6 +90,7 @@ type ServiceHTTPServer interface {
 	ParseTemplatePreview(context.Context, *ParseTemplatePreviewRequest) (*ParseTemplatePreviewReply, error)
 	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
 	ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*ResetEnvironmentTokenReply, error)
+	SwitchTemplate(context.Context, *SwitchTemplateRequest) (*emptypb.Empty, error)
 	UpdateBusiness(context.Context, *UpdateBusinessRequest) (*emptypb.Empty, error)
 	UpdateBusinessValue(context.Context, *UpdateBusinessValueRequest) (*emptypb.Empty, error)
 	UpdateConfigure(context.Context, *UpdateConfigureRequest) (*emptypb.Empty, error)
@@ -93,7 +98,6 @@ type ServiceHTTPServer interface {
 	UpdateResource(context.Context, *UpdateResourceRequest) (*emptypb.Empty, error)
 	UpdateResourceValue(context.Context, *UpdateResourceValueRequest) (*emptypb.Empty, error)
 	UpdateServer(context.Context, *UpdateServerRequest) (*emptypb.Empty, error)
-	UpdateTemplateVersion(context.Context, *UseTemplateVersionRequest) (*emptypb.Empty, error)
 }
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
@@ -129,11 +133,13 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.GET("/configure/v1/template", _Service_GetTemplate0_HTTP_Handler(srv))
 	r.GET("/configure/v1/template/current", _Service_CurrentTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/v1/template", _Service_AddTemplate0_HTTP_Handler(srv))
-	r.PUT("/configure/v1/template", _Service_UpdateTemplateVersion0_HTTP_Handler(srv))
+	r.POST("/configure/v1/template/switch", _Service_SwitchTemplate0_HTTP_Handler(srv))
+	r.POST("/configure/v1/template/compare", _Service_CompareTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/v1/template/preview/{env_keyword}", _Service_ParseTemplatePreview0_HTTP_Handler(srv))
 	r.POST("/configure/v1/template/parse/{env_keyword}", _Service_ParseTemplate0_HTTP_Handler(srv))
 	r.GET("/configure/v1/configure/{env_keyword}", _Service_GetConfigure0_HTTP_Handler(srv))
 	r.PUT("/configure/v1/configure/{env_keyword}", _Service_UpdateConfigure0_HTTP_Handler(srv))
+	r.POST("/configure/v1/configure/compare/{env_keyword}", _Service_CompareConfigure0_HTTP_Handler(srv))
 }
 
 func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
@@ -764,18 +770,18 @@ func _Service_AddTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 	}
 }
 
-func _Service_UpdateTemplateVersion0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_SwitchTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UseTemplateVersionRequest
+		var in SwitchTemplateRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceUpdateTemplateVersion)
+		http.SetOperation(ctx, OperationServiceSwitchTemplate)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateTemplateVersion(ctx, req.(*UseTemplateVersionRequest))
+			return srv.SwitchTemplate(ctx, req.(*SwitchTemplateRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -783,6 +789,28 @@ func _Service_UpdateTemplateVersion0_HTTP_Handler(srv ServiceHTTPServer) func(ct
 		}
 		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_CompareTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CompareTemplateRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceCompareTemplate)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.CompareTemplate(ctx, req.(*CompareTemplateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CompareTemplateReply)
+		return ctx.Result(200, reply.List)
 	}
 }
 
@@ -883,6 +911,31 @@ func _Service_UpdateConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 	}
 }
 
+func _Service_CompareConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CompareConfigureRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceCompareConfigure)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.CompareConfigure(ctx, req.(*CompareConfigureRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CompareConfigureReply)
+		return ctx.Result(200, reply.List)
+	}
+}
+
 type ServiceHTTPClient interface {
 	AddBusiness(ctx context.Context, req *AddBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddEnvironment(ctx context.Context, req *AddEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -893,6 +946,8 @@ type ServiceHTTPClient interface {
 	AllEnvironment(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *AllEnvironmentReply, err error)
 	AllResourceServer(ctx context.Context, req *AllResourceServerRequest, opts ...http.CallOption) (rsp *AllResourceServerReply, err error)
 	AllResourceValue(ctx context.Context, req *AllResourceValueRequest, opts ...http.CallOption) (rsp *AllResourceValueReply, err error)
+	CompareConfigure(ctx context.Context, req *CompareConfigureRequest, opts ...http.CallOption) (rsp *CompareConfigureReply, err error)
+	CompareTemplate(ctx context.Context, req *CompareTemplateRequest, opts ...http.CallOption) (rsp *CompareTemplateReply, err error)
 	CurrentTemplate(ctx context.Context, req *CurrentTemplateRequest, opts ...http.CallOption) (rsp *CurrentTemplateReply, err error)
 	DeleteBusiness(ctx context.Context, req *DeleteBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteEnvironment(ctx context.Context, req *DeleteEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -912,6 +967,7 @@ type ServiceHTTPClient interface {
 	ParseTemplatePreview(ctx context.Context, req *ParseTemplatePreviewRequest, opts ...http.CallOption) (rsp *ParseTemplatePreviewReply, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *RefreshTokenReply, err error)
 	ResetEnvironmentToken(ctx context.Context, req *ResetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *ResetEnvironmentTokenReply, err error)
+	SwitchTemplate(ctx context.Context, req *SwitchTemplateRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateBusiness(ctx context.Context, req *UpdateBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateBusinessValue(ctx context.Context, req *UpdateBusinessValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateConfigure(ctx context.Context, req *UpdateConfigureRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -919,7 +975,6 @@ type ServiceHTTPClient interface {
 	UpdateResource(ctx context.Context, req *UpdateResourceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateResourceValue(ctx context.Context, req *UpdateResourceValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateServer(ctx context.Context, req *UpdateServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	UpdateTemplateVersion(ctx context.Context, req *UseTemplateVersionRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type ServiceHTTPClientImpl struct {
@@ -1041,6 +1096,32 @@ func (c *ServiceHTTPClientImpl) AllResourceValue(ctx context.Context, in *AllRes
 	opts = append(opts, http.Operation(OperationServiceAllResourceValue))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) CompareConfigure(ctx context.Context, in *CompareConfigureRequest, opts ...http.CallOption) (*CompareConfigureReply, error) {
+	var out CompareConfigureReply
+	pattern := "/configure/v1/configure/compare/{env_keyword}"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceCompareConfigure))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out.List, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) CompareTemplate(ctx context.Context, in *CompareTemplateRequest, opts ...http.CallOption) (*CompareTemplateReply, error) {
+	var out CompareTemplateReply
+	pattern := "/configure/v1/template/compare"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceCompareTemplate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out.List, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1294,6 +1375,19 @@ func (c *ServiceHTTPClientImpl) ResetEnvironmentToken(ctx context.Context, in *R
 	return &out, err
 }
 
+func (c *ServiceHTTPClientImpl) SwitchTemplate(ctx context.Context, in *SwitchTemplateRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/configure/v1/template/switch"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceSwitchTemplate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ServiceHTTPClientImpl) UpdateBusiness(ctx context.Context, in *UpdateBusinessRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/configure/v1/business"
@@ -1377,19 +1471,6 @@ func (c *ServiceHTTPClientImpl) UpdateServer(ctx context.Context, in *UpdateServ
 	pattern := "/configure/v1/server"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceUpdateServer))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ServiceHTTPClientImpl) UpdateTemplateVersion(ctx context.Context, in *UseTemplateVersionRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/configure/v1/template"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationServiceUpdateTemplateVersion))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

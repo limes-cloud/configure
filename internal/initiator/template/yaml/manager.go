@@ -1,17 +1,17 @@
 package yaml
 
 var Manager = `
-env: {{Env.Keyword}}
+env: ${Env.Keyword}
 server:
   http:
-    addr: {{ManagerServer.Host}}:{{ManagerServer.HttpPort}}
-    timeout: {{ManagerServer.Timeout}}
+    addr: ${ManagerServer.Host}:${ManagerServer.HttpPort}
+    timeout: ${ManagerServer.Timeout}
     marshal:
       emitUnpopulated: false
       useProtoNames: true
   grpc:
-    addr: {{ManagerServer.Host}}:{{ManagerServer.GrpcPort}}
-    timeout: {{ManagerServer.Timeout}}
+    addr: ${ManagerServer.Host}:${ManagerServer.GrpcPort}
+    timeout: ${ManagerServer.Timeout}
 log:
   level: 0
   output:
@@ -26,15 +26,15 @@ log:
 database:
   system:
     enable: true #是否启用数据库
-    drive: {{ManagerDatabase.Type}} #数据库类型
+    drive: ${ManagerDatabase.Type} #数据库类型
     autoCreate: true #是否自动创建数据库
     connect:
-      username: {{ManagerDatabase.Username}}
-      password: {{ManagerDatabase.Password}}
-      host: {{ManagerDatabase.Host}}
-      port: {{ManagerDatabase.Port}}
-      dbName: {{ManagerDatabase.Database}}
-      option: {{ManagerDatabase.Option}}
+      username: ${ManagerDatabase.Username}
+      password: ${ManagerDatabase.Password}
+      host: ${ManagerDatabase.Host}
+      port: ${ManagerDatabase.Port}
+      dbName: ${ManagerDatabase.Database}
+      option: ${ManagerDatabase.Option}
     config:
       transformError:
         enable: true
@@ -46,9 +46,9 @@ database:
 redis:
   cache:
     enable: true
-    host: {{Redis.Host}}:{{Redis.Port}}
-    username: {{Redis.Username}}
-    password: {{Redis.Password}}
+    host: ${Redis.Host}:${Redis.Port}
+    username: ${Redis.Username}
+    password: ${Redis.Password}
 captcha:
   login:
     type: image
@@ -66,7 +66,7 @@ captcha:
     redis: cache
     template: captcha
 loader:
-  login: {{LoginPrivatePath}}
+  login: ${LoginPrivatePath}
 email:
   template:
     captcha:
@@ -74,23 +74,23 @@ email:
       path: static/template/email/default.html
       from: 青岑云科技
       type: text/html
-  user: {{Email.Username}}
-  name: {{Email.Company}}
-  host: {{Email.Host}}
-  port: {{Email.Port}}
-  password: {{Email.Password}}
+  user: ${Email.Username}
+  name: ${Email.Company}
+  host: ${Email.Host}
+  port: ${Email.Port}
+  password: ${Email.Password}
 jwt:
   redis: cache
-  secret: {{AdminJwt.Secret}}
-  expire: {{AdminJwt.Expire}}
-  renewal: {{AdminJwt.Renewal}}
-  whitelist: {{AdminJwt.Whitelist}}
+  secret: ${AdminJwt.Secret}
+  expire: ${AdminJwt.Expire}
+  renewal: ${AdminJwt.Renewal}
+  whitelist: ${AdminJwt.Whitelist}
 authentication:
   db: system
   redis: cache
   roleKey: role_keyword
-  skipRole: {{AuthSkipRoles}}
+  skipRole: ${AuthSkipRoles}
 business:
-  defaultPassword: {{DefaultUserPassword}}
-  setting: {{Setting}}
+  defaultPassword: ${DefaultUserPassword}
+  setting: ${Setting}
 `

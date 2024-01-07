@@ -126,3 +126,7 @@ require (
 	gorm.io/driver/postgres v1.5.2 // indirect
 	gorm.io/driver/sqlserver v1.5.2 // indirect
 )
+
+replace (
+	github.com/limes-cloud/kratosx v1.0.7 => ../kratosx
+)

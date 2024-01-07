@@ -14,6 +14,7 @@ type Template struct {
 	IsUse       bool    `json:"is_use" gorm:"default:false;comment:是否使用"`
 	Format      string  `json:"format" gorm:"not null;size:32;comment:模板格式"`
 	Description string  `json:"description" gorm:"not null;size:128;comment:模板描述"`
+	Compare     string  `json:"compare" gorm:"not null;type:text;comment:变更详情"`
 	Server      *Server `json:"server" gorm:"constraint:onDelete:cascade"`
 }
 
@@ -55,9 +56,9 @@ func (t *Template) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Tem
 
 func (t *Template) UseVersionByID(ctx kratosx.Context, srvId, id uint32) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("server_id=? and id=?", srvId, t.ID).Update("is_use", true).Error; err != nil {
+		if err := tx.Model(Template{}).Where("server_id=? and id=?", srvId, t.ID).Update("is_use", true).Error; err != nil {
 			return err
 		}
-		return tx.Where("server_id=? and id!=?", t.ID).Update("is_use", false).Error
+		return tx.Model(Template{}).Where("server_id=? and id!=?", srvId, t.ID).Update("is_use", false).Error
 	})
 }

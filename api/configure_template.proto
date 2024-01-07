@@ -11,8 +11,9 @@ message Template{
   string version = 4;
   string format = 5;
   bool is_use = 6;
-  string content = 7;
-  uint32 created_at = 8;
+  string compare = 7;
+  string content = 8;
+  uint32 created_at = 9;
 }
 
 message PageTemplateRequest{
@@ -25,7 +26,6 @@ message PageTemplateReply {
   uint32 total = 1;
   repeated Template list = 2;
 }
-
 
 // 查询指定模板
 message CurrentTemplateRequest{
@@ -60,8 +60,8 @@ message AddTemplateRequest {
   string format = 4 [(validate.rules).string = {min_len: 1, max_len: 64, in: ["json","yaml"]}];
 }
 
-// 修改模板
-message UseTemplateVersionRequest {
+// 切换模板
+message SwitchTemplateRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
   uint32 server_id = 2[(validate.rules).uint32 = {gt: 0}];
 }
@@ -70,7 +70,7 @@ message UseTemplateVersionRequest {
 message ParseTemplatePreviewRequest {
   string env_keyword = 1[(validate.rules).string = {min_len: 1}];
   uint32 server_id = 2[(validate.rules).uint32 = {gt: 0}];
-  string format = 3[(validate.rules).string = {min_len: 1}];
+  string format = 3[(validate.rules).string = {min_len: 1, in: ["json","yaml"]}];
   string content = 4[(validate.rules).string = {min_len: 7}];
 }
 
@@ -87,4 +87,21 @@ message ParseTemplateRequest {
 message ParseTemplateReply {
   string content = 1;
   string format = 2;
+}
+
+message CompareTemplateRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  string format = 2[(validate.rules).string = {min_len: 1, in: ["json","yaml"]}];
+  string content = 3[(validate.rules).string = {min_len: 1}];
+}
+
+message CompareTemplateReply {
+  repeated CompareTemplateInfo list = 1;
+}
+
+message CompareTemplateInfo {
+  string type = 1;
+  string key = 2;
+  string old = 3;
+  string cur = 4;
 }

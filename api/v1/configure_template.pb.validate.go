@@ -69,6 +69,8 @@ func (m *Template) validate(all bool) error {
 
 	// no validation rules for IsUse
 
+	// no validation rules for Compare
+
 	// no validation rules for Content
 
 	// no validation rules for CreatedAt
@@ -1064,22 +1066,22 @@ var _AddTemplateRequest_Format_InLookup = map[string]struct{}{
 	"yaml": {},
 }
 
-// Validate checks the field values on UseTemplateVersionRequest with the rules
+// Validate checks the field values on SwitchTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UseTemplateVersionRequest) Validate() error {
+func (m *SwitchTemplateRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UseTemplateVersionRequest with the
-// rules defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on SwitchTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UseTemplateVersionRequestMultiError, or nil if none found.
-func (m *UseTemplateVersionRequest) ValidateAll() error {
+// SwitchTemplateRequestMultiError, or nil if none found.
+func (m *SwitchTemplateRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UseTemplateVersionRequest) validate(all bool) error {
+func (m *SwitchTemplateRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1087,7 +1089,7 @@ func (m *UseTemplateVersionRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() <= 0 {
-		err := UseTemplateVersionRequestValidationError{
+		err := SwitchTemplateRequestValidationError{
 			field:  "Id",
 			reason: "value must be greater than 0",
 		}
@@ -1098,7 +1100,7 @@ func (m *UseTemplateVersionRequest) validate(all bool) error {
 	}
 
 	if m.GetServerId() <= 0 {
-		err := UseTemplateVersionRequestValidationError{
+		err := SwitchTemplateRequestValidationError{
 			field:  "ServerId",
 			reason: "value must be greater than 0",
 		}
@@ -1109,19 +1111,19 @@ func (m *UseTemplateVersionRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UseTemplateVersionRequestMultiError(errors)
+		return SwitchTemplateRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// UseTemplateVersionRequestMultiError is an error wrapping multiple validation
-// errors returned by UseTemplateVersionRequest.ValidateAll() if the
-// designated constraints aren't met.
-type UseTemplateVersionRequestMultiError []error
+// SwitchTemplateRequestMultiError is an error wrapping multiple validation
+// errors returned by SwitchTemplateRequest.ValidateAll() if the designated
+// constraints aren't met.
+type SwitchTemplateRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UseTemplateVersionRequestMultiError) Error() string {
+func (m SwitchTemplateRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1130,11 +1132,11 @@ func (m UseTemplateVersionRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UseTemplateVersionRequestMultiError) AllErrors() []error { return m }
+func (m SwitchTemplateRequestMultiError) AllErrors() []error { return m }
 
-// UseTemplateVersionRequestValidationError is the validation error returned by
-// UseTemplateVersionRequest.Validate if the designated constraints aren't met.
-type UseTemplateVersionRequestValidationError struct {
+// SwitchTemplateRequestValidationError is the validation error returned by
+// SwitchTemplateRequest.Validate if the designated constraints aren't met.
+type SwitchTemplateRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1142,24 +1144,24 @@ type UseTemplateVersionRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e UseTemplateVersionRequestValidationError) Field() string { return e.field }
+func (e SwitchTemplateRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UseTemplateVersionRequestValidationError) Reason() string { return e.reason }
+func (e SwitchTemplateRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UseTemplateVersionRequestValidationError) Cause() error { return e.cause }
+func (e SwitchTemplateRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UseTemplateVersionRequestValidationError) Key() bool { return e.key }
+func (e SwitchTemplateRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UseTemplateVersionRequestValidationError) ErrorName() string {
-	return "UseTemplateVersionRequestValidationError"
+func (e SwitchTemplateRequestValidationError) ErrorName() string {
+	return "SwitchTemplateRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UseTemplateVersionRequestValidationError) Error() string {
+func (e SwitchTemplateRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1171,14 +1173,14 @@ func (e UseTemplateVersionRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUseTemplateVersionRequest.%s: %s%s",
+		"invalid %sSwitchTemplateRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UseTemplateVersionRequestValidationError{}
+var _ error = SwitchTemplateRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1186,7 +1188,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UseTemplateVersionRequestValidationError{}
+} = SwitchTemplateRequestValidationError{}
 
 // Validate checks the field values on ParseTemplatePreviewRequest with the
 // rules defined in the proto definition for this message. If any rules are
@@ -1225,6 +1227,17 @@ func (m *ParseTemplatePreviewRequest) validate(all bool) error {
 		err := ParseTemplatePreviewRequestValidationError{
 			field:  "ServerId",
 			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _ParseTemplatePreviewRequest_Format_InLookup[m.GetFormat()]; !ok {
+		err := ParseTemplatePreviewRequestValidationError{
+			field:  "Format",
+			reason: "value must be in list [json yaml]",
 		}
 		if !all {
 			return err
@@ -1334,6 +1347,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ParseTemplatePreviewRequestValidationError{}
+
+var _ParseTemplatePreviewRequest_Format_InLookup = map[string]struct{}{
+	"json": {},
+	"yaml": {},
+}
 
 // Validate checks the field values on ParseTemplatePreviewReply with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1668,3 +1686,400 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ParseTemplateReplyValidationError{}
+
+// Validate checks the field values on CompareTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CompareTemplateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CompareTemplateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompareTemplateRequestMultiError, or nil if none found.
+func (m *CompareTemplateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CompareTemplateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := CompareTemplateRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _CompareTemplateRequest_Format_InLookup[m.GetFormat()]; !ok {
+		err := CompareTemplateRequestValidationError{
+			field:  "Format",
+			reason: "value must be in list [json yaml]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetFormat()) < 1 {
+		err := CompareTemplateRequestValidationError{
+			field:  "Format",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetContent()) < 1 {
+		err := CompareTemplateRequestValidationError{
+			field:  "Content",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return CompareTemplateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CompareTemplateRequestMultiError is an error wrapping multiple validation
+// errors returned by CompareTemplateRequest.ValidateAll() if the designated
+// constraints aren't met.
+type CompareTemplateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CompareTemplateRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CompareTemplateRequestMultiError) AllErrors() []error { return m }
+
+// CompareTemplateRequestValidationError is the validation error returned by
+// CompareTemplateRequest.Validate if the designated constraints aren't met.
+type CompareTemplateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CompareTemplateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CompareTemplateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CompareTemplateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CompareTemplateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CompareTemplateRequestValidationError) ErrorName() string {
+	return "CompareTemplateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CompareTemplateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCompareTemplateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CompareTemplateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CompareTemplateRequestValidationError{}
+
+var _CompareTemplateRequest_Format_InLookup = map[string]struct{}{
+	"json": {},
+	"yaml": {},
+}
+
+// Validate checks the field values on CompareTemplateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CompareTemplateReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CompareTemplateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompareTemplateReplyMultiError, or nil if none found.
+func (m *CompareTemplateReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CompareTemplateReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CompareTemplateReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CompareTemplateReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CompareTemplateReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return CompareTemplateReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// CompareTemplateReplyMultiError is an error wrapping multiple validation
+// errors returned by CompareTemplateReply.ValidateAll() if the designated
+// constraints aren't met.
+type CompareTemplateReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CompareTemplateReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CompareTemplateReplyMultiError) AllErrors() []error { return m }
+
+// CompareTemplateReplyValidationError is the validation error returned by
+// CompareTemplateReply.Validate if the designated constraints aren't met.
+type CompareTemplateReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CompareTemplateReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CompareTemplateReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CompareTemplateReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CompareTemplateReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CompareTemplateReplyValidationError) ErrorName() string {
+	return "CompareTemplateReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CompareTemplateReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCompareTemplateReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CompareTemplateReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CompareTemplateReplyValidationError{}
+
+// Validate checks the field values on CompareTemplateInfo with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CompareTemplateInfo) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CompareTemplateInfo with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CompareTemplateInfoMultiError, or nil if none found.
+func (m *CompareTemplateInfo) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CompareTemplateInfo) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Type
+
+	// no validation rules for Key
+
+	// no validation rules for Old
+
+	// no validation rules for Cur
+
+	if len(errors) > 0 {
+		return CompareTemplateInfoMultiError(errors)
+	}
+
+	return nil
+}
+
+// CompareTemplateInfoMultiError is an error wrapping multiple validation
+// errors returned by CompareTemplateInfo.ValidateAll() if the designated
+// constraints aren't met.
+type CompareTemplateInfoMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CompareTemplateInfoMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CompareTemplateInfoMultiError) AllErrors() []error { return m }
+
+// CompareTemplateInfoValidationError is the validation error returned by
+// CompareTemplateInfo.Validate if the designated constraints aren't met.
+type CompareTemplateInfoValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CompareTemplateInfoValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CompareTemplateInfoValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CompareTemplateInfoValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CompareTemplateInfoValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CompareTemplateInfoValidationError) ErrorName() string {
+	return "CompareTemplateInfoValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CompareTemplateInfoValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCompareTemplateInfo.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CompareTemplateInfoValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CompareTemplateInfoValidationError{}

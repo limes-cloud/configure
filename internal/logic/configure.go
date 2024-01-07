@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -99,6 +100,121 @@ func (t *Configure) Update(ctx kratosx.Context, in *v1.UpdateConfigureRequest) (
 
 	t.SendWatcher(configure)
 	return nil, nil
+}
+
+// Compare 对比配置
+func (t *Configure) Compare(ctx kratosx.Context, in *v1.CompareConfigureRequest) (*v1.CompareConfigureReply, error) {
+	// 获取环境
+	env := model.Environment{}
+	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+
+	// 获取当前正在使用的模板
+	tp := model.Template{}
+	if err := tp.Current(ctx, in.ServerId); err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+
+	// 获取生产中的配置
+	configure := model.Configure{}
+	if err := configure.OneBySrvAndEnv(ctx, in.ServerId, env.ID); err != nil {
+		return nil, err
+	}
+
+	// 解析当前配置
+	template := NewTemplate(t.conf)
+	parse, err := template.Parse(ctx, &v1.ParseTemplateRequest{ServerId: in.ServerId, EnvKeyword: in.EnvKeyword})
+	if err != nil {
+		return nil, err
+	}
+
+	// 对比配置
+	// 解析生产中的配置
+	var oldKeys []string
+	otc := map[string]any{}
+
+	oe := encoding.GetCodec(configure.Format)
+	if err := oe.Unmarshal([]byte(configure.Content), &otc); err != nil {
+		return nil, v1.ParseTemplateError()
+	}
+	for key := range otc {
+		oldKeys = append(oldKeys, key)
+	}
+
+	// 解析上传的模板
+	var curKeys []string
+	ctc := map[string]any{}
+
+	ce := encoding.GetCodec(parse.Format)
+	if err := ce.Unmarshal([]byte(parse.Content), &ctc); err != nil {
+		return nil, v1.ParseTemplateError()
+	}
+	for key := range ctc {
+		curKeys = append(curKeys, key)
+	}
+
+	reply := v1.CompareConfigureReply{}
+
+	// 新增字段
+	addKeys := util.Diff(curKeys, oldKeys)
+	for _, key := range addKeys {
+		val := ""
+		switch ctc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(ctc[key])
+			val = string(b)
+		default:
+			val = fmt.Sprint(ctc[key])
+		}
+		reply.List = append(reply.List, &v1.CompareConfigureInfo{Type: "add", Key: key, Cur: val})
+	}
+
+	// 删除的字段
+	delKeys := util.Diff(oldKeys, curKeys)
+	for _, key := range delKeys {
+		val := ""
+		switch otc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(otc[key])
+			val = string(b)
+		default:
+			val = fmt.Sprint(otc[key])
+		}
+		reply.List = append(reply.List, &v1.CompareConfigureInfo{Type: "del", Key: key, Old: val})
+	}
+
+	// 变更的字段
+	for key, val := range ctc {
+		if otc[key] == nil {
+			continue
+		}
+		if fmt.Sprint(val) == fmt.Sprint(otc[key]) {
+			continue
+		}
+
+		oldVal := ""
+		switch otc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(otc[key])
+			oldVal = string(b)
+		default:
+			oldVal = fmt.Sprint(otc[key])
+		}
+
+		curVal := ""
+		switch ctc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(ctc[key])
+			curVal = string(b)
+		default:
+			curVal = fmt.Sprint(ctc[key])
+		}
+
+		reply.List = append(reply.List, &v1.CompareConfigureInfo{Type: "update", Key: key, Old: oldVal, Cur: curVal})
+	}
+
+	return &reply, nil
 }
 
 func (t *Configure) channelKey(srvId, envId uint32) string {

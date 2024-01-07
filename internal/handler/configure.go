@@ -3,11 +3,15 @@ package handler
 import (
 	"context"
 
-	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/kratosx"
-
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
 )
+
+func (s *Service) CompareConfigure(ctx context.Context, in *v1.CompareConfigureRequest) (*v1.CompareConfigureReply, error) {
+	return s.Configure.Compare(kratosx.MustContext(ctx), in)
+}
 
 func (s *Service) GetConfigure(ctx context.Context, in *v1.GetConfigureRequest) (*v1.GetConfigureReply, error) {
 	return s.Configure.Get(kratosx.MustContext(ctx), in)

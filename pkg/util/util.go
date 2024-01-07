@@ -29,3 +29,35 @@ func MarshalString(in any) string {
 	b, _ := json.Marshal(in)
 	return string(b)
 }
+
+// Diff 计算两个数组中的key变更元素
+func Diff(cur, old []string) []string {
+	set := make(map[string]bool)
+	n := make([]string, 0)
+	for _, v := range old {
+		set[v] = true
+	}
+
+	for _, v := range cur {
+		if !set[v] {
+			n = append(n, v)
+		}
+	}
+	return n
+}
+
+// Intersect 计算两个数组中交叉的数组
+func Intersect(slice1, slice2 []string) []string {
+	m := make(map[string]bool)
+	n := make([]string, 0)
+	for _, v := range slice1 {
+		m[v] = true
+	}
+
+	for _, v := range slice2 {
+		if m[v] {
+			n = append(n, v)
+		}
+	}
+	return n
+}

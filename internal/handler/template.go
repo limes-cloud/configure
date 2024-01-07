@@ -3,10 +3,10 @@ package handler
 import (
 	"context"
 
-	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/kratosx"
-
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
 )
 
 func (s *Service) CurrentTemplate(ctx context.Context, in *v1.CurrentTemplateRequest) (*v1.CurrentTemplateReply, error) {
@@ -25,8 +25,12 @@ func (s *Service) AddTemplate(ctx context.Context, in *v1.AddTemplateRequest) (*
 	return s.Template.Add(kratosx.MustContext(ctx), in)
 }
 
-func (s *Service) UseTemplateVersion(ctx context.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
-	return s.Template.UseVersion(kratosx.MustContext(ctx), in)
+func (s *Service) SwitchTemplate(ctx context.Context, in *v1.SwitchTemplateRequest) (*emptypb.Empty, error) {
+	return s.Template.Switch(kratosx.MustContext(ctx), in)
+}
+
+func (s *Service) CompareTemplate(ctx context.Context, in *v1.CompareTemplateRequest) (*v1.CompareTemplateReply, error) {
+	return s.Template.Compare(kratosx.MustContext(ctx), in)
 }
 
 func (s *Service) ParseTemplatePreview(ctx context.Context, in *v1.ParseTemplatePreviewRequest) (*v1.ParseTemplatePreviewReply, error) {

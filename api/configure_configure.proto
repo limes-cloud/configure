@@ -21,11 +21,29 @@ message GetConfigureReply{
   uint32 created_at = 8;
 }
 
-// 新增模板
+// 对比配置
+message CompareConfigureRequest {
+  uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
+  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
+}
+
+// 对比配置详情
+message CompareConfigureInfo {
+  string type = 1;
+  string key = 2;
+  string old = 3;
+  string cur = 4;
+}
+
+message CompareConfigureReply {
+  repeated CompareConfigureInfo list = 1;
+}
+
+// 新增配置
 message UpdateConfigureRequest {
   uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
   string env_keyword = 2[(validate.rules).string = {min_len: 1}];
-  string description = 3[(validate.rules).string = {min_len: 3, max_len: 64}];
+  string description = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
 }
 
 // 监听获取配置

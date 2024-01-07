@@ -227,10 +227,18 @@ service Service {
     };
   }
 
-  rpc UpdateTemplateVersion (UseTemplateVersionRequest) returns (google.protobuf.Empty) {
+  rpc SwitchTemplate (SwitchTemplateRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/configure/v1/template",
+      post: "/configure/v1/template/switch",
       body:"*"
+    };
+  }
+
+  rpc CompareTemplate (CompareTemplateRequest) returns (CompareTemplateReply) {
+    option (google.api.http) = {
+      post: "/configure/v1/template/compare",
+      body:"*",
+      response_body:"list",
     };
   }
 
@@ -248,7 +256,6 @@ service Service {
     };
   }
 
-
   rpc GetConfigure (GetConfigureRequest) returns (GetConfigureReply) {
     option (google.api.http) = {
       get: "/configure/v1/configure/{env_keyword}"
@@ -259,6 +266,14 @@ service Service {
     option (google.api.http) = {
       put: "/configure/v1/configure/{env_keyword}",
       body:"*"
+    };
+  }
+
+  rpc CompareConfigure (CompareConfigureRequest) returns (CompareConfigureReply) {
+    option (google.api.http) = {
+      post: "/configure/v1/configure/compare/{env_keyword}",
+      body:"*",
+      response_body:"list",
     };
   }
 

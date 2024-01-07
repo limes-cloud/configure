@@ -17,6 +17,7 @@ server:
     timeout: 5s
 log:
   level: 0 #日志输出等级
+  caller: true
   output:
     - stdout # stdout:控制台输出，k8s日志收集
     - file # file:输出到文件

@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/go-kratos/kratos/v2/encoding"
 	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/types"
@@ -33,6 +34,7 @@ type value struct {
 }
 
 const (
+	Regexp     = `\$\{(\w|\.)+}`
 	FormatJson = "json"
 	FormatYaml = "yaml"
 )
@@ -93,26 +95,134 @@ func (t *Template) Add(ctx kratosx.Context, in *v1.AddTemplateRequest) (*emptypb
 	if err := util.Transform(in, &template); err != nil {
 		return nil, v1.TransformError()
 	}
-	template.Version = strings.ToUpper(util.MD5([]byte(in.Content))[:12])
 
+	otc := map[string]any{}
+	oe := encoding.GetCodec(template.Format)
+	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {
+		return nil, v1.ParseTemplateErrorFormat(err.Error())
+	}
 	// 查找当前的版本
+	template.Version = strings.ToUpper(util.MD5([]byte(in.Content))[:12])
 	temp := model.Template{}
 	if temp.Current(ctx, in.ServerId) == nil {
-		// 判断两个版本之前是否有差异
 		if template.Version == temp.Version {
 			return nil, v1.VersionExistError()
 		}
 	}
 
+	// 进行模板检查
 	if err := t.checkTemplate(ctx, in.ServerId, in.Content); err != nil {
 		return nil, v1.CheckTemplateErrorFormat(err.Error())
 	}
+
+	// 进行变更对比
+	compare, err := t.Compare(ctx, &v1.CompareTemplateRequest{Id: temp.ID, Format: in.Format, Content: in.Content})
+	if err != nil {
+		return nil, v1.ParseTemplateErrorFormat(err.Error())
+	}
+	compareByte, _ := json.Marshal(compare.List)
+	template.Compare = string(compareByte)
 	template.IsUse = true
 	return nil, template.Create(ctx)
 }
 
-// UseVersion 使用指定版本
-func (t *Template) UseVersion(ctx kratosx.Context, in *v1.UseTemplateVersionRequest) (*emptypb.Empty, error) {
+// Compare 对比变更细节
+func (t *Template) Compare(ctx kratosx.Context, in *v1.CompareTemplateRequest) (*v1.CompareTemplateReply, error) {
+	// 查询当前版本
+	template := model.Template{}
+	if err := template.OneById(ctx, in.Id); err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+
+	// 解析当前版本数据
+	var oldKeys []string
+	otc := map[string]any{}
+
+	oe := encoding.GetCodec(template.Format)
+	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {
+		return nil, v1.ParseTemplateError()
+	}
+	for key := range otc {
+		oldKeys = append(oldKeys, key)
+	}
+
+	// 解析上传的模板
+	var curKeys []string
+	ctc := map[string]any{}
+
+	ce := encoding.GetCodec(in.Format)
+	if err := ce.Unmarshal([]byte(in.Content), &ctc); err != nil {
+		return nil, v1.ParseTemplateError()
+	}
+	for key := range ctc {
+		curKeys = append(curKeys, key)
+	}
+
+	reply := v1.CompareTemplateReply{}
+
+	// 新增字段
+	addKeys := util.Diff(curKeys, oldKeys)
+	for _, key := range addKeys {
+		val := ""
+		switch ctc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(ctc[key])
+			val = string(b)
+		default:
+			val = fmt.Sprint(ctc[key])
+		}
+		reply.List = append(reply.List, &v1.CompareTemplateInfo{Type: "add", Key: key, Cur: val})
+	}
+
+	// 删除的字段
+	delKeys := util.Diff(oldKeys, curKeys)
+	for _, key := range delKeys {
+		val := ""
+		switch otc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(otc[key])
+			val = string(b)
+		default:
+			val = fmt.Sprint(otc[key])
+		}
+		reply.List = append(reply.List, &v1.CompareTemplateInfo{Type: "del", Key: key, Old: val})
+	}
+
+	// 变更的字段
+	for key, val := range ctc {
+		if otc[key] == nil {
+			continue
+		}
+		if fmt.Sprint(val) == fmt.Sprint(otc[key]) {
+			continue
+		}
+
+		oldVal := ""
+		switch otc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(otc[key])
+			oldVal = string(b)
+		default:
+			oldVal = fmt.Sprint(otc[key])
+		}
+
+		curVal := ""
+		switch ctc[key].(type) {
+		case map[string]any, []any:
+			b, _ := ce.Marshal(ctc[key])
+			curVal = string(b)
+		default:
+			curVal = fmt.Sprint(ctc[key])
+		}
+
+		reply.List = append(reply.List, &v1.CompareTemplateInfo{Type: "update", Key: key, Old: oldVal, Cur: curVal})
+	}
+
+	return &reply, nil
+}
+
+// Switch 使用指定版本
+func (t *Template) Switch(ctx kratosx.Context, in *v1.SwitchTemplateRequest) (*emptypb.Empty, error) {
 	template := model.Template{}
 	if util.Transform(in, &template) != nil {
 		return nil, v1.TransformError()
@@ -121,7 +231,7 @@ func (t *Template) UseVersion(ctx kratosx.Context, in *v1.UseTemplateVersionRequ
 	return nil, template.UseVersionByID(ctx, in.ServerId, in.Id)
 }
 
-// ParsePreview 使用指定版本配置
+// ParsePreview 配置解决预览
 func (t *Template) ParsePreview(ctx kratosx.Context, in *v1.ParseTemplatePreviewRequest) (*v1.ParseTemplatePreviewReply, error) {
 	env := model.Environment{}
 	if err := env.OneByKeyword(ctx, in.EnvKeyword); err != nil {
@@ -135,7 +245,7 @@ func (t *Template) ParsePreview(ctx kratosx.Context, in *v1.ParseTemplatePreview
 	}
 
 	// 进行值替换
-	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
+	reg := regexp.MustCompile(Regexp)
 	tempKeys := reg.FindAllString(in.Content, -1)
 	for _, key := range tempKeys {
 		if val, ok := values[key]; !ok {
@@ -174,7 +284,7 @@ func (t *Template) Parse(ctx kratosx.Context, in *v1.ParseTemplateRequest) (*v1.
 	}
 
 	// 进行值替换
-	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
+	reg := regexp.MustCompile(Regexp)
 	tempKeys := reg.FindAllString(tp.Content, -1)
 	for _, key := range tempKeys {
 		if val, ok := values[key]; !ok {
@@ -239,7 +349,7 @@ func (t *Template) checkTemplate(ctx kratosx.Context, srvId uint32, template str
 	}
 
 	// 进行增则匹配
-	reg := regexp.MustCompile(`\{\{(\w|\.)+}}`)
+	reg := regexp.MustCompile(Regexp)
 	tempKeys := reg.FindAllString(template, -1)
 	// 进行参数判断
 	for _, key := range tempKeys {
@@ -251,7 +361,7 @@ func (t *Template) checkTemplate(ctx kratosx.Context, srvId uint32, template str
 }
 
 func (t *Template) fillKey(val string) string {
-	return fmt.Sprintf(`{{%s}}`, val)
+	return fmt.Sprintf(`${%s}`, val)
 }
 
 func (t *Template) getVariableValue(ctx kratosx.Context, envId, srvId uint32) (map[string]value, error) {

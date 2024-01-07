@@ -1,17 +1,17 @@
 package yaml
 
 var Resource = `
-env: {{Env.Keyword}}
+env: ${Env.Keyword}
 server:
   http:
-    addr: {{ResourceServer.Host}}:{{ResourceServer.HttpPort}}
-    timeout: {{ResourceServer.Timeout}}
+    addr: ${ResourceServer.Host}:${ResourceServer.HttpPort}
+    timeout: ${ResourceServer.Timeout}
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: {{ResourceServer.Host}}:{{ResourceServer.GrpcPort}}
-    timeout: {{ResourceServer.Timeout}}
+    addr: ${ResourceServer.Host}:${ResourceServer.GrpcPort}
+    timeout: ${ResourceServer.Timeout}
 log:
   level: 0
   output:
@@ -26,15 +26,15 @@ log:
 database:
   system:
     enable: true #是否启用数据库
-    drive: {{ResourceDatabase.Type}} #数据库类型
+    drive: ${ResourceDatabase.Type} #数据库类型
     autoCreate: true #是否自动创建数据库
     connect:
-      username: {{ResourceDatabase.Username}}
-      password: {{ResourceDatabase.Password}}
-      host: {{ResourceDatabase.Host}}
-      port: {{ResourceDatabase.Port}}
-      dbName: {{ResourceDatabase.Database}}
-      option: {{ResourceDatabase.Option}}
+      username: ${ResourceDatabase.Username}
+      password: ${ResourceDatabase.Password}
+      host: ${ResourceDatabase.Host}
+      port: ${ResourceDatabase.Port}
+      dbName: ${ResourceDatabase.Database}
+      option: ${ResourceDatabase.Option}
     config:
       transformError:
         enable: true
@@ -47,9 +47,9 @@ file:
   storage: local
   serverPath: /resource/v1/static
   localDir: static
-  maxSingularSize: {{MaxSingularSize}}
-  maxChunkSize: {{MaxChunkSize}}
-  maxChunkCount: {{MaxChunkCount}}
-  acceptTypes: {{AcceptTypes}}
+  maxSingularSize: ${MaxSingularSize}
+  maxChunkSize: ${MaxChunkSize}
+  maxChunkCount: ${MaxChunkCount}
+  acceptTypes: ${AcceptTypes}
 
 `

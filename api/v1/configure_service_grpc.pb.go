@@ -51,11 +51,13 @@ const (
 	Service_GetTemplate_FullMethodName           = "/configure.Service/GetTemplate"
 	Service_CurrentTemplate_FullMethodName       = "/configure.Service/CurrentTemplate"
 	Service_AddTemplate_FullMethodName           = "/configure.Service/AddTemplate"
-	Service_UpdateTemplateVersion_FullMethodName = "/configure.Service/UpdateTemplateVersion"
+	Service_SwitchTemplate_FullMethodName        = "/configure.Service/SwitchTemplate"
+	Service_CompareTemplate_FullMethodName       = "/configure.Service/CompareTemplate"
 	Service_ParseTemplatePreview_FullMethodName  = "/configure.Service/ParseTemplatePreview"
 	Service_ParseTemplate_FullMethodName         = "/configure.Service/ParseTemplate"
 	Service_GetConfigure_FullMethodName          = "/configure.Service/GetConfigure"
 	Service_UpdateConfigure_FullMethodName       = "/configure.Service/UpdateConfigure"
+	Service_CompareConfigure_FullMethodName      = "/configure.Service/CompareConfigure"
 	Service_WatchConfigure_FullMethodName        = "/configure.Service/WatchConfigure"
 )
 
@@ -94,11 +96,13 @@ type ServiceClient interface {
 	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateReply, error)
 	CurrentTemplate(ctx context.Context, in *CurrentTemplateRequest, opts ...grpc.CallOption) (*CurrentTemplateReply, error)
 	AddTemplate(ctx context.Context, in *AddTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateTemplateVersion(ctx context.Context, in *UseTemplateVersionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SwitchTemplate(ctx context.Context, in *SwitchTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompareTemplate(ctx context.Context, in *CompareTemplateRequest, opts ...grpc.CallOption) (*CompareTemplateReply, error)
 	ParseTemplatePreview(ctx context.Context, in *ParseTemplatePreviewRequest, opts ...grpc.CallOption) (*ParseTemplatePreviewReply, error)
 	ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...grpc.CallOption) (*ParseTemplateReply, error)
 	GetConfigure(ctx context.Context, in *GetConfigureRequest, opts ...grpc.CallOption) (*GetConfigureReply, error)
 	UpdateConfigure(ctx context.Context, in *UpdateConfigureRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	CompareConfigure(ctx context.Context, in *CompareConfigureRequest, opts ...grpc.CallOption) (*CompareConfigureReply, error)
 	WatchConfigure(ctx context.Context, in *WatchConfigureRequest, opts ...grpc.CallOption) (Service_WatchConfigureClient, error)
 }
 
@@ -389,9 +393,18 @@ func (c *serviceClient) AddTemplate(ctx context.Context, in *AddTemplateRequest,
 	return out, nil
 }
 
-func (c *serviceClient) UpdateTemplateVersion(ctx context.Context, in *UseTemplateVersionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *serviceClient) SwitchTemplate(ctx context.Context, in *SwitchTemplateRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Service_UpdateTemplateVersion_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_SwitchTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) CompareTemplate(ctx context.Context, in *CompareTemplateRequest, opts ...grpc.CallOption) (*CompareTemplateReply, error) {
+	out := new(CompareTemplateReply)
+	err := c.cc.Invoke(ctx, Service_CompareTemplate_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -428,6 +441,15 @@ func (c *serviceClient) GetConfigure(ctx context.Context, in *GetConfigureReques
 func (c *serviceClient) UpdateConfigure(ctx context.Context, in *UpdateConfigureRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_UpdateConfigure_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) CompareConfigure(ctx context.Context, in *CompareConfigureRequest, opts ...grpc.CallOption) (*CompareConfigureReply, error) {
+	out := new(CompareConfigureReply)
+	err := c.cc.Invoke(ctx, Service_CompareConfigure_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -501,11 +523,13 @@ type ServiceServer interface {
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error)
 	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error)
 	AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error)
-	UpdateTemplateVersion(context.Context, *UseTemplateVersionRequest) (*emptypb.Empty, error)
+	SwitchTemplate(context.Context, *SwitchTemplateRequest) (*emptypb.Empty, error)
+	CompareTemplate(context.Context, *CompareTemplateRequest) (*CompareTemplateReply, error)
 	ParseTemplatePreview(context.Context, *ParseTemplatePreviewRequest) (*ParseTemplatePreviewReply, error)
 	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
 	GetConfigure(context.Context, *GetConfigureRequest) (*GetConfigureReply, error)
 	UpdateConfigure(context.Context, *UpdateConfigureRequest) (*emptypb.Empty, error)
+	CompareConfigure(context.Context, *CompareConfigureRequest) (*CompareConfigureReply, error)
 	WatchConfigure(*WatchConfigureRequest, Service_WatchConfigureServer) error
 	mustEmbedUnimplementedServiceServer()
 }
@@ -607,8 +631,11 @@ func (UnimplementedServiceServer) CurrentTemplate(context.Context, *CurrentTempl
 func (UnimplementedServiceServer) AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddTemplate not implemented")
 }
-func (UnimplementedServiceServer) UpdateTemplateVersion(context.Context, *UseTemplateVersionRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateTemplateVersion not implemented")
+func (UnimplementedServiceServer) SwitchTemplate(context.Context, *SwitchTemplateRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SwitchTemplate not implemented")
+}
+func (UnimplementedServiceServer) CompareTemplate(context.Context, *CompareTemplateRequest) (*CompareTemplateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompareTemplate not implemented")
 }
 func (UnimplementedServiceServer) ParseTemplatePreview(context.Context, *ParseTemplatePreviewRequest) (*ParseTemplatePreviewReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseTemplatePreview not implemented")
@@ -621,6 +648,9 @@ func (UnimplementedServiceServer) GetConfigure(context.Context, *GetConfigureReq
 }
 func (UnimplementedServiceServer) UpdateConfigure(context.Context, *UpdateConfigureRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateConfigure not implemented")
+}
+func (UnimplementedServiceServer) CompareConfigure(context.Context, *CompareConfigureRequest) (*CompareConfigureReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompareConfigure not implemented")
 }
 func (UnimplementedServiceServer) WatchConfigure(*WatchConfigureRequest, Service_WatchConfigureServer) error {
 	return status.Errorf(codes.Unimplemented, "method WatchConfigure not implemented")
@@ -1196,20 +1226,38 @@ func _Service_AddTemplate_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_UpdateTemplateVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UseTemplateVersionRequest)
+func _Service_SwitchTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SwitchTemplateRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).UpdateTemplateVersion(ctx, in)
+		return srv.(ServiceServer).SwitchTemplate(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_UpdateTemplateVersion_FullMethodName,
+		FullMethod: Service_SwitchTemplate_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).UpdateTemplateVersion(ctx, req.(*UseTemplateVersionRequest))
+		return srv.(ServiceServer).SwitchTemplate(ctx, req.(*SwitchTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_CompareTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompareTemplateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).CompareTemplate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_CompareTemplate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).CompareTemplate(ctx, req.(*CompareTemplateRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1282,6 +1330,24 @@ func _Service_UpdateConfigure_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).UpdateConfigure(ctx, req.(*UpdateConfigureRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_CompareConfigure_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompareConfigureRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).CompareConfigure(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_CompareConfigure_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).CompareConfigure(ctx, req.(*CompareConfigureRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1439,8 +1505,12 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_AddTemplate_Handler,
 		},
 		{
-			MethodName: "UpdateTemplateVersion",
-			Handler:    _Service_UpdateTemplateVersion_Handler,
+			MethodName: "SwitchTemplate",
+			Handler:    _Service_SwitchTemplate_Handler,
+		},
+		{
+			MethodName: "CompareTemplate",
+			Handler:    _Service_CompareTemplate_Handler,
 		},
 		{
 			MethodName: "ParseTemplatePreview",
@@ -1457,6 +1527,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateConfigure",
 			Handler:    _Service_UpdateConfigure_Handler,
+		},
+		{
+			MethodName: "CompareConfigure",
+			Handler:    _Service_CompareConfigure_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

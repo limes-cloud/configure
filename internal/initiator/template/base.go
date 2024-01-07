@@ -6,6 +6,7 @@ import (
 	"github.com/limes-cloud/configure/internal/initiator/server"
 	"github.com/limes-cloud/configure/internal/initiator/template/yaml"
 	"github.com/limes-cloud/configure/internal/model"
+	"github.com/limes-cloud/configure/pkg/util"
 )
 
 var templates = []*model.Template{
@@ -16,6 +17,7 @@ var templates = []*model.Template{
 		IsUse:       true,
 		Format:      "yaml",
 		Content:     yaml.Gateway,
+		Version:     util.MD5ToUpper([]byte(yaml.Gateway))[:12],
 		Description: "初始化模板",
 	},
 	// Manager业务配置
@@ -25,6 +27,7 @@ var templates = []*model.Template{
 		IsUse:       true,
 		Format:      "yaml",
 		Content:     yaml.Manager,
+		Version:     util.MD5ToUpper([]byte(yaml.Gateway))[:12],
 		Description: "初始化模板",
 	},
 
@@ -34,6 +37,7 @@ var templates = []*model.Template{
 		IsUse:       true,
 		Format:      "yaml",
 		Content:     yaml.Resource,
+		Version:     util.MD5ToUpper([]byte(yaml.Gateway))[:12],
 		Description: "初始化模板",
 	},
 }
