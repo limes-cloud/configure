@@ -38,7 +38,7 @@
 				<span class="value">
 					{{ template?.version }}
 					<a-tooltip content="切换模板版本" position="top">
-						<span class="swap" @click="handleClickSwapTemplate"><icon-swap /></span>
+						<span v-permission="'configure:template:history'" class="swap" @click="handleClickSwapTemplate"><icon-swap /></span>
 					</a-tooltip>
 				</span>
 			</div>
@@ -102,8 +102,8 @@
 						</div>
 					</template>
 					<CodeEditor
-						:value="item?.content"
-						:lang="item?.format"
+						:value="item.content"
+						:lang="item.format"
 						:show-line="false"
 						:read-only="true"
 						:style="{

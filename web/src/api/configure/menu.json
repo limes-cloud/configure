@@ -393,7 +393,7 @@
           "created_at": 1699608352,
           "id": 67,
           "parent_id": 66,
-          "permission": "configure:template:preview",
+          "permission": "configure:configure:preview",
           "title": "配置预览",
           "type": "G",
           "updated_at": 1699608458,
@@ -412,6 +412,7 @@
           "updated_at": 1699608517,
           "weight": 0
         },
+
         {
           "app": "Configure",
           "children": [
@@ -465,6 +466,32 @@
               "title": "生产环境",
               "type": "A",
               "updated_at": 1699615673,
+              "weight": 0
+            },
+            {
+              "api": "/configure/v1/template/switch",
+              "app": "Configure",
+              "created_at": 1699608517,
+              "id": 78,
+              "method": "POST",
+              "parent_id": 69,
+              "permission": "configure:template:switch",
+              "title": "切换模板",
+              "type": "A",
+              "updated_at": 1699608517,
+              "weight": 0
+            },
+            {
+              "api": "/configure/v1/templates",
+              "app": "Configure",
+              "created_at": 1699608517,
+              "id": 78,
+              "method": "POST",
+              "parent_id": 69,
+              "permission": "configure:template:history",
+              "title": "查看历史模板",
+              "type": "A",
+              "updated_at": 1699608517,
               "weight": 0
             }
           ],

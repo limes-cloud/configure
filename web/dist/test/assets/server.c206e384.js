@@ -1,0 +1,1 @@
+import{aE as r}from"./index.e1248d42.js";function t(e){return r.get("/configure/v1/servers",{params:{...e}})}function a(e){return r.post("/configure/v1/server",e)}function u(e){return r.put("/configure/v1/server",e)}function s(e){return r.delete("/configure/v1/server",{params:{id:e}})}export{a,s as d,t as p,u};
