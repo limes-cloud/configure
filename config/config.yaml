@@ -63,3 +63,7 @@ business:
   author:
     adminUser: 1280291001@qq.com
     adminPassword: xrxy0852
+logging:
+  enable: true
+  whitelist:
+    GET:/configure/v1/list: true  # 登录

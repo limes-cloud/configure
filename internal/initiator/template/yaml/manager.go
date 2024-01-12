@@ -7,7 +7,7 @@ server:
     addr: ${ManagerServer.Host}:${ManagerServer.HttpPort}
     timeout: ${ManagerServer.Timeout}
     marshal:
-      emitUnpopulated: false
+      emitUnpopulated: true
       useProtoNames: true
   grpc:
     addr: ${ManagerServer.Host}:${ManagerServer.GrpcPort}
