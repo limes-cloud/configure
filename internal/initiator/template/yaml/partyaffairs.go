@@ -43,6 +43,11 @@ database:
       maxIdleConn: 10 #最大空闲数量
       logLevel: 4 #日志等级
       slowThreshold: 2s #慢sql阈值
-
-
+business:
+  service:
+    resource: ${ResourceServer.Host}:${ResourceServer.GrpcPort}
+  auth:
+    yiBan:
+      appId: e4750b34230b48e1
+      appSecret: b0891a7f6018e5a76b085e3cb9548edd
 `
