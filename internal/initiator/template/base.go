@@ -12,7 +12,7 @@ import (
 var templates = []*model.Template{
 	// Getaway 配置模板
 	{
-		BaseModel:   types.BaseModel{ID: 1},
+		BaseModel:   types.BaseModel{ID: server.Gateway},
 		ServerID:    server.Gateway,
 		IsUse:       true,
 		Format:      "yaml",
@@ -22,22 +22,39 @@ var templates = []*model.Template{
 	},
 	// Manager业务配置
 	{
-		BaseModel:   types.BaseModel{ID: 2},
+		BaseModel:   types.BaseModel{ID: server.Manager},
 		ServerID:    server.Manager,
 		IsUse:       true,
 		Format:      "yaml",
 		Content:     yaml.Manager,
-		Version:     util.MD5ToUpper([]byte(yaml.Gateway))[:12],
+		Version:     util.MD5ToUpper([]byte(yaml.Manager))[:12],
 		Description: "初始化模板",
 	},
-
 	{
-		BaseModel:   types.BaseModel{ID: 3},
+		BaseModel:   types.BaseModel{ID: server.Resource},
 		ServerID:    server.Resource,
 		IsUse:       true,
 		Format:      "yaml",
 		Content:     yaml.Resource,
-		Version:     util.MD5ToUpper([]byte(yaml.Gateway))[:12],
+		Version:     util.MD5ToUpper([]byte(yaml.Resource))[:12],
+		Description: "初始化模板",
+	},
+	{
+		BaseModel:   types.BaseModel{ID: server.UserCenter},
+		ServerID:    server.UserCenter,
+		IsUse:       true,
+		Format:      "yaml",
+		Content:     yaml.UserCenter,
+		Version:     util.MD5ToUpper([]byte(yaml.UserCenter))[:12],
+		Description: "初始化模板",
+	},
+	{
+		BaseModel:   types.BaseModel{ID: server.PartyAffairs},
+		ServerID:    server.PartyAffairs,
+		IsUse:       true,
+		Format:      "yaml",
+		Content:     yaml.PartyAffairs,
+		Version:     util.MD5ToUpper([]byte(yaml.PartyAffairs))[:12],
 		Description: "初始化模板",
 	},
 }

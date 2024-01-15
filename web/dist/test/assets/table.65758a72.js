@@ -1,1 +1,0 @@
-import"./table.vue_vue_type_script_setup_true_lang.c0195604.js";import{_ as c}from"./table.vue_vue_type_script_setup_true_lang.c0195604.js";import"./index.e1248d42.js";/* empty css               *//* empty css               *//* empty css              *//* empty css               *//* empty css               *//* empty css               */export{c as default};

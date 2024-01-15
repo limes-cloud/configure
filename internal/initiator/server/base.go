@@ -7,12 +7,14 @@ import (
 )
 
 const (
-	Gateway  = 1
-	Manager  = 2
-	Resource = 3
+	Gateway      = 1
+	Manager      = 2
+	Resource     = 3
+	UserCenter   = 4
+	PartyAffairs = 5
 )
 
-var Servers = []uint32{Gateway, Manager, Resource}
+var Servers = []uint32{Gateway, Manager, Resource, UserCenter, PartyAffairs}
 
 var servers = []*model.Server{
 	{
@@ -32,5 +34,17 @@ var servers = []*model.Server{
 		Keyword:     "Resource",
 		Name:        "资源中心",
 		Description: "主要负责静态资源的管理",
+	},
+	{
+		BaseModel:   types.BaseModel{ID: UserCenter},
+		Keyword:     "UserCenter",
+		Name:        "用户中心",
+		Description: "主要负责业务用户的管理",
+	},
+	{
+		BaseModel:   types.BaseModel{ID: PartyAffairs},
+		Keyword:     "PartyAffairs",
+		Name:        "信号灯系统",
+		Description: "指尖上的党务系统",
 	},
 }

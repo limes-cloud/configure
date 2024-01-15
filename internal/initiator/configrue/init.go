@@ -1,6 +1,8 @@
 package configure
 
 import (
+	"fmt"
+
 	"github.com/limes-cloud/kratosx"
 
 	v1 "github.com/limes-cloud/configure/api/v1"
@@ -23,7 +25,7 @@ func Init(ctx kratosx.Context, config *config.Config) {
 				EnvKeyword: env.Keyword,
 				ServerId:   srv,
 			}); err != nil {
-				pt.Error("初始化configure失败：" + err.Error())
+				pt.Error(fmt.Sprintf("初始化configure失败 srv:%v env:%v err:%s", srv, env.Keyword, err.Error()))
 				return
 			}
 		}

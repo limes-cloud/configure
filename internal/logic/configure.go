@@ -154,7 +154,9 @@ func (t *Configure) Compare(ctx kratosx.Context, in *v1.CompareConfigureRequest)
 		curKeys = append(curKeys, key)
 	}
 
-	reply := v1.CompareConfigureReply{}
+	reply := v1.CompareConfigureReply{
+		List: make([]*v1.CompareConfigureInfo, 0),
+	}
 
 	// 新增字段
 	addKeys := util.Diff(curKeys, oldKeys)

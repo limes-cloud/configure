@@ -158,7 +158,9 @@ func (t *Template) Compare(ctx kratosx.Context, in *v1.CompareTemplateRequest) (
 		curKeys = append(curKeys, key)
 	}
 
-	reply := v1.CompareTemplateReply{}
+	reply := v1.CompareTemplateReply{
+		List: make([]*v1.CompareTemplateInfo, 0),
+	}
 
 	// 新增字段
 	addKeys := util.Diff(curKeys, oldKeys)

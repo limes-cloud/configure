@@ -10,8 +10,10 @@ import (
 	"github.com/limes-cloud/configure/internal/initiator/resource/gateway"
 	"github.com/limes-cloud/configure/internal/initiator/resource/jwt"
 	"github.com/limes-cloud/configure/internal/initiator/resource/manager"
+	"github.com/limes-cloud/configure/internal/initiator/resource/partyaffairs"
 	"github.com/limes-cloud/configure/internal/initiator/resource/redis"
 	"github.com/limes-cloud/configure/internal/initiator/resource/resource"
+	"github.com/limes-cloud/configure/internal/initiator/resource/usercenter"
 	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/pt"
 )
@@ -35,7 +37,10 @@ func Init(ctx kratosx.Context, config *config.Config) {
 	resourceList = append(resourceList, resource.Resources...)
 	// configure
 	resourceList = append(resourceList, configure.Resources...)
-
+	// user-center
+	resourceList = append(resourceList, usercenter.UserCenter...)
+	// party-affairs
+	resourceList = append(resourceList, partyaffairs.PartyAffairs...)
 	db := ctx.DB().Begin()
 	// 进行便利创建
 	for _, item := range resourceList {

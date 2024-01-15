@@ -102,8 +102,8 @@
 						</div>
 					</template>
 					<CodeEditor
-						:value="item.content"
-						:lang="item.format"
+						:value="item?.content"
+						:lang="item?.format"
 						:show-line="false"
 						:read-only="true"
 						:style="{
