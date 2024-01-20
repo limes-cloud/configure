@@ -3,15 +3,15 @@ package business
 import (
 	"fmt"
 
+	"github.com/limes-cloud/configure/internal/biz"
 	"github.com/limes-cloud/configure/internal/initiator/server"
-	"github.com/limes-cloud/configure/internal/model"
 	"github.com/limes-cloud/configure/pkg/util"
 )
 
-var businessValues = []*model.BusinessValue{
+var businessValues = []*biz.BusinessValue{
 	// Manager业务配置
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Manager,
 			Keyword:     "AuthSkipRoles",
 			Type:        "object",
@@ -20,7 +20,7 @@ var businessValues = []*model.BusinessValue{
 		Value: util.MarshalString([]string{"superAdmin"}),
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Manager,
 			Keyword:     "DefaultUserPassword",
 			Type:        "string",
@@ -29,7 +29,7 @@ var businessValues = []*model.BusinessValue{
 		Value: `12345678`,
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Manager,
 			Keyword:     "JwtWhitelist",
 			Type:        "object",
@@ -43,7 +43,7 @@ var businessValues = []*model.BusinessValue{
 		}),
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Manager,
 			Keyword:     "LoginPrivatePath",
 			Type:        "string",
@@ -52,7 +52,7 @@ var businessValues = []*model.BusinessValue{
 		Value: `static/cert/login.pem`,
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Manager,
 			Keyword:     "Setting",
 			Type:        "object",
@@ -69,7 +69,7 @@ var businessValues = []*model.BusinessValue{
 
 	// Resource业务配置
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Resource,
 			Keyword:     "AcceptTypes",
 			Type:        "object",
@@ -78,7 +78,7 @@ var businessValues = []*model.BusinessValue{
 		Value: util.MarshalString([]string{"jpg", "png", "txt", "ppt", "pptx", "mp4"}),
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Resource,
 			Keyword:     "MaxChunkCount",
 			Type:        "int",
@@ -87,7 +87,7 @@ var businessValues = []*model.BusinessValue{
 		Value: fmt.Sprint(20),
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Resource,
 			Keyword:     "MaxChunkSize",
 			Type:        "int",
@@ -96,7 +96,7 @@ var businessValues = []*model.BusinessValue{
 		Value: fmt.Sprint(1),
 	},
 	{
-		Business: &model.Business{
+		Business: &biz.Business{
 			ServerID:    server.Resource,
 			Keyword:     "MaxSingularSize",
 			Type:        "int",

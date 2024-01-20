@@ -4,7 +4,7 @@ package configure;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 import "configure_resource.proto";
-import "configure_environment.proto";
+import "configure_env.proto";
 
 message AllBusinessValueRequest{
   uint32 business_id = 1[(validate.rules).uint32.gt = 0];
@@ -13,7 +13,7 @@ message AllBusinessValueRequest{
 message AllBusinessValueReply {
   message BusinessValue{
     uint32 id = 1;
-    uint32 environment_id = 2;
+    uint32 env_id = 2;
     uint32 business_id = 3;
     string value = 4;
     uint32 created_at = 5;
@@ -25,9 +25,8 @@ message AllBusinessValueReply {
 // 修改资源值
 message UpdateBusinessValueRequest {
   message BusinessValue{
-    uint32 environment_id = 1[(validate.rules).uint32 = {gt: 0}];
+    uint32 env_id = 1[(validate.rules).uint32 = {gt: 0}];
     string value = 2[(validate.rules).string = {min_len: 1}];
-    string env_keyword = 3[(validate.rules).string = {min_len: 1}];
   }
   uint32 business_id = 1 [(validate.rules).uint32 = {gt: 0}];
   repeated BusinessValue list = 2;

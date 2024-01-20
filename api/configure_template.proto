@@ -33,7 +33,15 @@ message CurrentTemplateRequest{
 }
 
 message CurrentTemplateReply{
-    Template template = 1;
+  uint32 id = 1;
+  uint32 server_id = 2;
+  string description = 3;
+  string version = 4;
+  string format = 5;
+  bool is_use = 6;
+  string compare = 7;
+  string content = 8;
+  uint32 created_at = 9;
 }
 
 // 查询指定模板
@@ -68,7 +76,7 @@ message SwitchTemplateRequest {
 
 // 解析配置
 message ParseTemplatePreviewRequest {
-  string env_keyword = 1[(validate.rules).string = {min_len: 1}];
+  uint32 env_id = 1[(validate.rules).uint32 = {gt: 0}];
   uint32 server_id = 2[(validate.rules).uint32 = {gt: 0}];
   string format = 3[(validate.rules).string = {min_len: 1, in: ["json","yaml"]}];
   string content = 4[(validate.rules).string = {min_len: 7}];
@@ -81,7 +89,7 @@ message ParseTemplatePreviewReply {
 // 解析配置
 message ParseTemplateRequest {
   uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
-  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
+  uint32 env_id = 2[(validate.rules).uint32 = {gt: 0}];
 }
 
 message ParseTemplateReply {

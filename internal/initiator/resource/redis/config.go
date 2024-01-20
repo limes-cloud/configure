@@ -1,10 +1,10 @@
 package redis
 
 import (
+	"github.com/limes-cloud/configure/internal/initiator/env"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/limes-cloud/configure/internal/initiator/environment"
-	"github.com/limes-cloud/configure/internal/model"
+	"github.com/limes-cloud/configure/internal/biz"
 	"github.com/limes-cloud/configure/pkg/util"
 )
 
@@ -29,17 +29,17 @@ var PROD = map[string]any{
 	"Port":     6379,
 }
 
-var Resources = []*model.Resource{
+var Resources = []*biz.Resource{
 	{
 		Keyword:     "Redis",
 		Description: "redis中间件配置信息",
 		Fields:      "Host,Username,Password,Port",
 		Private:     proto.Bool(false),
 		Tag:         "redis",
-		ResourceValue: []*model.ResourceValue{
+		ResourceValue: []*biz.ResourceValue{
 			{
-				EnvironmentID: environment.TEST,
-				Values: util.MarshalString(map[string]any{
+				EnvID: env.TEST,
+				Value: util.MarshalString(map[string]any{
 					"Host":     "127.0.0.1",
 					"Username": "",
 					"Password": "",
@@ -47,8 +47,8 @@ var Resources = []*model.Resource{
 				}),
 			},
 			{
-				EnvironmentID: environment.PRE,
-				Values: util.MarshalString(map[string]any{
+				EnvID: env.PRE,
+				Value: util.MarshalString(map[string]any{
 					"Host":     "127.0.0.1",
 					"Username": "",
 					"Password": "",
@@ -56,8 +56,8 @@ var Resources = []*model.Resource{
 				}),
 			},
 			{
-				EnvironmentID: environment.PROD,
-				Values: util.MarshalString(map[string]any{
+				EnvID: env.PROD,
+				Value: util.MarshalString(map[string]any{
 					"Host":     "127.0.0.1",
 					"Username": "",
 					"Password": "",

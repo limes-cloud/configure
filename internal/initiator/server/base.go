@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/limes-cloud/kratosx/types"
 
-	"github.com/limes-cloud/configure/internal/model"
+	"github.com/limes-cloud/configure/internal/biz"
 )
 
 const (
@@ -16,7 +16,7 @@ const (
 
 var Servers = []uint32{Gateway, Manager, Resource, UserCenter, PartyAffairs}
 
-var servers = []*model.Server{
+var servers = []*biz.Server{
 	{
 		BaseModel:   types.BaseModel{ID: Gateway},
 		Keyword:     "Gateway",

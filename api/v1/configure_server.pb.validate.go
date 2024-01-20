@@ -431,13 +431,7 @@ func (m *GetServerRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		// no validation rules for Id
-	}
-
-	if m.Keyword != nil {
-		// no validation rules for Keyword
-	}
+	// no validation rules for Id
 
 	if len(errors) > 0 {
 		return GetServerRequestMultiError(errors)

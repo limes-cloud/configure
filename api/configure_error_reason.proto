@@ -28,6 +28,7 @@ enum ErrorReason {
   RefreshTokenError = 15 [(errors.code)=401,(errors.message)="刷新token失败"];
   TokenAuthError = 16 [(errors.code)=401,(errors.message)="token验证失败"];
   ServerNotFound = 17 [(errors.code)=401,(errors.message)="服务不存在"];
+  ResourceValueError = 18[(errors.message)="资源值错误"];
 }
 
 

@@ -7,6 +7,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/limes-cloud/configure/internal/initiator"
+
+	"github.com/limes-cloud/configure/internal/service"
+
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
@@ -20,8 +24,6 @@ import (
 	v1 "github.com/limes-cloud/configure/api/v1"
 	systemConfig "github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/consts"
-	"github.com/limes-cloud/configure/internal/handler"
-	"github.com/limes-cloud/configure/internal/initiator"
 	"github.com/limes-cloud/configure/pkg/pt"
 )
 
@@ -59,16 +61,16 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 		}
 	})
 
-	// 初始化逻辑
-	ior := initiator.New(conf)
-	if err := ior.Run(); err != nil {
-		panic("initiator error:" + err.Error())
-	}
-
 	go RegisterWebServer(c, conf)
-	srv := handler.New(conf)
+	srv := service.New(conf)
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
+
+	// 初始化逻辑
+	ior := initiator.New(conf)
+	if err := ior.Run(srv); err != nil {
+		panic("initiator error:" + err.Error())
+	}
 }
 
 func RegisterWebServer(c config.Config, config *systemConfig.Config) {

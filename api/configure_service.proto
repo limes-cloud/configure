@@ -6,7 +6,7 @@ option go_package = "./v1;v1";
 import "configure_auth.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "configure_environment.proto";
+import "configure_env.proto";
 import "configure_server.proto";
 import "configure_resource.proto";
 import "configure_resource_value.proto";
@@ -18,6 +18,7 @@ import "configure_configure.proto";
 
 service Service {
 
+  // 用户登录
   rpc Login(LoginRequest) returns(LoginReply){
     option (google.api.http) = {
       post: "/configure/v1/login",
@@ -25,48 +26,54 @@ service Service {
     };
   }
 
+  // RefreshToken 刷新token
   rpc RefreshToken(google.protobuf.Empty) returns(RefreshTokenReply){
     option (google.api.http) = {
       post: "/configure/v1/token/refresh",
     };
   }
 
-  rpc AllEnvironment (google.protobuf.Empty) returns (AllEnvironmentReply) {
+  // AllEnv 获取全部环境
+  rpc AllEnv (google.protobuf.Empty) returns (AllEnvReply) {
     option (google.api.http) = {
-      get: "/configure/v1/environments",
-      response_body: "list"
+      get: "/configure/v1/envs",
     };
   }
 
-  rpc AddEnvironment (AddEnvironmentRequest) returns (google.protobuf.Empty) {
+  // AddEnv 添加环境
+  rpc AddEnv (AddEnvRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/configure/v1/environment",
+      post: "/configure/v1/env",
       body:"*",
     };
   }
 
-  rpc UpdateEnvironment (UpdateEnvironmentRequest) returns (google.protobuf.Empty) {
+  // UpdateEnv 更新环境信息
+  rpc UpdateEnv (UpdateEnvRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/configure/v1/environment",
+      put: "/configure/v1/env",
       body:"*"
     };
   }
 
-  rpc DeleteEnvironment (DeleteEnvironmentRequest) returns (google.protobuf.Empty) {
+  // DeleteEnv 删除环境信息
+  rpc DeleteEnv (DeleteEnvRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      delete: "/configure/v1/environment"
+      delete: "/configure/v1/env"
     };
   }
 
-  rpc GetEnvironmentToken (GetEnvironmentTokenRequest) returns (GetEnvironmentTokenReply) {
+  // GetEnvToken 获取环境token
+  rpc GetEnvToken (GetEnvTokenRequest) returns (GetEnvTokenReply) {
     option (google.api.http) = {
-      get: "/configure/v1/environment/token"
+      get: "/configure/v1/env/token"
     };
   }
 
-  rpc ResetEnvironmentToken (ResetEnvironmentTokenRequest) returns (ResetEnvironmentTokenReply) {
+  // ResetEnvToken 重置环境token
+  rpc ResetEnvToken (ResetEnvTokenRequest) returns (ResetEnvTokenReply) {
     option (google.api.http) = {
-      put: "/configure/v1/environment/token",
+      put: "/configure/v1/env/token",
       body:"*"
     };
   }
@@ -133,14 +140,12 @@ service Service {
   rpc AllResourceServer (AllResourceServerRequest) returns (AllResourceServerReply) {
     option (google.api.http) = {
       get: "/configure/v1/resource/servers",
-      response_body:"list"
     };
   }
 
   rpc PageServerResource (PageServerResourceRequest) returns (PageServerResourceReply) {
     option (google.api.http) = {
       get: "/configure/v1/server/resources",
-      response_body: "*"
     };
   }
 
@@ -186,8 +191,7 @@ service Service {
 
   rpc AllBusinessValue (AllBusinessValueRequest) returns (AllBusinessValueReply) {
     option (google.api.http) = {
-      get: "/configure/v1/business/values",
-      response_body:"list"
+      get: "/configure/v1/business/values"
     };
   }
 
@@ -209,14 +213,12 @@ service Service {
   rpc GetTemplate (GetTemplateRequest) returns (GetTemplateReply) {
     option (google.api.http) = {
       get: "/configure/v1/template",
-      response_body: "*"
     };
   }
 
   rpc CurrentTemplate (CurrentTemplateRequest) returns (CurrentTemplateReply) {
     option (google.api.http) = {
       get: "/configure/v1/template/current",
-      response_body: "template"
     };
   }
 
@@ -238,42 +240,40 @@ service Service {
     option (google.api.http) = {
       post: "/configure/v1/template/compare",
       body:"*",
-      response_body:"list",
     };
   }
 
   rpc ParseTemplatePreview (ParseTemplatePreviewRequest) returns (ParseTemplatePreviewReply) {
     option (google.api.http) = {
-      post: "/configure/v1/template/preview/{env_keyword}",
+      post: "/configure/v1/template/preview",
       body:"*"
     };
   }
 
   rpc ParseTemplate (ParseTemplateRequest) returns (ParseTemplateReply) {
     option (google.api.http) = {
-      post: "/configure/v1/template/parse/{env_keyword}",
+      post: "/configure/v1/template/parse",
       body:"*"
     };
   }
 
   rpc GetConfigure (GetConfigureRequest) returns (GetConfigureReply) {
     option (google.api.http) = {
-      get: "/configure/v1/configure/{env_keyword}"
+      get: "/configure/v1/configure"
     };
   }
 
   rpc UpdateConfigure (UpdateConfigureRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/configure/v1/configure/{env_keyword}",
+      put: "/configure/v1/configure",
       body:"*"
     };
   }
 
   rpc CompareConfigure (CompareConfigureRequest) returns (CompareConfigureReply) {
     option (google.api.http) = {
-      post: "/configure/v1/configure/compare/{env_keyword}",
+      post: "/configure/v1/configure/compare",
       body:"*",
-      response_body:"list",
     };
   }
 

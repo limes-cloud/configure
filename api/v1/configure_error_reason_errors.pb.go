@@ -298,3 +298,19 @@ func ServerNotFoundFormat(format string, args ...any) *errors.Error {
 func ServerNotFound() *errors.Error {
 	return errors.New(401, ErrorReason_ServerNotFound.String(), "服务不存在")
 }
+
+func IsResourceValueError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ResourceValueError.String() && e.Code == 200
+}
+
+func ResourceValueErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ResourceValueError.String(), "资源值错误:"+fmt.Sprintf(format, args...))
+}
+
+func ResourceValueError() *errors.Error {
+	return errors.New(200, ErrorReason_ResourceValueError.String(), "资源值错误")
+}

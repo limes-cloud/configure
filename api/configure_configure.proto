@@ -7,13 +7,13 @@ import "validate/validate.proto";
 // 查询指定模板
 message GetConfigureRequest{
   uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
-  string env_keyword = 2[(validate.rules).string = {min_len: 0}];
+  uint32 env_id = 2[(validate.rules).uint32 = {gt: 0}];
 }
 
 message GetConfigureReply{
   uint32 id = 1;
   uint32 server_id = 2;
-  uint32 environment_id = 3;
+  uint32 env_id = 3;
   string content = 4;
   string description = 5;
   string version = 6;
@@ -24,7 +24,7 @@ message GetConfigureReply{
 // 对比配置
 message CompareConfigureRequest {
   uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
-  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
+  uint32 env_id = 2[(validate.rules).uint32 = {gt: 0}];
 }
 
 // 对比配置详情
@@ -42,7 +42,7 @@ message CompareConfigureReply {
 // 新增配置
 message UpdateConfigureRequest {
   uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
-  string env_keyword = 2[(validate.rules).string = {min_len: 1}];
+  uint32 env_id = 2[(validate.rules).uint32 = {gt: 0}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
 }
 

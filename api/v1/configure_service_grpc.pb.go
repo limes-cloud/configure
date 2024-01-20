@@ -20,59 +20,67 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Service_Login_FullMethodName                 = "/configure.Service/Login"
-	Service_RefreshToken_FullMethodName          = "/configure.Service/RefreshToken"
-	Service_AllEnvironment_FullMethodName        = "/configure.Service/AllEnvironment"
-	Service_AddEnvironment_FullMethodName        = "/configure.Service/AddEnvironment"
-	Service_UpdateEnvironment_FullMethodName     = "/configure.Service/UpdateEnvironment"
-	Service_DeleteEnvironment_FullMethodName     = "/configure.Service/DeleteEnvironment"
-	Service_GetEnvironmentToken_FullMethodName   = "/configure.Service/GetEnvironmentToken"
-	Service_ResetEnvironmentToken_FullMethodName = "/configure.Service/ResetEnvironmentToken"
-	Service_PageServer_FullMethodName            = "/configure.Service/PageServer"
-	Service_GetServer_FullMethodName             = "/configure.Service/GetServer"
-	Service_AddServer_FullMethodName             = "/configure.Service/AddServer"
-	Service_UpdateServer_FullMethodName          = "/configure.Service/UpdateServer"
-	Service_DeleteServer_FullMethodName          = "/configure.Service/DeleteServer"
-	Service_PageResource_FullMethodName          = "/configure.Service/PageResource"
-	Service_AddResource_FullMethodName           = "/configure.Service/AddResource"
-	Service_UpdateResource_FullMethodName        = "/configure.Service/UpdateResource"
-	Service_DeleteResource_FullMethodName        = "/configure.Service/DeleteResource"
-	Service_AllResourceServer_FullMethodName     = "/configure.Service/AllResourceServer"
-	Service_PageServerResource_FullMethodName    = "/configure.Service/PageServerResource"
-	Service_AllResourceValue_FullMethodName      = "/configure.Service/AllResourceValue"
-	Service_UpdateResourceValue_FullMethodName   = "/configure.Service/UpdateResourceValue"
-	Service_PageBusiness_FullMethodName          = "/configure.Service/PageBusiness"
-	Service_AddBusiness_FullMethodName           = "/configure.Service/AddBusiness"
-	Service_UpdateBusiness_FullMethodName        = "/configure.Service/UpdateBusiness"
-	Service_DeleteBusiness_FullMethodName        = "/configure.Service/DeleteBusiness"
-	Service_AllBusinessValue_FullMethodName      = "/configure.Service/AllBusinessValue"
-	Service_UpdateBusinessValue_FullMethodName   = "/configure.Service/UpdateBusinessValue"
-	Service_PageTemplate_FullMethodName          = "/configure.Service/PageTemplate"
-	Service_GetTemplate_FullMethodName           = "/configure.Service/GetTemplate"
-	Service_CurrentTemplate_FullMethodName       = "/configure.Service/CurrentTemplate"
-	Service_AddTemplate_FullMethodName           = "/configure.Service/AddTemplate"
-	Service_SwitchTemplate_FullMethodName        = "/configure.Service/SwitchTemplate"
-	Service_CompareTemplate_FullMethodName       = "/configure.Service/CompareTemplate"
-	Service_ParseTemplatePreview_FullMethodName  = "/configure.Service/ParseTemplatePreview"
-	Service_ParseTemplate_FullMethodName         = "/configure.Service/ParseTemplate"
-	Service_GetConfigure_FullMethodName          = "/configure.Service/GetConfigure"
-	Service_UpdateConfigure_FullMethodName       = "/configure.Service/UpdateConfigure"
-	Service_CompareConfigure_FullMethodName      = "/configure.Service/CompareConfigure"
-	Service_WatchConfigure_FullMethodName        = "/configure.Service/WatchConfigure"
+	Service_Login_FullMethodName                = "/configure.Service/Login"
+	Service_RefreshToken_FullMethodName         = "/configure.Service/RefreshToken"
+	Service_AllEnv_FullMethodName               = "/configure.Service/AllEnv"
+	Service_AddEnv_FullMethodName               = "/configure.Service/AddEnv"
+	Service_UpdateEnv_FullMethodName            = "/configure.Service/UpdateEnv"
+	Service_DeleteEnv_FullMethodName            = "/configure.Service/DeleteEnv"
+	Service_GetEnvToken_FullMethodName          = "/configure.Service/GetEnvToken"
+	Service_ResetEnvToken_FullMethodName        = "/configure.Service/ResetEnvToken"
+	Service_PageServer_FullMethodName           = "/configure.Service/PageServer"
+	Service_GetServer_FullMethodName            = "/configure.Service/GetServer"
+	Service_AddServer_FullMethodName            = "/configure.Service/AddServer"
+	Service_UpdateServer_FullMethodName         = "/configure.Service/UpdateServer"
+	Service_DeleteServer_FullMethodName         = "/configure.Service/DeleteServer"
+	Service_PageResource_FullMethodName         = "/configure.Service/PageResource"
+	Service_AddResource_FullMethodName          = "/configure.Service/AddResource"
+	Service_UpdateResource_FullMethodName       = "/configure.Service/UpdateResource"
+	Service_DeleteResource_FullMethodName       = "/configure.Service/DeleteResource"
+	Service_AllResourceServer_FullMethodName    = "/configure.Service/AllResourceServer"
+	Service_PageServerResource_FullMethodName   = "/configure.Service/PageServerResource"
+	Service_AllResourceValue_FullMethodName     = "/configure.Service/AllResourceValue"
+	Service_UpdateResourceValue_FullMethodName  = "/configure.Service/UpdateResourceValue"
+	Service_PageBusiness_FullMethodName         = "/configure.Service/PageBusiness"
+	Service_AddBusiness_FullMethodName          = "/configure.Service/AddBusiness"
+	Service_UpdateBusiness_FullMethodName       = "/configure.Service/UpdateBusiness"
+	Service_DeleteBusiness_FullMethodName       = "/configure.Service/DeleteBusiness"
+	Service_AllBusinessValue_FullMethodName     = "/configure.Service/AllBusinessValue"
+	Service_UpdateBusinessValue_FullMethodName  = "/configure.Service/UpdateBusinessValue"
+	Service_PageTemplate_FullMethodName         = "/configure.Service/PageTemplate"
+	Service_GetTemplate_FullMethodName          = "/configure.Service/GetTemplate"
+	Service_CurrentTemplate_FullMethodName      = "/configure.Service/CurrentTemplate"
+	Service_AddTemplate_FullMethodName          = "/configure.Service/AddTemplate"
+	Service_SwitchTemplate_FullMethodName       = "/configure.Service/SwitchTemplate"
+	Service_CompareTemplate_FullMethodName      = "/configure.Service/CompareTemplate"
+	Service_ParseTemplatePreview_FullMethodName = "/configure.Service/ParseTemplatePreview"
+	Service_ParseTemplate_FullMethodName        = "/configure.Service/ParseTemplate"
+	Service_GetConfigure_FullMethodName         = "/configure.Service/GetConfigure"
+	Service_UpdateConfigure_FullMethodName      = "/configure.Service/UpdateConfigure"
+	Service_CompareConfigure_FullMethodName     = "/configure.Service/CompareConfigure"
+	Service_WatchConfigure_FullMethodName       = "/configure.Service/WatchConfigure"
 )
 
 // ServiceClient is the client API for Service service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
+	// 用户登录
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	// RefreshToken 刷新token
 	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error)
-	AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvironmentReply, error)
-	AddEnvironment(ctx context.Context, in *AddEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UpdateEnvironment(ctx context.Context, in *UpdateEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	DeleteEnvironment(ctx context.Context, in *DeleteEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetEnvironmentToken(ctx context.Context, in *GetEnvironmentTokenRequest, opts ...grpc.CallOption) (*GetEnvironmentTokenReply, error)
-	ResetEnvironmentToken(ctx context.Context, in *ResetEnvironmentTokenRequest, opts ...grpc.CallOption) (*ResetEnvironmentTokenReply, error)
+	// AllEnv 获取全部环境
+	AllEnv(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvReply, error)
+	// AddEnv 添加环境
+	AddEnv(ctx context.Context, in *AddEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UpdateEnv 更新环境信息
+	UpdateEnv(ctx context.Context, in *UpdateEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteEnv 删除环境信息
+	DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// GetEnvToken 获取环境token
+	GetEnvToken(ctx context.Context, in *GetEnvTokenRequest, opts ...grpc.CallOption) (*GetEnvTokenReply, error)
+	// ResetEnvToken 重置环境token
+	ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...grpc.CallOption) (*ResetEnvTokenReply, error)
 	PageServer(ctx context.Context, in *PageServerRequest, opts ...grpc.CallOption) (*PageServerReply, error)
 	GetServer(ctx context.Context, in *GetServerRequest, opts ...grpc.CallOption) (*GetServerReply, error)
 	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
@@ -132,54 +140,54 @@ func (c *serviceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opt
 	return out, nil
 }
 
-func (c *serviceClient) AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvironmentReply, error) {
-	out := new(AllEnvironmentReply)
-	err := c.cc.Invoke(ctx, Service_AllEnvironment_FullMethodName, in, out, opts...)
+func (c *serviceClient) AllEnv(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvReply, error) {
+	out := new(AllEnvReply)
+	err := c.cc.Invoke(ctx, Service_AllEnv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) AddEnvironment(ctx context.Context, in *AddEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *serviceClient) AddEnv(ctx context.Context, in *AddEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Service_AddEnvironment_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_AddEnv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) UpdateEnvironment(ctx context.Context, in *UpdateEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *serviceClient) UpdateEnv(ctx context.Context, in *UpdateEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Service_UpdateEnvironment_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_UpdateEnv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) DeleteEnvironment(ctx context.Context, in *DeleteEnvironmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *serviceClient) DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Service_DeleteEnvironment_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_DeleteEnv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) GetEnvironmentToken(ctx context.Context, in *GetEnvironmentTokenRequest, opts ...grpc.CallOption) (*GetEnvironmentTokenReply, error) {
-	out := new(GetEnvironmentTokenReply)
-	err := c.cc.Invoke(ctx, Service_GetEnvironmentToken_FullMethodName, in, out, opts...)
+func (c *serviceClient) GetEnvToken(ctx context.Context, in *GetEnvTokenRequest, opts ...grpc.CallOption) (*GetEnvTokenReply, error) {
+	out := new(GetEnvTokenReply)
+	err := c.cc.Invoke(ctx, Service_GetEnvToken_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) ResetEnvironmentToken(ctx context.Context, in *ResetEnvironmentTokenRequest, opts ...grpc.CallOption) (*ResetEnvironmentTokenReply, error) {
-	out := new(ResetEnvironmentTokenReply)
-	err := c.cc.Invoke(ctx, Service_ResetEnvironmentToken_FullMethodName, in, out, opts...)
+func (c *serviceClient) ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...grpc.CallOption) (*ResetEnvTokenReply, error) {
+	out := new(ResetEnvTokenReply)
+	err := c.cc.Invoke(ctx, Service_ResetEnvToken_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -492,14 +500,22 @@ func (x *serviceWatchConfigureClient) Recv() (*WatchConfigureReply, error) {
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
+	// 用户登录
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	// RefreshToken 刷新token
 	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
-	AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error)
-	AddEnvironment(context.Context, *AddEnvironmentRequest) (*emptypb.Empty, error)
-	UpdateEnvironment(context.Context, *UpdateEnvironmentRequest) (*emptypb.Empty, error)
-	DeleteEnvironment(context.Context, *DeleteEnvironmentRequest) (*emptypb.Empty, error)
-	GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error)
-	ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*ResetEnvironmentTokenReply, error)
+	// AllEnv 获取全部环境
+	AllEnv(context.Context, *emptypb.Empty) (*AllEnvReply, error)
+	// AddEnv 添加环境
+	AddEnv(context.Context, *AddEnvRequest) (*emptypb.Empty, error)
+	// UpdateEnv 更新环境信息
+	UpdateEnv(context.Context, *UpdateEnvRequest) (*emptypb.Empty, error)
+	// DeleteEnv 删除环境信息
+	DeleteEnv(context.Context, *DeleteEnvRequest) (*emptypb.Empty, error)
+	// GetEnvToken 获取环境token
+	GetEnvToken(context.Context, *GetEnvTokenRequest) (*GetEnvTokenReply, error)
+	// ResetEnvToken 重置环境token
+	ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error)
 	PageServer(context.Context, *PageServerRequest) (*PageServerReply, error)
 	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
 	AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error)
@@ -544,23 +560,23 @@ func (UnimplementedServiceServer) Login(context.Context, *LoginRequest) (*LoginR
 func (UnimplementedServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
-func (UnimplementedServiceServer) AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AllEnvironment not implemented")
+func (UnimplementedServiceServer) AllEnv(context.Context, *emptypb.Empty) (*AllEnvReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AllEnv not implemented")
 }
-func (UnimplementedServiceServer) AddEnvironment(context.Context, *AddEnvironmentRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddEnvironment not implemented")
+func (UnimplementedServiceServer) AddEnv(context.Context, *AddEnvRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddEnv not implemented")
 }
-func (UnimplementedServiceServer) UpdateEnvironment(context.Context, *UpdateEnvironmentRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateEnvironment not implemented")
+func (UnimplementedServiceServer) UpdateEnv(context.Context, *UpdateEnvRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEnv not implemented")
 }
-func (UnimplementedServiceServer) DeleteEnvironment(context.Context, *DeleteEnvironmentRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteEnvironment not implemented")
+func (UnimplementedServiceServer) DeleteEnv(context.Context, *DeleteEnvRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteEnv not implemented")
 }
-func (UnimplementedServiceServer) GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEnvironmentToken not implemented")
+func (UnimplementedServiceServer) GetEnvToken(context.Context, *GetEnvTokenRequest) (*GetEnvTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEnvToken not implemented")
 }
-func (UnimplementedServiceServer) ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*ResetEnvironmentTokenReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ResetEnvironmentToken not implemented")
+func (UnimplementedServiceServer) ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ResetEnvToken not implemented")
 }
 func (UnimplementedServiceServer) PageServer(context.Context, *PageServerRequest) (*PageServerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageServer not implemented")
@@ -704,110 +720,110 @@ func _Service_RefreshToken_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_AllEnvironment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Service_AllEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).AllEnvironment(ctx, in)
+		return srv.(ServiceServer).AllEnv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_AllEnvironment_FullMethodName,
+		FullMethod: Service_AllEnv_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).AllEnvironment(ctx, req.(*emptypb.Empty))
+		return srv.(ServiceServer).AllEnv(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_AddEnvironment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddEnvironmentRequest)
+func _Service_AddEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddEnvRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).AddEnvironment(ctx, in)
+		return srv.(ServiceServer).AddEnv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_AddEnvironment_FullMethodName,
+		FullMethod: Service_AddEnv_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).AddEnvironment(ctx, req.(*AddEnvironmentRequest))
+		return srv.(ServiceServer).AddEnv(ctx, req.(*AddEnvRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_UpdateEnvironment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateEnvironmentRequest)
+func _Service_UpdateEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEnvRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).UpdateEnvironment(ctx, in)
+		return srv.(ServiceServer).UpdateEnv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_UpdateEnvironment_FullMethodName,
+		FullMethod: Service_UpdateEnv_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).UpdateEnvironment(ctx, req.(*UpdateEnvironmentRequest))
+		return srv.(ServiceServer).UpdateEnv(ctx, req.(*UpdateEnvRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_DeleteEnvironment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteEnvironmentRequest)
+func _Service_DeleteEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEnvRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).DeleteEnvironment(ctx, in)
+		return srv.(ServiceServer).DeleteEnv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_DeleteEnvironment_FullMethodName,
+		FullMethod: Service_DeleteEnv_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).DeleteEnvironment(ctx, req.(*DeleteEnvironmentRequest))
+		return srv.(ServiceServer).DeleteEnv(ctx, req.(*DeleteEnvRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_GetEnvironmentToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetEnvironmentTokenRequest)
+func _Service_GetEnvToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetEnvTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).GetEnvironmentToken(ctx, in)
+		return srv.(ServiceServer).GetEnvToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_GetEnvironmentToken_FullMethodName,
+		FullMethod: Service_GetEnvToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetEnvironmentToken(ctx, req.(*GetEnvironmentTokenRequest))
+		return srv.(ServiceServer).GetEnvToken(ctx, req.(*GetEnvTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_ResetEnvironmentToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResetEnvironmentTokenRequest)
+func _Service_ResetEnvToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResetEnvTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).ResetEnvironmentToken(ctx, in)
+		return srv.(ServiceServer).ResetEnvToken(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_ResetEnvironmentToken_FullMethodName,
+		FullMethod: Service_ResetEnvToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).ResetEnvironmentToken(ctx, req.(*ResetEnvironmentTokenRequest))
+		return srv.(ServiceServer).ResetEnvToken(ctx, req.(*ResetEnvTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1389,28 +1405,28 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_RefreshToken_Handler,
 		},
 		{
-			MethodName: "AllEnvironment",
-			Handler:    _Service_AllEnvironment_Handler,
+			MethodName: "AllEnv",
+			Handler:    _Service_AllEnv_Handler,
 		},
 		{
-			MethodName: "AddEnvironment",
-			Handler:    _Service_AddEnvironment_Handler,
+			MethodName: "AddEnv",
+			Handler:    _Service_AddEnv_Handler,
 		},
 		{
-			MethodName: "UpdateEnvironment",
-			Handler:    _Service_UpdateEnvironment_Handler,
+			MethodName: "UpdateEnv",
+			Handler:    _Service_UpdateEnv_Handler,
 		},
 		{
-			MethodName: "DeleteEnvironment",
-			Handler:    _Service_DeleteEnvironment_Handler,
+			MethodName: "DeleteEnv",
+			Handler:    _Service_DeleteEnv_Handler,
 		},
 		{
-			MethodName: "GetEnvironmentToken",
-			Handler:    _Service_GetEnvironmentToken_Handler,
+			MethodName: "GetEnvToken",
+			Handler:    _Service_GetEnvToken_Handler,
 		},
 		{
-			MethodName: "ResetEnvironmentToken",
-			Handler:    _Service_ResetEnvironmentToken_Handler,
+			MethodName: "ResetEnvToken",
+			Handler:    _Service_ResetEnvToken_Handler,
 		},
 		{
 			MethodName: "PageServer",

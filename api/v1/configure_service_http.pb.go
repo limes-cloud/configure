@@ -21,23 +21,23 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationServiceAddBusiness = "/configure.Service/AddBusiness"
-const OperationServiceAddEnvironment = "/configure.Service/AddEnvironment"
+const OperationServiceAddEnv = "/configure.Service/AddEnv"
 const OperationServiceAddResource = "/configure.Service/AddResource"
 const OperationServiceAddServer = "/configure.Service/AddServer"
 const OperationServiceAddTemplate = "/configure.Service/AddTemplate"
 const OperationServiceAllBusinessValue = "/configure.Service/AllBusinessValue"
-const OperationServiceAllEnvironment = "/configure.Service/AllEnvironment"
+const OperationServiceAllEnv = "/configure.Service/AllEnv"
 const OperationServiceAllResourceServer = "/configure.Service/AllResourceServer"
 const OperationServiceAllResourceValue = "/configure.Service/AllResourceValue"
 const OperationServiceCompareConfigure = "/configure.Service/CompareConfigure"
 const OperationServiceCompareTemplate = "/configure.Service/CompareTemplate"
 const OperationServiceCurrentTemplate = "/configure.Service/CurrentTemplate"
 const OperationServiceDeleteBusiness = "/configure.Service/DeleteBusiness"
-const OperationServiceDeleteEnvironment = "/configure.Service/DeleteEnvironment"
+const OperationServiceDeleteEnv = "/configure.Service/DeleteEnv"
 const OperationServiceDeleteResource = "/configure.Service/DeleteResource"
 const OperationServiceDeleteServer = "/configure.Service/DeleteServer"
 const OperationServiceGetConfigure = "/configure.Service/GetConfigure"
-const OperationServiceGetEnvironmentToken = "/configure.Service/GetEnvironmentToken"
+const OperationServiceGetEnvToken = "/configure.Service/GetEnvToken"
 const OperationServiceGetServer = "/configure.Service/GetServer"
 const OperationServiceGetTemplate = "/configure.Service/GetTemplate"
 const OperationServiceLogin = "/configure.Service/Login"
@@ -49,37 +49,42 @@ const OperationServicePageTemplate = "/configure.Service/PageTemplate"
 const OperationServiceParseTemplate = "/configure.Service/ParseTemplate"
 const OperationServiceParseTemplatePreview = "/configure.Service/ParseTemplatePreview"
 const OperationServiceRefreshToken = "/configure.Service/RefreshToken"
-const OperationServiceResetEnvironmentToken = "/configure.Service/ResetEnvironmentToken"
+const OperationServiceResetEnvToken = "/configure.Service/ResetEnvToken"
 const OperationServiceSwitchTemplate = "/configure.Service/SwitchTemplate"
 const OperationServiceUpdateBusiness = "/configure.Service/UpdateBusiness"
 const OperationServiceUpdateBusinessValue = "/configure.Service/UpdateBusinessValue"
 const OperationServiceUpdateConfigure = "/configure.Service/UpdateConfigure"
-const OperationServiceUpdateEnvironment = "/configure.Service/UpdateEnvironment"
+const OperationServiceUpdateEnv = "/configure.Service/UpdateEnv"
 const OperationServiceUpdateResource = "/configure.Service/UpdateResource"
 const OperationServiceUpdateResourceValue = "/configure.Service/UpdateResourceValue"
 const OperationServiceUpdateServer = "/configure.Service/UpdateServer"
 
 type ServiceHTTPServer interface {
 	AddBusiness(context.Context, *AddBusinessRequest) (*emptypb.Empty, error)
-	AddEnvironment(context.Context, *AddEnvironmentRequest) (*emptypb.Empty, error)
+	// AddEnv AddEnv 添加环境
+	AddEnv(context.Context, *AddEnvRequest) (*emptypb.Empty, error)
 	AddResource(context.Context, *AddResourceRequest) (*emptypb.Empty, error)
 	AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error)
 	AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error)
 	AllBusinessValue(context.Context, *AllBusinessValueRequest) (*AllBusinessValueReply, error)
-	AllEnvironment(context.Context, *emptypb.Empty) (*AllEnvironmentReply, error)
+	// AllEnv AllEnv 获取全部环境
+	AllEnv(context.Context, *emptypb.Empty) (*AllEnvReply, error)
 	AllResourceServer(context.Context, *AllResourceServerRequest) (*AllResourceServerReply, error)
 	AllResourceValue(context.Context, *AllResourceValueRequest) (*AllResourceValueReply, error)
 	CompareConfigure(context.Context, *CompareConfigureRequest) (*CompareConfigureReply, error)
 	CompareTemplate(context.Context, *CompareTemplateRequest) (*CompareTemplateReply, error)
 	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error)
 	DeleteBusiness(context.Context, *DeleteBusinessRequest) (*emptypb.Empty, error)
-	DeleteEnvironment(context.Context, *DeleteEnvironmentRequest) (*emptypb.Empty, error)
+	// DeleteEnv DeleteEnv 删除环境信息
+	DeleteEnv(context.Context, *DeleteEnvRequest) (*emptypb.Empty, error)
 	DeleteResource(context.Context, *DeleteResourceRequest) (*emptypb.Empty, error)
 	DeleteServer(context.Context, *DeleteServerRequest) (*emptypb.Empty, error)
 	GetConfigure(context.Context, *GetConfigureRequest) (*GetConfigureReply, error)
-	GetEnvironmentToken(context.Context, *GetEnvironmentTokenRequest) (*GetEnvironmentTokenReply, error)
+	// GetEnvToken GetEnvToken 获取环境token
+	GetEnvToken(context.Context, *GetEnvTokenRequest) (*GetEnvTokenReply, error)
 	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error)
+	// Login 用户登录
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	PageBusiness(context.Context, *PageBusinessRequest) (*PageBusinessReply, error)
 	PageResource(context.Context, *PageResourceRequest) (*PageResourceReply, error)
@@ -88,13 +93,16 @@ type ServiceHTTPServer interface {
 	PageTemplate(context.Context, *PageTemplateRequest) (*PageTemplateReply, error)
 	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
 	ParseTemplatePreview(context.Context, *ParseTemplatePreviewRequest) (*ParseTemplatePreviewReply, error)
+	// RefreshToken RefreshToken 刷新token
 	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
-	ResetEnvironmentToken(context.Context, *ResetEnvironmentTokenRequest) (*ResetEnvironmentTokenReply, error)
+	// ResetEnvToken ResetEnvToken 重置环境token
+	ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error)
 	SwitchTemplate(context.Context, *SwitchTemplateRequest) (*emptypb.Empty, error)
 	UpdateBusiness(context.Context, *UpdateBusinessRequest) (*emptypb.Empty, error)
 	UpdateBusinessValue(context.Context, *UpdateBusinessValueRequest) (*emptypb.Empty, error)
 	UpdateConfigure(context.Context, *UpdateConfigureRequest) (*emptypb.Empty, error)
-	UpdateEnvironment(context.Context, *UpdateEnvironmentRequest) (*emptypb.Empty, error)
+	// UpdateEnv UpdateEnv 更新环境信息
+	UpdateEnv(context.Context, *UpdateEnvRequest) (*emptypb.Empty, error)
 	UpdateResource(context.Context, *UpdateResourceRequest) (*emptypb.Empty, error)
 	UpdateResourceValue(context.Context, *UpdateResourceValueRequest) (*emptypb.Empty, error)
 	UpdateServer(context.Context, *UpdateServerRequest) (*emptypb.Empty, error)
@@ -104,12 +112,12 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r := s.Route("/")
 	r.POST("/configure/v1/login", _Service_Login0_HTTP_Handler(srv))
 	r.POST("/configure/v1/token/refresh", _Service_RefreshToken0_HTTP_Handler(srv))
-	r.GET("/configure/v1/environments", _Service_AllEnvironment0_HTTP_Handler(srv))
-	r.POST("/configure/v1/environment", _Service_AddEnvironment0_HTTP_Handler(srv))
-	r.PUT("/configure/v1/environment", _Service_UpdateEnvironment0_HTTP_Handler(srv))
-	r.DELETE("/configure/v1/environment", _Service_DeleteEnvironment0_HTTP_Handler(srv))
-	r.GET("/configure/v1/environment/token", _Service_GetEnvironmentToken0_HTTP_Handler(srv))
-	r.PUT("/configure/v1/environment/token", _Service_ResetEnvironmentToken0_HTTP_Handler(srv))
+	r.GET("/configure/v1/envs", _Service_AllEnv0_HTTP_Handler(srv))
+	r.POST("/configure/v1/env", _Service_AddEnv0_HTTP_Handler(srv))
+	r.PUT("/configure/v1/env", _Service_UpdateEnv0_HTTP_Handler(srv))
+	r.DELETE("/configure/v1/env", _Service_DeleteEnv0_HTTP_Handler(srv))
+	r.GET("/configure/v1/env/token", _Service_GetEnvToken0_HTTP_Handler(srv))
+	r.PUT("/configure/v1/env/token", _Service_ResetEnvToken0_HTTP_Handler(srv))
 	r.GET("/configure/v1/servers", _Service_PageServer0_HTTP_Handler(srv))
 	r.GET("/configure/v1/server", _Service_GetServer0_HTTP_Handler(srv))
 	r.POST("/configure/v1/server", _Service_AddServer0_HTTP_Handler(srv))
@@ -135,11 +143,11 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/configure/v1/template", _Service_AddTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/v1/template/switch", _Service_SwitchTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/v1/template/compare", _Service_CompareTemplate0_HTTP_Handler(srv))
-	r.POST("/configure/v1/template/preview/{env_keyword}", _Service_ParseTemplatePreview0_HTTP_Handler(srv))
-	r.POST("/configure/v1/template/parse/{env_keyword}", _Service_ParseTemplate0_HTTP_Handler(srv))
-	r.GET("/configure/v1/configure/{env_keyword}", _Service_GetConfigure0_HTTP_Handler(srv))
-	r.PUT("/configure/v1/configure/{env_keyword}", _Service_UpdateConfigure0_HTTP_Handler(srv))
-	r.POST("/configure/v1/configure/compare/{env_keyword}", _Service_CompareConfigure0_HTTP_Handler(srv))
+	r.POST("/configure/v1/template/preview", _Service_ParseTemplatePreview0_HTTP_Handler(srv))
+	r.POST("/configure/v1/template/parse", _Service_ParseTemplate0_HTTP_Handler(srv))
+	r.GET("/configure/v1/configure", _Service_GetConfigure0_HTTP_Handler(srv))
+	r.PUT("/configure/v1/configure", _Service_UpdateConfigure0_HTTP_Handler(srv))
+	r.POST("/configure/v1/configure/compare", _Service_CompareConfigure0_HTTP_Handler(srv))
 }
 
 func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
@@ -183,37 +191,37 @@ func _Service_RefreshToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 	}
 }
 
-func _Service_AllEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_AllEnv0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceAllEnvironment)
+		http.SetOperation(ctx, OperationServiceAllEnv)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.AllEnvironment(ctx, req.(*emptypb.Empty))
+			return srv.AllEnv(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*AllEnvironmentReply)
-		return ctx.Result(200, reply.List)
+		reply := out.(*AllEnvReply)
+		return ctx.Result(200, reply)
 	}
 }
 
-func _Service_AddEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_AddEnv0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AddEnvironmentRequest
+		var in AddEnvRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceAddEnvironment)
+		http.SetOperation(ctx, OperationServiceAddEnv)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.AddEnvironment(ctx, req.(*AddEnvironmentRequest))
+			return srv.AddEnv(ctx, req.(*AddEnvRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -224,18 +232,18 @@ func _Service_AddEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 	}
 }
 
-func _Service_UpdateEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_UpdateEnv0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateEnvironmentRequest
+		var in UpdateEnvRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceUpdateEnvironment)
+		http.SetOperation(ctx, OperationServiceUpdateEnv)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateEnvironment(ctx, req.(*UpdateEnvironmentRequest))
+			return srv.UpdateEnv(ctx, req.(*UpdateEnvRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -246,15 +254,15 @@ func _Service_UpdateEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 	}
 }
 
-func _Service_DeleteEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_DeleteEnv0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteEnvironmentRequest
+		var in DeleteEnvRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceDeleteEnvironment)
+		http.SetOperation(ctx, OperationServiceDeleteEnv)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteEnvironment(ctx, req.(*DeleteEnvironmentRequest))
+			return srv.DeleteEnv(ctx, req.(*DeleteEnvRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -265,43 +273,43 @@ func _Service_DeleteEnvironment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 	}
 }
 
-func _Service_GetEnvironmentToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_GetEnvToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetEnvironmentTokenRequest
+		var in GetEnvTokenRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceGetEnvironmentToken)
+		http.SetOperation(ctx, OperationServiceGetEnvToken)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetEnvironmentToken(ctx, req.(*GetEnvironmentTokenRequest))
+			return srv.GetEnvToken(ctx, req.(*GetEnvTokenRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetEnvironmentTokenReply)
+		reply := out.(*GetEnvTokenReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Service_ResetEnvironmentToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_ResetEnvToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ResetEnvironmentTokenRequest
+		var in ResetEnvTokenRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceResetEnvironmentToken)
+		http.SetOperation(ctx, OperationServiceResetEnvToken)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ResetEnvironmentToken(ctx, req.(*ResetEnvironmentTokenRequest))
+			return srv.ResetEnvToken(ctx, req.(*ResetEnvTokenRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ResetEnvironmentTokenReply)
+		reply := out.(*ResetEnvTokenReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -504,7 +512,7 @@ func _Service_AllResourceServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 			return err
 		}
 		reply := out.(*AllResourceServerReply)
-		return ctx.Result(200, reply.List)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -665,7 +673,7 @@ func _Service_AllBusinessValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		reply := out.(*AllBusinessValueReply)
-		return ctx.Result(200, reply.List)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -744,7 +752,7 @@ func _Service_CurrentTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		reply := out.(*CurrentTemplateReply)
-		return ctx.Result(200, reply.Template)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -810,7 +818,7 @@ func _Service_CompareTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		reply := out.(*CompareTemplateReply)
-		return ctx.Result(200, reply.List)
+		return ctx.Result(200, reply)
 	}
 }
 
@@ -821,9 +829,6 @@ func _Service_ParseTemplatePreview0_HTTP_Handler(srv ServiceHTTPServer) func(ctx
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceParseTemplatePreview)
@@ -848,9 +853,6 @@ func _Service_ParseTemplate0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.C
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
 		http.SetOperation(ctx, OperationServiceParseTemplate)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ParseTemplate(ctx, req.(*ParseTemplateRequest))
@@ -868,9 +870,6 @@ func _Service_GetConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 	return func(ctx http.Context) error {
 		var in GetConfigureRequest
 		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetConfigure)
@@ -895,9 +894,6 @@ func _Service_UpdateConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
 		http.SetOperation(ctx, OperationServiceUpdateConfigure)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateConfigure(ctx, req.(*UpdateConfigureRequest))
@@ -920,9 +916,6 @@ func _Service_CompareConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		if err := ctx.BindVars(&in); err != nil {
-			return err
-		}
 		http.SetOperation(ctx, OperationServiceCompareConfigure)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.CompareConfigure(ctx, req.(*CompareConfigureRequest))
@@ -932,29 +925,29 @@ func _Service_CompareConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		reply := out.(*CompareConfigureReply)
-		return ctx.Result(200, reply.List)
+		return ctx.Result(200, reply)
 	}
 }
 
 type ServiceHTTPClient interface {
 	AddBusiness(ctx context.Context, req *AddBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	AddEnvironment(ctx context.Context, req *AddEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	AddEnv(ctx context.Context, req *AddEnvRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddResource(ctx context.Context, req *AddResourceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddServer(ctx context.Context, req *AddServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddTemplate(ctx context.Context, req *AddTemplateRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AllBusinessValue(ctx context.Context, req *AllBusinessValueRequest, opts ...http.CallOption) (rsp *AllBusinessValueReply, err error)
-	AllEnvironment(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *AllEnvironmentReply, err error)
+	AllEnv(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *AllEnvReply, err error)
 	AllResourceServer(ctx context.Context, req *AllResourceServerRequest, opts ...http.CallOption) (rsp *AllResourceServerReply, err error)
 	AllResourceValue(ctx context.Context, req *AllResourceValueRequest, opts ...http.CallOption) (rsp *AllResourceValueReply, err error)
 	CompareConfigure(ctx context.Context, req *CompareConfigureRequest, opts ...http.CallOption) (rsp *CompareConfigureReply, err error)
 	CompareTemplate(ctx context.Context, req *CompareTemplateRequest, opts ...http.CallOption) (rsp *CompareTemplateReply, err error)
 	CurrentTemplate(ctx context.Context, req *CurrentTemplateRequest, opts ...http.CallOption) (rsp *CurrentTemplateReply, err error)
 	DeleteBusiness(ctx context.Context, req *DeleteBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	DeleteEnvironment(ctx context.Context, req *DeleteEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteEnv(ctx context.Context, req *DeleteEnvRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteResource(ctx context.Context, req *DeleteResourceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteServer(ctx context.Context, req *DeleteServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetConfigure(ctx context.Context, req *GetConfigureRequest, opts ...http.CallOption) (rsp *GetConfigureReply, err error)
-	GetEnvironmentToken(ctx context.Context, req *GetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *GetEnvironmentTokenReply, err error)
+	GetEnvToken(ctx context.Context, req *GetEnvTokenRequest, opts ...http.CallOption) (rsp *GetEnvTokenReply, err error)
 	GetServer(ctx context.Context, req *GetServerRequest, opts ...http.CallOption) (rsp *GetServerReply, err error)
 	GetTemplate(ctx context.Context, req *GetTemplateRequest, opts ...http.CallOption) (rsp *GetTemplateReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
@@ -966,12 +959,12 @@ type ServiceHTTPClient interface {
 	ParseTemplate(ctx context.Context, req *ParseTemplateRequest, opts ...http.CallOption) (rsp *ParseTemplateReply, err error)
 	ParseTemplatePreview(ctx context.Context, req *ParseTemplatePreviewRequest, opts ...http.CallOption) (rsp *ParseTemplatePreviewReply, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *RefreshTokenReply, err error)
-	ResetEnvironmentToken(ctx context.Context, req *ResetEnvironmentTokenRequest, opts ...http.CallOption) (rsp *ResetEnvironmentTokenReply, err error)
+	ResetEnvToken(ctx context.Context, req *ResetEnvTokenRequest, opts ...http.CallOption) (rsp *ResetEnvTokenReply, err error)
 	SwitchTemplate(ctx context.Context, req *SwitchTemplateRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateBusiness(ctx context.Context, req *UpdateBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateBusinessValue(ctx context.Context, req *UpdateBusinessValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateConfigure(ctx context.Context, req *UpdateConfigureRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	UpdateEnvironment(ctx context.Context, req *UpdateEnvironmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateEnv(ctx context.Context, req *UpdateEnvRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateResource(ctx context.Context, req *UpdateResourceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateResourceValue(ctx context.Context, req *UpdateResourceValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateServer(ctx context.Context, req *UpdateServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -998,11 +991,11 @@ func (c *ServiceHTTPClientImpl) AddBusiness(ctx context.Context, in *AddBusiness
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) AddEnvironment(ctx context.Context, in *AddEnvironmentRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+func (c *ServiceHTTPClientImpl) AddEnv(ctx context.Context, in *AddEnvRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/configure/v1/environment"
+	pattern := "/configure/v1/env"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationServiceAddEnvironment))
+	opts = append(opts, http.Operation(OperationServiceAddEnv))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1056,20 +1049,20 @@ func (c *ServiceHTTPClientImpl) AllBusinessValue(ctx context.Context, in *AllBus
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceAllBusinessValue))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) AllEnvironment(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*AllEnvironmentReply, error) {
-	var out AllEnvironmentReply
-	pattern := "/configure/v1/environments"
+func (c *ServiceHTTPClientImpl) AllEnv(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*AllEnvReply, error) {
+	var out AllEnvReply
+	pattern := "/configure/v1/envs"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationServiceAllEnvironment))
+	opts = append(opts, http.Operation(OperationServiceAllEnv))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1082,7 +1075,7 @@ func (c *ServiceHTTPClientImpl) AllResourceServer(ctx context.Context, in *AllRe
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceAllResourceServer))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1104,11 +1097,11 @@ func (c *ServiceHTTPClientImpl) AllResourceValue(ctx context.Context, in *AllRes
 
 func (c *ServiceHTTPClientImpl) CompareConfigure(ctx context.Context, in *CompareConfigureRequest, opts ...http.CallOption) (*CompareConfigureReply, error) {
 	var out CompareConfigureReply
-	pattern := "/configure/v1/configure/compare/{env_keyword}"
+	pattern := "/configure/v1/configure/compare"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceCompareConfigure))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out.List, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1121,7 +1114,7 @@ func (c *ServiceHTTPClientImpl) CompareTemplate(ctx context.Context, in *Compare
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceCompareTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out.List, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1134,7 +1127,7 @@ func (c *ServiceHTTPClientImpl) CurrentTemplate(ctx context.Context, in *Current
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceCurrentTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Template, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1154,11 +1147,11 @@ func (c *ServiceHTTPClientImpl) DeleteBusiness(ctx context.Context, in *DeleteBu
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) DeleteEnvironment(ctx context.Context, in *DeleteEnvironmentRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+func (c *ServiceHTTPClientImpl) DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/configure/v1/environment"
+	pattern := "/configure/v1/env"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationServiceDeleteEnvironment))
+	opts = append(opts, http.Operation(OperationServiceDeleteEnv))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -1195,7 +1188,7 @@ func (c *ServiceHTTPClientImpl) DeleteServer(ctx context.Context, in *DeleteServ
 
 func (c *ServiceHTTPClientImpl) GetConfigure(ctx context.Context, in *GetConfigureRequest, opts ...http.CallOption) (*GetConfigureReply, error) {
 	var out GetConfigureReply
-	pattern := "/configure/v1/configure/{env_keyword}"
+	pattern := "/configure/v1/configure"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceGetConfigure))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -1206,11 +1199,11 @@ func (c *ServiceHTTPClientImpl) GetConfigure(ctx context.Context, in *GetConfigu
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) GetEnvironmentToken(ctx context.Context, in *GetEnvironmentTokenRequest, opts ...http.CallOption) (*GetEnvironmentTokenReply, error) {
-	var out GetEnvironmentTokenReply
-	pattern := "/configure/v1/environment/token"
+func (c *ServiceHTTPClientImpl) GetEnvToken(ctx context.Context, in *GetEnvTokenRequest, opts ...http.CallOption) (*GetEnvTokenReply, error) {
+	var out GetEnvTokenReply
+	pattern := "/configure/v1/env/token"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationServiceGetEnvironmentToken))
+	opts = append(opts, http.Operation(OperationServiceGetEnvToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -1325,7 +1318,7 @@ func (c *ServiceHTTPClientImpl) PageTemplate(ctx context.Context, in *PageTempla
 
 func (c *ServiceHTTPClientImpl) ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...http.CallOption) (*ParseTemplateReply, error) {
 	var out ParseTemplateReply
-	pattern := "/configure/v1/template/parse/{env_keyword}"
+	pattern := "/configure/v1/template/parse"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceParseTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -1338,7 +1331,7 @@ func (c *ServiceHTTPClientImpl) ParseTemplate(ctx context.Context, in *ParseTemp
 
 func (c *ServiceHTTPClientImpl) ParseTemplatePreview(ctx context.Context, in *ParseTemplatePreviewRequest, opts ...http.CallOption) (*ParseTemplatePreviewReply, error) {
 	var out ParseTemplatePreviewReply
-	pattern := "/configure/v1/template/preview/{env_keyword}"
+	pattern := "/configure/v1/template/preview"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceParseTemplatePreview))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -1362,11 +1355,11 @@ func (c *ServiceHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Em
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) ResetEnvironmentToken(ctx context.Context, in *ResetEnvironmentTokenRequest, opts ...http.CallOption) (*ResetEnvironmentTokenReply, error) {
-	var out ResetEnvironmentTokenReply
-	pattern := "/configure/v1/environment/token"
+func (c *ServiceHTTPClientImpl) ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...http.CallOption) (*ResetEnvTokenReply, error) {
+	var out ResetEnvTokenReply
+	pattern := "/configure/v1/env/token"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationServiceResetEnvironmentToken))
+	opts = append(opts, http.Operation(OperationServiceResetEnvToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
@@ -1416,7 +1409,7 @@ func (c *ServiceHTTPClientImpl) UpdateBusinessValue(ctx context.Context, in *Upd
 
 func (c *ServiceHTTPClientImpl) UpdateConfigure(ctx context.Context, in *UpdateConfigureRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/configure/v1/configure/{env_keyword}"
+	pattern := "/configure/v1/configure"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceUpdateConfigure))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -1427,11 +1420,11 @@ func (c *ServiceHTTPClientImpl) UpdateConfigure(ctx context.Context, in *UpdateC
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) UpdateEnvironment(ctx context.Context, in *UpdateEnvironmentRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+func (c *ServiceHTTPClientImpl) UpdateEnv(ctx context.Context, in *UpdateEnvRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/configure/v1/environment"
+	pattern := "/configure/v1/env"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationServiceUpdateEnvironment))
+	opts = append(opts, http.Operation(OperationServiceUpdateEnv))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

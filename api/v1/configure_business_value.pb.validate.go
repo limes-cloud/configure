@@ -456,7 +456,7 @@ func (m *AllBusinessValueReply_BusinessValue) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for EnvironmentId
+	// no validation rules for EnvId
 
 	// no validation rules for BusinessId
 
@@ -572,9 +572,9 @@ func (m *UpdateBusinessValueRequest_BusinessValue) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetEnvironmentId() <= 0 {
+	if m.GetEnvId() <= 0 {
 		err := UpdateBusinessValueRequest_BusinessValueValidationError{
-			field:  "EnvironmentId",
+			field:  "EnvId",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -586,17 +586,6 @@ func (m *UpdateBusinessValueRequest_BusinessValue) validate(all bool) error {
 	if utf8.RuneCountInString(m.GetValue()) < 1 {
 		err := UpdateBusinessValueRequest_BusinessValueValidationError{
 			field:  "Value",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
-		err := UpdateBusinessValueRequest_BusinessValueValidationError{
-			field:  "EnvKeyword",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {

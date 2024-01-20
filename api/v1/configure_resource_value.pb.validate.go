@@ -456,11 +456,11 @@ func (m *AllResourceValueReply_ResourceValue) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for EnvironmentId
+	// no validation rules for EnvId
 
 	// no validation rules for ResourceId
 
-	// no validation rules for Values
+	// no validation rules for Value
 
 	// no validation rules for CreatedAt
 
@@ -570,9 +570,9 @@ func (m *UpdateResourceValueRequest_ResourceValue) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetEnvironmentId() <= 0 {
+	if m.GetEnvId() <= 0 {
 		err := UpdateResourceValueRequest_ResourceValueValidationError{
-			field:  "EnvironmentId",
+			field:  "EnvId",
 			reason: "value must be greater than 0",
 		}
 		if !all {
@@ -581,21 +581,10 @@ func (m *UpdateResourceValueRequest_ResourceValue) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetValues()) < 7 {
+	if utf8.RuneCountInString(m.GetValue()) < 7 {
 		err := UpdateResourceValueRequest_ResourceValueValidationError{
-			field:  "Values",
+			field:  "Value",
 			reason: "value length must be at least 7 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
-		err := UpdateResourceValueRequest_ResourceValueValidationError{
-			field:  "EnvKeyword",
-			reason: "value length must be at least 1 runes",
 		}
 		if !all {
 			return err

@@ -68,10 +68,10 @@ func (m *GetConfigureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 0 {
+	if m.GetEnvId() <= 0 {
 		err := GetConfigureRequestValidationError{
-			field:  "EnvKeyword",
-			reason: "value length must be at least 0 runes",
+			field:  "EnvId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err
@@ -185,7 +185,7 @@ func (m *GetConfigureReply) validate(all bool) error {
 
 	// no validation rules for ServerId
 
-	// no validation rules for EnvironmentId
+	// no validation rules for EnvId
 
 	// no validation rules for Content
 
@@ -310,10 +310,10 @@ func (m *CompareConfigureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+	if m.GetEnvId() <= 0 {
 		err := CompareConfigureRequestValidationError{
-			field:  "EnvKeyword",
-			reason: "value length must be at least 1 runes",
+			field:  "EnvId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err
@@ -680,10 +680,10 @@ func (m *UpdateConfigureRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+	if m.GetEnvId() <= 0 {
 		err := UpdateConfigureRequestValidationError{
-			field:  "EnvKeyword",
-			reason: "value length must be at least 1 runes",
+			field:  "EnvId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err

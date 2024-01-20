@@ -560,34 +560,23 @@ func (m *CurrentTemplateReply) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetTemplate()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, CurrentTemplateReplyValidationError{
-					field:  "Template",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, CurrentTemplateReplyValidationError{
-					field:  "Template",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetTemplate()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return CurrentTemplateReplyValidationError{
-				field:  "Template",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for Id
+
+	// no validation rules for ServerId
+
+	// no validation rules for Description
+
+	// no validation rules for Version
+
+	// no validation rules for Format
+
+	// no validation rules for IsUse
+
+	// no validation rules for Compare
+
+	// no validation rules for Content
+
+	// no validation rules for CreatedAt
 
 	if len(errors) > 0 {
 		return CurrentTemplateReplyMultiError(errors)
@@ -1212,10 +1201,10 @@ func (m *ParseTemplatePreviewRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+	if m.GetEnvId() <= 0 {
 		err := ParseTemplatePreviewRequestValidationError{
-			field:  "EnvKeyword",
-			reason: "value length must be at least 1 runes",
+			field:  "EnvId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err
@@ -1490,10 +1479,10 @@ func (m *ParseTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetEnvKeyword()) < 1 {
+	if m.GetEnvId() <= 0 {
 		err := ParseTemplateRequestValidationError{
-			field:  "EnvKeyword",
-			reason: "value length must be at least 1 runes",
+			field:  "EnvId",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err

@@ -29,7 +29,7 @@ message PageBusinessReply {
 
 // 新增业务key
 message AddBusinessRequest {
-  uint32  server_id = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 server_id = 1[(validate.rules).uint32 = {gt: 0}];
   string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
   string type = 4[(validate.rules).string = {min_len: 1, max_len: 12}];
