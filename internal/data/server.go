@@ -59,6 +59,10 @@ func (s *serverRepo) PageServer(ctx kratosx.Context, req *types.PageServerReques
 			if req.Keyword != nil {
 				db = db.Where("keyword like ?", *req.Keyword+"%")
 			}
+			if req.IsBusiness != nil {
+				db = db.Where("is_business=?", *req.IsBusiness)
+
+			}
 			return db
 		},
 	})

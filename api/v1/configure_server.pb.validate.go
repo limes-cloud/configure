@@ -193,6 +193,10 @@ func (m *PageServerRequest) validate(all bool) error {
 		// no validation rules for Keyword
 	}
 
+	if m.IsBusiness != nil {
+		// no validation rules for IsBusiness
+	}
+
 	if len(errors) > 0 {
 		return PageServerRequestMultiError(errors)
 	}
@@ -695,6 +699,8 @@ func (m *AddServerRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	// no validation rules for IsBusiness
+
 	if len(errors) > 0 {
 		return AddServerRequestMultiError(errors)
 	}
@@ -838,6 +844,8 @@ func (m *UpdateServerRequest) validate(all bool) error {
 		}
 		errors = append(errors, err)
 	}
+
+	// no validation rules for IsBusiness
 
 	if len(errors) > 0 {
 		return UpdateServerRequestMultiError(errors)

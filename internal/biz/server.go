@@ -10,6 +10,7 @@ import (
 
 type Server struct {
 	ktypes.BaseModel
+	IsBusiness  *bool  `json:"is_business" gorm:"not null;comment:是否为业务应用"`
 	Keyword     string `json:"keyword" gorm:"not null;type:char(32) binary;comment:服务标识"`
 	Name        string `json:"name" gorm:"not null;size:64;comment:服务名称"`
 	Description string `json:"description" gorm:"not null;size:128;comment:服务描述"`
