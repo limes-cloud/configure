@@ -71,7 +71,7 @@ func (s *Service) AllResourceServer(ctx context.Context, in *v1.AllResourceServe
 	if err != nil {
 		return nil, err
 	}
-	envs, err := s.EnvUseCase.GetByIds(kCtx, ids)
+	envs, err := s.ServerUseCase.GetByIds(kCtx, ids)
 	if err != nil {
 		return nil, err
 	}
@@ -98,6 +98,7 @@ func (s *Service) PageServerResource(ctx context.Context, in *v1.PageServerResou
 	if err := copier.Copy(&reply.List, list); err != nil {
 		return nil, v1.TransformError()
 	}
+
 	return &reply, nil
 }
 

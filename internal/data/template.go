@@ -1,11 +1,12 @@
 package data
 
 import (
+	"github.com/limes-cloud/configure/internal/biz/types"
 	"gorm.io/gorm"
 
 	"github.com/limes-cloud/configure/internal/biz"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/types"
+	ktypes "github.com/limes-cloud/kratosx/types"
 )
 
 type templateRepo struct {
@@ -48,7 +49,7 @@ func (s *templateRepo) GetByVersion(ctx kratosx.Context, keyword string) (*biz.T
 }
 
 // Page 查询分页模板
-func (s *templateRepo) Page(ctx kratosx.Context, options *types.PageOptions) ([]*biz.Template, uint32, error) {
+func (s *templateRepo) Page(ctx kratosx.Context, options *ktypes.PageOptions) ([]*biz.Template, uint32, error) {
 	var list []*biz.Template
 	var total int64
 
@@ -61,13 +62,23 @@ func (s *templateRepo) Page(ctx kratosx.Context, options *types.PageOptions) ([]
 		return nil, uint32(total), err
 	}
 
-	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
+	db = db.Offset(int((options.Page - 1) * options.PageSize)).Order("created_at desc").Limit(int(options.PageSize))
 
 	return list, uint32(total), db.Find(&list).Error
 }
 
+func (s templateRepo) PageServerTemplate(ctx kratosx.Context, req *types.PageTemplateRequest) ([]*biz.Template, uint32, error) {
+	return s.Page(ctx, &ktypes.PageOptions{
+		Page:     req.Page,
+		PageSize: req.PageSize,
+		Scopes: func(db *gorm.DB) *gorm.DB {
+			return db.Where("server_id=?", req.ServerID)
+		},
+	})
+}
+
 // All 查询全部模板
-func (s *templateRepo) All(ctx kratosx.Context, scopes types.Scopes) ([]*biz.Template, error) {
+func (s *templateRepo) All(ctx kratosx.Context, scopes ktypes.Scopes) ([]*biz.Template, error) {
 	var list []*biz.Template
 
 	db := ctx.DB().Model(biz.Template{})

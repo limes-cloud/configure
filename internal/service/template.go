@@ -44,7 +44,7 @@ func (s *Service) PageTemplate(ctx context.Context, in *v1.PageTemplateRequest) 
 		return nil, v1.TransformError()
 	}
 
-	templates, total, err := s.TemplateUseCase.Page(kratosx.MustContext(ctx), req)
+	templates, total, err := s.TemplateUseCase.PageServerTemplate(kratosx.MustContext(ctx), req)
 	if err != nil {
 		return nil, err
 	}

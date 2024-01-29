@@ -14,7 +14,6 @@ import (
 	"github.com/limes-cloud/configure/internal/biz/types"
 	"github.com/limes-cloud/kratosx"
 	ktypes "github.com/limes-cloud/kratosx/types"
-	"gorm.io/gorm"
 )
 
 const (
@@ -39,7 +38,7 @@ type TemplateRepo interface {
 	Get(ctx kratosx.Context, id uint32) (*Template, error)
 	GetByVersion(ctx kratosx.Context, version string) (*Template, error)
 	Current(ctx kratosx.Context, srvId uint32) (*Template, error)
-	Page(ctx kratosx.Context, options *ktypes.PageOptions) ([]*Template, uint32, error)
+	PageServerTemplate(ctx kratosx.Context, options *types.PageTemplateRequest) ([]*Template, uint32, error)
 	All(ctx kratosx.Context, options ktypes.Scopes) ([]*Template, error)
 	Create(ctx kratosx.Context, c *Template) (uint32, error)
 	Update(ctx kratosx.Context, c *Template) error
@@ -76,15 +75,9 @@ func (t *TemplateUseCase) Get(ctx kratosx.Context, id uint32) (*Template, error)
 	return template, nil
 }
 
-// Page 获取分页模板信息
-func (t *TemplateUseCase) Page(ctx kratosx.Context, req *types.PageTemplateRequest) ([]*Template, uint32, error) {
-	list, total, err := t.tpRepo.Page(ctx, &ktypes.PageOptions{
-		Page:     req.Page,
-		PageSize: req.PageSize,
-		Scopes: func(db *gorm.DB) *gorm.DB {
-			return db.Where("server_id=?", req.ServerID)
-		},
-	})
+// PageServerTemplate 获取分页模板信息
+func (t *TemplateUseCase) PageServerTemplate(ctx kratosx.Context, req *types.PageTemplateRequest) ([]*Template, uint32, error) {
+	list, total, err := t.tpRepo.PageServerTemplate(ctx, req)
 	if err != nil {
 		return nil, 0, v1.DatabaseErrorFormat(err.Error())
 	}
@@ -130,11 +123,13 @@ func (t *TemplateUseCase) Add(ctx kratosx.Context, template *Template) (uint32, 
 	}
 
 	// 数据入库
-	template.IsUse = true
 	id, err := t.tpRepo.Create(ctx, template)
 	if err != nil {
 		return 0, v1.DatabaseErrorFormat(err.Error())
 	}
+
+	// 使用当前配置
+	_ = t.tpRepo.Use(ctx, template.ServerID, id)
 	return id, nil
 }
 

@@ -10,7 +10,6 @@ import (
 
 type Server struct {
 	ktypes.BaseModel
-	IsBusiness  *bool  `json:"is_business" gorm:"not null;comment:是否为业务应用"`
 	Keyword     string `json:"keyword" gorm:"not null;type:char(32) binary;comment:服务标识"`
 	Name        string `json:"name" gorm:"not null;size:64;comment:服务名称"`
 	Description string `json:"description" gorm:"not null;size:128;comment:服务描述"`
@@ -19,6 +18,7 @@ type Server struct {
 type ServerRepo interface {
 	Get(ctx kratosx.Context, id uint32) (*Server, error)
 	GetByKeyword(ctx kratosx.Context, key string) (*Server, error)
+	GetByIds(ctx kratosx.Context, ids []uint32) ([]*Server, error)
 	PageServer(ctx kratosx.Context, req *types.PageServerRequest) ([]*Server, uint32, error)
 	All(ctx kratosx.Context, options ktypes.Scopes) ([]*Server, error)
 	Create(ctx kratosx.Context, c *Server) (uint32, error)
@@ -36,8 +36,8 @@ func NewServerUseCase(config *config.Config, repo ServerRepo) *ServerUseCase {
 }
 
 // Get 获取指定服务信息
-func (u *ServerUseCase) Get(ctx kratosx.Context, id uint32) (*Server, error) {
-	server, err := u.repo.Get(ctx, id)
+func (s *ServerUseCase) Get(ctx kratosx.Context, id uint32) (*Server, error) {
+	server, err := s.repo.Get(ctx, id)
 	if err != nil {
 		return nil, v1.NotRecordError()
 	}
@@ -45,8 +45,8 @@ func (u *ServerUseCase) Get(ctx kratosx.Context, id uint32) (*Server, error) {
 }
 
 // GetByKeyword 获取指定标识的服务信息
-func (u *ServerUseCase) GetByKeyword(ctx kratosx.Context, keyword string) (*Server, error) {
-	server, err := u.repo.GetByKeyword(ctx, keyword)
+func (s *ServerUseCase) GetByKeyword(ctx kratosx.Context, keyword string) (*Server, error) {
+	server, err := s.repo.GetByKeyword(ctx, keyword)
 	if err != nil {
 		return nil, v1.NotRecordError()
 	}
@@ -54,8 +54,8 @@ func (u *ServerUseCase) GetByKeyword(ctx kratosx.Context, keyword string) (*Serv
 }
 
 // Page 获取分页服务信息
-func (u *ServerUseCase) Page(ctx kratosx.Context, req *types.PageServerRequest) ([]*Server, uint32, error) {
-	list, total, err := u.repo.PageServer(ctx, req)
+func (s *ServerUseCase) Page(ctx kratosx.Context, req *types.PageServerRequest) ([]*Server, uint32, error) {
+	list, total, err := s.repo.PageServer(ctx, req)
 	if err != nil {
 		return nil, 0, v1.DatabaseErrorFormat(err.Error())
 	}
@@ -63,8 +63,8 @@ func (u *ServerUseCase) Page(ctx kratosx.Context, req *types.PageServerRequest) 
 }
 
 // Add 添加服务信息
-func (u *ServerUseCase) Add(ctx kratosx.Context, server *Server) (uint32, error) {
-	id, err := u.repo.Create(ctx, server)
+func (s *ServerUseCase) Add(ctx kratosx.Context, server *Server) (uint32, error) {
+	id, err := s.repo.Create(ctx, server)
 	if err != nil {
 		return 0, v1.DatabaseErrorFormat(err.Error())
 	}
@@ -72,17 +72,26 @@ func (u *ServerUseCase) Add(ctx kratosx.Context, server *Server) (uint32, error)
 }
 
 // Update 更新服务信息
-func (u *ServerUseCase) Update(ctx kratosx.Context, server *Server) error {
-	if err := u.repo.Update(ctx, server); err != nil {
+func (s *ServerUseCase) Update(ctx kratosx.Context, server *Server) error {
+	if err := s.repo.Update(ctx, server); err != nil {
 		return v1.DatabaseErrorFormat(err.Error())
 	}
 	return nil
 }
 
 // Delete 删除服务信息
-func (u *ServerUseCase) Delete(ctx kratosx.Context, id uint32) error {
-	if err := u.repo.Delete(ctx, id); err != nil {
+func (s *ServerUseCase) Delete(ctx kratosx.Context, id uint32) error {
+	if err := s.repo.Delete(ctx, id); err != nil {
 		return v1.DatabaseErrorFormat(err.Error())
 	}
 	return nil
+}
+
+// GetByIds 查询所有环境
+func (s *ServerUseCase) GetByIds(ctx kratosx.Context, ids []uint32) ([]*Server, error) {
+	srvs, err := s.repo.GetByIds(ctx, ids)
+	if err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+	return srvs, nil
 }

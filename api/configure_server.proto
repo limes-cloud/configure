@@ -17,7 +17,6 @@ message PageServerRequest{
     uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
     uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
     optional string keyword = 3;
-    optional bool is_business = 4;
 }
 
 message PageServerReply {
@@ -38,7 +37,9 @@ message AddServerRequest {
   string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
-  bool is_business = 4;
+  optional bool is_business = 4;
+  optional string logo = 5;
+  optional bool allow_registry = 6;
 }
 
 // 修改环境
@@ -47,7 +48,6 @@ message UpdateServerRequest {
   string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 3[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
-  bool is_business = 5;
 }
 
 // 删除环境

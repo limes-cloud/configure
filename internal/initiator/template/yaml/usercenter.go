@@ -43,6 +43,90 @@ database:
       maxIdleConn: 10 #最大空闲数量
       logLevel: 4 #日志等级
       slowThreshold: 2s #慢sql阈值
-
-
+redis:
+  cache:
+    enable: true
+    host: ${Redis.Host}:${Redis.Port}
+    username: ${Redis.Username}
+    password: ${Redis.Password}
+captcha:
+  loginImage:
+    type: image
+    length: 6
+    expire: 180s
+    redis: cache
+    height: 80
+    width: 200
+    skew: 0.7
+    dotCount: 80
+    refresh: true
+  bindImage:
+    type: image
+    length: 6
+    expire: 180s
+    redis: cache
+    height: 80
+    width: 200
+    skew: 0.7
+    dotCount: 80
+    refresh: true
+  registerImage:
+    type: image
+    length: 6
+    expire: 180s
+    redis: cache
+    height: 80
+    width: 200
+    skew: 0.7
+    dotCount: 80
+    refresh: true
+  loginEmail:
+    type: email
+    length: 6
+    expire: 180s
+    redis: cache
+    template: login
+  bindEmail:
+    type: email
+    length: 6
+    expire: 180s
+    redis: cache
+    template: bind
+  registerEmail:
+    type: email
+    length: 6
+    expire: 180s
+    redis: cache
+    template: register
+loader:
+  password: static/cert/password.pem
+email:
+  template:
+    login:
+      subject: 登录验证码发送通知
+      path: static/template/email/default.html
+      type: text/html
+    bind:
+      subject: 绑定验证码发送通知
+      path: static/template/email/default.html
+      type: text/html
+    register:
+      subject: 注册验证码发送通知
+      path: static/template/email/default.html
+      type: text/html
+  user: ${Email.Username}
+  name: ${Email.Company}
+  host: ${Email.Host}
+  port: ${Email.Port}
+  password: ${Email.Password}
+jwt:
+  redis: cache
+  prefix: /user-center/admin/
+  secret: ${ClientJwt.Secret}
+  expire: ${ClientJwt.Expire}
+  renewal: ${ClientJwt.Renewal}
+  whitelist: ${ClientJwt.Whitelist}
+business:
+  service:
+    resource: ${ResourceServer.Host}:${ResourceServer.GrpcPort}
 `

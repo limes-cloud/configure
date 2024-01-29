@@ -89,3 +89,8 @@ func (s *serverRepo) Update(ctx kratosx.Context, server *biz.Server) error {
 func (s *serverRepo) Delete(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(biz.Server{}, "id = ?", id).Error
 }
+
+func (u *serverRepo) GetByIds(ctx kratosx.Context, ids []uint32) ([]*biz.Server, error) {
+	var list []*biz.Server
+	return list, ctx.DB().Model(biz.Server{}).Where("id in ?", ids).Find(&list).Error
+}

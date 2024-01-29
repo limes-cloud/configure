@@ -60,7 +60,7 @@ endpoints:
           whiteList:
             - path: /resource/v1/static/*
               method: GET
-  - path: /user-center/*
+  - path: /user-center/admin/*
     timeout: ${UserCenterServer.Timeout}
     protocol: HTTP
     responseFormat: true
@@ -71,6 +71,20 @@ endpoints:
         options:
           url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth
           method: POST
+  - path: /user-center/client/*
+    timeout: ${UserCenterServer.Timeout}
+    protocol: HTTP
+    responseFormat: true
+    backends:
+      - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}
+    middlewares:
+      - name: auth
+        options:
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
+          method: POST
+          whiteList:
+            - path: /user-center/client/v1/auth
+              method: POST
   - path: /party-affairs/admin/*
     timeout: ${PartyAffairsServer.Timeout}
     protocol: HTTP
@@ -91,6 +105,6 @@ endpoints:
     middlewares:
       - name: auth
         options:
-          url: http://localhost:${GatewayServer.HttpPort}/user-center/v1/auth
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
           method: POST
 `
