@@ -77,14 +77,6 @@ endpoints:
     responseFormat: true
     backends:
       - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}
-    middlewares:
-      - name: auth
-        options:
-          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
-          method: POST
-          whiteList:
-            - path: /user-center/client/v1/auth
-              method: POST
   - path: /party-affairs/admin/*
     timeout: ${PartyAffairsServer.Timeout}
     protocol: HTTP
