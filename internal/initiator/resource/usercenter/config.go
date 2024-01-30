@@ -39,8 +39,8 @@ var UserCenter = []*biz.Resource{
 				EnvID: env.PROD,
 				Value: util.MarshalString(map[string]any{
 					"Host":     "127.0.0.1",
-					"HttpPort": 7003,
-					"GrpcPort": 8003,
+					"HttpPort": 7004,
+					"GrpcPort": 8004,
 					"Timeout":  "10s",
 				}),
 			},
