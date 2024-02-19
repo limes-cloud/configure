@@ -1,10 +1,10 @@
 package jwt
 
 import (
-	"github.com/limes-cloud/configure/internal/initiator/env"
 	"google.golang.org/protobuf/proto"
 
 	"github.com/limes-cloud/configure/internal/biz"
+	"github.com/limes-cloud/configure/internal/initiator/env"
 	"github.com/limes-cloud/configure/pkg/util"
 )
 
@@ -23,10 +23,13 @@ var Resources = []*biz.Resource{
 					"Expire":  "2h",
 					"Renewal": "120s",
 					"Whitelist": map[string]bool{
-						"GET:/manager/v1/setting":        true,
-						"POST:/manager/v1/login/captcha": true,
-						"POST:/manager/v1/login":         true,
-						"POST:/manager/v1/token/refresh": true,
+						"GET:/manager/v1/setting":                 true,
+						"POST:/manager/v1/login/captcha":          true,
+						"POST:/manager/v1/login":                  true,
+						"POST:/manager/v1/token/refresh":          true,
+						"GET:/manager/client/v1/dict/value":       true,
+						"POST:/resource/client/v1/upload/prepare": true,
+						"POST:/resource/client/v1/upload":         true,
 					},
 				}),
 			},
@@ -37,10 +40,13 @@ var Resources = []*biz.Resource{
 					"Expire":  "2h",
 					"Renewal": "120s",
 					"Whitelist": map[string]bool{
-						"GET:/manager/v1/setting":        true,
-						"POST:/manager/v1/login/captcha": true,
-						"POST:/manager/v1/login":         true,
-						"POST:/manager/v1/token/refresh": true,
+						"GET:/manager/v1/setting":                 true,
+						"POST:/manager/v1/login/captcha":          true,
+						"POST:/manager/v1/login":                  true,
+						"POST:/manager/v1/token/refresh":          true,
+						"GET:/manager/client/v1/dict/value":       true,
+						"POST:/resource/client/v1/upload/prepare": true,
+						"POST:/resource/client/v1/upload":         true,
 					},
 				}),
 			},
@@ -75,7 +81,6 @@ var Resources = []*biz.Resource{
 					"Expire":  "2h",
 					"Renewal": "360s",
 					"Whitelist": map[string]bool{
-						"POST:/user-center/client/v1/auth":                   true,
 						"GET:/user-center/client/v1/scene":                   true,
 						"GET:/user-center/client/v1/agreement":               true,
 						"GET:/user-center/client/v1/app":                     true,
@@ -92,6 +97,9 @@ var Resources = []*biz.Resource{
 						"POST:/user-center/client/v1/login/password":         true,
 						"POST:/user-center/client/v1/bind/password":          true,
 						"POST:/user-center/client/v1/register/password":      true,
+						"POST:/resource/client/v1/upload/prepare":            true,
+						"POST:/resource/client/v1/upload":                    true,
+						"GET:/manager/client/v1/dict/value":                  true,
 					},
 				}),
 			},
@@ -102,7 +110,6 @@ var Resources = []*biz.Resource{
 					"Expire":  "2h",
 					"Renewal": "360s",
 					"Whitelist": map[string]bool{
-						"POST:/user-center/client/v1/auth":                   true,
 						"GET:/user-center/client/v1/scene":                   true,
 						"GET:/user-center/client/v1/agreement":               true,
 						"GET:/user-center/client/v1/app":                     true,
@@ -119,6 +126,9 @@ var Resources = []*biz.Resource{
 						"POST:/user-center/client/v1/login/password":         true,
 						"POST:/user-center/client/v1/bind/password":          true,
 						"POST:/user-center/client/v1/register/password":      true,
+						"POST:/resource/client/v1/upload/prepare":            true,
+						"POST:/resource/client/v1/upload":                    true,
+						"GET:/manager/client/v1/dict/value":                  true,
 					},
 				}),
 			},
@@ -129,7 +139,6 @@ var Resources = []*biz.Resource{
 					"Expire":  "2h",
 					"Renewal": "360s",
 					"Whitelist": map[string]bool{
-						"POST:/user-center/client/v1/auth":                   true,
 						"GET:/user-center/client/v1/scene":                   true,
 						"GET:/user-center/client/v1/agreement":               true,
 						"GET:/user-center/client/v1/app":                     true,
@@ -146,6 +155,9 @@ var Resources = []*biz.Resource{
 						"POST:/user-center/client/v1/login/password":         true,
 						"POST:/user-center/client/v1/bind/password":          true,
 						"POST:/user-center/client/v1/register/password":      true,
+						"POST:/resource/client/v1/upload/prepare":            true,
+						"POST:/resource/client/v1/upload":                    true,
+						"GET:/manager/client/v1/dict/value":                  true,
 					},
 				}),
 			},

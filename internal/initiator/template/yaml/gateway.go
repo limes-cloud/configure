@@ -29,12 +29,23 @@ middlewares:
   - name: logging
   - name: transcoder
 endpoints:
-  - path: /manager/*
+  - path: /manager/v1/*
     timeout: ${ManagerServer.Timeout}
     protocol: HTTP
     responseFormat: true
     backends:
       - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}
+  - path: /manager/client/*
+    timeout: ${ManagerServer.Timeout}
+    protocol: HTTP
+    responseFormat: true
+    backends:
+      - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}
+    middlewares:
+      - name: auth
+        options:
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
+          method: POST
   - path: /configure/*
     timeout: ${ConfigureServer.Timeout}
     protocol: HTTP
@@ -46,7 +57,7 @@ endpoints:
         options:
           url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth
           method: POST
-  - path: /resource/*
+  - path: /resource/v1/*
     timeout: ${ResourceServer.Timeout}
     protocol: HTTP
     responseFormat: true
@@ -60,6 +71,17 @@ endpoints:
           whiteList:
             - path: /resource/v1/static/*
               method: GET
+  - path: /resource/client/*
+    timeout: ${ResourceServer.Timeout}
+    protocol: HTTP
+    responseFormat: true
+    backends:
+      - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}
+    middlewares:
+      - name: auth
+        options:
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
+          method: POST
   - path: /user-center/admin/*
     timeout: ${UserCenterServer.Timeout}
     protocol: HTTP

@@ -3,20 +3,18 @@ package data
 import (
 	"errors"
 
-	"github.com/limes-cloud/configure/internal/biz/types"
-
+	"github.com/limes-cloud/kratosx"
+	ktypes "github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 
 	"github.com/limes-cloud/configure/internal/biz"
-	"github.com/limes-cloud/kratosx"
-	ktypes "github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/configure/internal/biz/types"
 )
 
 type businessRepo struct {
 }
 
 func NewBusinessRepo() biz.BusinessRepo {
-
 	return &businessRepo{}
 }
 
@@ -77,7 +75,7 @@ func (s *businessRepo) PageServerBusiness(ctx kratosx.Context, req *types.PageSe
 // AllServerBusiness 查询指定服务的全部业务变量
 func (s *businessRepo) AllServerBusiness(ctx kratosx.Context, srvId uint32) ([]*biz.Business, error) {
 	var list []*biz.Business
-	return list, ctx.DB().Model(s).Where("server_id=?", srvId).Find(&list).Error
+	return list, ctx.DB().Model(biz.Business{}).Where("server_id=?", srvId).Find(&list).Error
 }
 
 // Update 更新指定id的业务变量
