@@ -91,6 +91,6 @@ authentication:
   roleKey: role_keyword
   skipRole: ${AuthSkipRoles}
 business:
-  defaultPassword: ${DefaultUserPassword}
+  defaultUserPassword: ${DefaultUserPassword}
   setting: ${Setting}
 `
