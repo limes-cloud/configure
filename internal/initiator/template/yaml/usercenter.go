@@ -126,15 +126,6 @@ jwt:
   expire: ${ClientJwt.Expire}
   renewal: ${ClientJwt.Renewal}
   whitelist: ${ClientJwt.Whitelist}
-authentication:
-  db: system
-  redis: cache
-  roleKey: app_keyword
-  whitelist: 
-    GET:/user-center/client/v1/user: true
-    PUT:/user-center/client/v1/user: true
-    POST:/user-center/client/v1/auth: true
-    GET:/user-center/client/v1/extra-fields: true
 business:
   service:
     resource: ${ResourceServer.Host}:${ResourceServer.GrpcPort}

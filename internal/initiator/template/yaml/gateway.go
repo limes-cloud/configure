@@ -44,7 +44,7 @@ endpoints:
     middlewares:
       - name: auth
         options:
-          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse
           method: POST
   - path: /configure/*
     timeout: ${ConfigureServer.Timeout}
@@ -80,7 +80,7 @@ endpoints:
     middlewares:
       - name: auth
         options:
-          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse
           method: POST
   - path: /user-center/admin/*
     timeout: ${UserCenterServer.Timeout}
@@ -119,6 +119,6 @@ endpoints:
     middlewares:
       - name: auth
         options:
-          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/v1/auth
+          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse
           method: POST
 `

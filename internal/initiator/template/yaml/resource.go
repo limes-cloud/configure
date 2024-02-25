@@ -41,7 +41,7 @@ database:
       maxLifetime: 2h #最大生存时间
       maxOpenConn: 20 #最大连接数量
       maxIdleConn: 10 #最大空闲数量
-      logLevel: 4 #日志等级
+      logLevel: 3 #日志等级
       slowThreshold: 2s #慢sql阈值
 file:
   storage: local
