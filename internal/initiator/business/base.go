@@ -84,7 +84,7 @@ var businessValues = []*biz.BusinessValue{
 			Type:        "int",
 			Description: "最大切片数量",
 		},
-		Value: fmt.Sprint(20),
+		Value: fmt.Sprint(200),
 	},
 	{
 		Business: &biz.Business{
@@ -93,7 +93,7 @@ var businessValues = []*biz.BusinessValue{
 			Type:        "int",
 			Description: "单个切片最大大小（M）",
 		},
-		Value: fmt.Sprint(1),
+		Value: fmt.Sprint(200),
 	},
 	{
 		Business: &biz.Business{
@@ -102,6 +102,6 @@ var businessValues = []*biz.BusinessValue{
 			Type:        "int",
 			Description: "单个文件最大大小（M），超过后被切片",
 		},
-		Value: fmt.Sprint(2),
+		Value: fmt.Sprint(400),
 	},
 }
