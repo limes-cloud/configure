@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/limes-cloud/configure/internal/biz/types"
-
 	"github.com/go-kratos/kratos/v2/encoding"
-	v1 "github.com/limes-cloud/configure/api/v1"
-	"github.com/limes-cloud/configure/config"
-	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratosx"
 	ktypes "github.com/limes-cloud/kratosx/types"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/config"
+	"github.com/limes-cloud/configure/internal/biz/types"
+	"github.com/limes-cloud/configure/pkg/util"
 )
 
 type Configure struct {
@@ -38,6 +38,7 @@ type watcher struct {
 	reply types.WatcherConfigReplyFunc
 	close chan string
 }
+
 type ConfigureUseCase struct {
 	config *config.Config
 	repo   ConfigureRepo
@@ -197,8 +198,8 @@ func (u *ConfigureUseCase) Compare(ctx kratosx.Context, req *types.CompareConfig
 	return reply, nil
 }
 
-func (u *ConfigureUseCase) channelKey(srvId, envId uint32) string {
-	return fmt.Sprintf("%v:%v", srvId, envId)
+func (u *ConfigureUseCase) channelKey(envId, srvId uint32) string {
+	return fmt.Sprintf("%v:%v", envId, srvId)
 }
 
 func (u *ConfigureUseCase) Watch(ctx kratosx.Context, req *types.WatcherConfigRequest, reply types.WatcherConfigReplyFunc) error {
@@ -221,11 +222,11 @@ func (u *ConfigureUseCase) Watch(ctx kratosx.Context, req *types.WatcherConfigRe
 	return v1.WatchConfigureErrorFormat(closer)
 }
 
-func (u *ConfigureUseCase) registerWatch(srvId, envId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
+func (u *ConfigureUseCase) registerWatch(envId, srvId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
 	u.mutex.Lock()
 	defer u.mutex.Unlock()
 
-	key := u.channelKey(srvId, envId)
+	key := u.channelKey(envId, srvId)
 	closer := make(chan string, 1)
 	u.rs[key] = append(u.rs[key], watcher{
 		reply: reply,
@@ -238,7 +239,7 @@ func (u *ConfigureUseCase) SendWatcher(in *Configure) {
 	u.mutex.Lock()
 	defer u.mutex.Unlock()
 
-	key := u.channelKey(in.ServerID, in.EnvID)
+	key := u.channelKey(in.EnvID, in.ServerID)
 	for ind := 0; ind < len(u.rs[key]); ind++ {
 		item := u.rs[key][ind]
 		if err := item.reply(&types.WatcherConfigureReply{
