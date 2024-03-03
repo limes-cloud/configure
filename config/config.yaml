@@ -2,7 +2,7 @@ env: TEST
 server:
   http:
     addr: 0.0.0.0:6081
-    timeout: 5s
+    timeout: 10s
     cors:
       allowCredentials: true
       allowOrigins: [ "*" ]
@@ -14,7 +14,7 @@ server:
       useProtoNames: true
   grpc:
     addr: 0.0.0.0:6082
-    timeout: 5s
+    timeout: 10s
 log:
   level: 0 #日志输出等级
   caller: true
