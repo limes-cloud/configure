@@ -23,7 +23,6 @@ FROM alpine
 WORKDIR /go/build
 COPY ./config/config-prod.yaml /go/build/config/config.yaml
 COPY ./static /go/build/static
-COPY ./web/dist /go/build/web/dist
 COPY --from=webbuild /app/dist/ /go/build/prod/dist/
 COPY --from=gobuild /go/build/configure /go/build/configure
 CMD ["./configure"]
