@@ -34,7 +34,7 @@ database:
     connect:
       username: configure
       password: YccB65xmdtwc3BJG
-      host: 127.0.0.1
+      host: inner-master
       port: 3306
       dbName: configure
       option: ?charset=utf8mb4&parseTime=True&loc=Local

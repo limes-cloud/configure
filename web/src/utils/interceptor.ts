@@ -12,10 +12,11 @@ export interface HttpResponse<T = unknown> {
   data: T;
 }
 
-if (import.meta.env.VITE_API_BASE_URL) {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;
+if (import.meta.env.VITE_API_BASE_PORT) {
+  axios.defaults.baseURL = `${window.location.protocol}//${window.location.hostname}${import.meta.env.VITE_API_BASE_PORT}`;
   axios.defaults.withCredentials = false;
   axios.defaults.timeout = 10000;
+
 }
 
 axios.interceptors.request.use(

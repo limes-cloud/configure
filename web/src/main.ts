@@ -36,4 +36,5 @@ app.use(store);
 app.use(globalComponents);
 app.use(directive);
 
+
 app.mount('#app');

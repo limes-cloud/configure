@@ -1,0 +1,13 @@
+version: '3.5'
+services:
+  consul:
+    image: limescloud/configure
+    container_name: configure
+    restart: always
+    ports:
+      - 6080:6080
+      - 6081:6081
+      - 6082:6082
+    volumes:
+      - ./tmp:/go/build/tmp
+      - ./config:/go/build/config

@@ -1,1 +1,0 @@
-import{aE as e}from"./index.b4c32530.js";function u(s){return e.get("/configure/v1/business",{params:{...s}})}function i(s){return e.post("/configure/v1/business",s)}function r(s){return e.put("/configure/v1/business",s)}function t(s){return e.delete("/configure/v1/business",{params:{id:s}})}export{i as a,t as d,u as p,r as u};
