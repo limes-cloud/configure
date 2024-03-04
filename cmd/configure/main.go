@@ -7,10 +7,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/limes-cloud/configure/internal/initiator"
-
-	"github.com/limes-cloud/configure/internal/service"
-
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/go-kratos/kratos/v2"
@@ -23,7 +19,8 @@ import (
 
 	v1 "github.com/limes-cloud/configure/api/v1"
 	systemConfig "github.com/limes-cloud/configure/config"
-	"github.com/limes-cloud/configure/consts"
+	"github.com/limes-cloud/configure/internal/initiator"
+	"github.com/limes-cloud/configure/internal/service"
 	"github.com/limes-cloud/configure/pkg/pt"
 )
 
@@ -61,7 +58,7 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 		}
 	})
 
-	go RegisterWebServer(c, conf)
+	go RegisterWebServer(conf)
 	srv := service.New(conf)
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
@@ -73,15 +70,10 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 	}
 }
 
-func RegisterWebServer(c config.Config, config *systemConfig.Config) {
+func RegisterWebServer(config *systemConfig.Config) {
 	r := gin.Default()
 
-	mode := c.App().Env
-	if c.App().Env != consts.ENV_TEST {
-		gin.SetMode(gin.ReleaseMode)
-	}
-
-	rootPath := fmt.Sprintf("web/dist/%s/", strings.ToLower(mode))
+	rootPath := "web/dist/"
 	r.Use(static.Serve("/", static.LocalFile(rootPath, true)))
 	r.NoRoute(func(c *gin.Context) {
 		accept := c.Request.Header.Get("Accept")
