@@ -4,13 +4,15 @@ var Resource = `
 env: ${Env.Keyword}
 server:
   http:
-    addr: ${ResourceServer.Host}:${ResourceServer.HttpPort}
+    host: ${ResourceServer.Host}
+    port: ${ResourceServer.HttpPort}
     timeout: ${ResourceServer.Timeout}
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: ${ResourceServer.Host}:${ResourceServer.GrpcPort}
+    host: ${ResourceServer.Host}
+    port: ${ResourceServer.GrpcPort}
     timeout: ${ResourceServer.Timeout}
 log:
   level: 0

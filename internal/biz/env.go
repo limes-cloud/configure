@@ -2,11 +2,13 @@ package biz
 
 import (
 	"github.com/google/uuid"
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/manager/api/auth"
+
 	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/configure/config"
 	"github.com/limes-cloud/configure/pkg/util"
-	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/types"
 )
 
 type Env struct {
@@ -23,7 +25,7 @@ type EnvRepo interface {
 	GetByKeyword(ctx kratosx.Context, keyword string) (*Env, error)
 	GetByToken(ctx kratosx.Context, keyword string) (*Env, error)
 	GetByIds(ctx kratosx.Context, ids []uint32) ([]*Env, error)
-	All(ctx kratosx.Context) ([]*Env, error)
+	All(ctx kratosx.Context, scope ...string) ([]*Env, error)
 	Create(ctx kratosx.Context, c *Env) (uint32, error)
 	Update(ctx kratosx.Context, c *Env) error
 	Delete(ctx kratosx.Context, uint322 uint32) error
@@ -76,7 +78,12 @@ func (e *EnvUseCase) GetByToken(ctx kratosx.Context, token string) (*Env, error)
 
 // All 查询所有环境
 func (e *EnvUseCase) All(ctx kratosx.Context) ([]*Env, error) {
-	envs, err := e.repo.All(ctx)
+	var scope []string
+	if info, err := auth.Get(ctx); err == nil && info.Scope["env_scope"] != nil {
+		scope = info.Scope["env_scope"].List
+	}
+
+	envs, err := e.repo.All(ctx, scope...)
 	if err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}

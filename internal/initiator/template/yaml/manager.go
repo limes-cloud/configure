@@ -4,13 +4,15 @@ var Manager = `
 env: ${Env.Keyword}
 server:
   http:
-    addr: ${ManagerServer.Host}:${ManagerServer.HttpPort}
+    host: ${ManagerServer.Host}
+    port: ${ManagerServer.HttpPort}
     timeout: ${ManagerServer.Timeout}
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: ${ManagerServer.Host}:${ManagerServer.GrpcPort}
+    host: ${ManagerServer.Host}
+    port: ${ManagerServer.GrpcPort}
     timeout: ${ManagerServer.Timeout}
 log:
   level: 0
@@ -58,6 +60,7 @@ captcha:
     height: 80
     width: 240
     skew: 0.7
+    refresh: true
     dotCount: 80
   changePassword:
     type: email

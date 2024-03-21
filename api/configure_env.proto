@@ -4,6 +4,7 @@ package configure;
 option go_package = "./v1;v1";
 import "validate/validate.proto";
 
+
 // 获取环境列表
 message AllEnvReply {
   message Env{
@@ -23,6 +24,10 @@ message AddEnvRequest {
   string keyword = 1[(validate.rules).string = {min_len: 1, max_len: 32}];
   string name = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
   string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
+}
+
+message AddEnvReply {
+  uint32 id = 1;
 }
 
 // 修改环境

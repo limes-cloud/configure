@@ -1,9 +1,10 @@
 package data
 
 import (
-	"github.com/limes-cloud/configure/internal/biz"
-
 	"github.com/limes-cloud/kratosx"
+	"gorm.io/gorm"
+
+	"github.com/limes-cloud/configure/internal/biz"
 )
 
 type envRepo struct {
@@ -40,9 +41,14 @@ func (u *envRepo) GetByToken(ctx kratosx.Context, token string) (*biz.Env, error
 	return &ins, ctx.DB().First(&ins, "token=?", token).Error
 }
 
-func (u *envRepo) All(ctx kratosx.Context) ([]*biz.Env, error) {
+func (u *envRepo) All(ctx kratosx.Context, scope ...string) ([]*biz.Env, error) {
 	var list []*biz.Env
-	return list, ctx.DB().Model(biz.Env{}).Find(&list).Error
+	return list, ctx.DB().Model(biz.Env{}).Scopes(func(db *gorm.DB) *gorm.DB {
+		if len(scope) != 0 {
+			return db.Where("id in ?", scope)
+		}
+		return db
+	}).Find(&list).Error
 }
 
 func (u *envRepo) GetByIds(ctx kratosx.Context, ids []uint32) ([]*biz.Env, error) {

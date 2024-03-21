@@ -4,13 +4,15 @@ var PartyAffairs = `
 env: ${Env.Keyword}
 server:
   http:
-    addr: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}
+    host: ${PartyAffairsServer.Host}
+    port: ${PartyAffairsServer.HttpPort}
     timeout: ${PartyAffairsServer.Timeout}
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: ${PartyAffairsServer.Host}:${PartyAffairsServer.GrpcPort}
+    host: ${PartyAffairsServer.Host}
+    port: ${PartyAffairsServer.GrpcPort}
     timeout: ${PartyAffairsServer.Timeout}
 log:
   level: 0

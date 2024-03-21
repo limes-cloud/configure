@@ -3,15 +3,13 @@ package service
 import (
 	"context"
 
-	"github.com/limes-cloud/configure/internal/biz/types"
-
-	"github.com/limes-cloud/configure/internal/biz"
-
 	"github.com/jinzhu/copier"
-
-	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/internal/biz"
+	"github.com/limes-cloud/configure/internal/biz/types"
 )
 
 func (s *Service) GetServer(ctx context.Context, in *v1.GetServerRequest) (*v1.GetServerReply, error) {
@@ -44,13 +42,13 @@ func (s *Service) PageServer(ctx context.Context, in *v1.PageServerRequest) (*v1
 	return &reply, nil
 }
 
-func (s *Service) AddServer(ctx context.Context, in *v1.AddServerRequest) (*emptypb.Empty, error) {
+func (s *Service) AddServer(ctx context.Context, in *v1.AddServerRequest) (*v1.AddServerReply, error) {
 	server := &biz.Server{}
 	if err := copier.Copy(server, in); err != nil {
 		return nil, v1.TransformError()
 	}
-	_, err := s.ServerUseCase.Add(kratosx.MustContext(ctx), server)
-	return nil, err
+	id, err := s.ServerUseCase.Add(kratosx.MustContext(ctx), server)
+	return &v1.AddServerReply{Id: id}, err
 }
 
 func (s *Service) UpdateServer(ctx context.Context, in *v1.UpdateServerRequest) (*emptypb.Empty, error) {

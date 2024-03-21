@@ -4,13 +4,15 @@ var UserCenter = `
 env: ${Env.Keyword}
 server:
   http:
-    addr: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}
+    host: ${UserCenterServer.Host}
+    port: ${UserCenterServer.HttpPort}
     timeout: ${UserCenterServer.Timeout}
     marshal:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: ${UserCenterServer.Host}:${UserCenterServer.GrpcPort}
+    host: ${UserCenterServer.Host}
+    port: ${UserCenterServer.GrpcPort}
     timeout: ${UserCenterServer.Timeout}
 log:
   level: 0

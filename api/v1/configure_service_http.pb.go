@@ -62,9 +62,9 @@ const OperationServiceUpdateServer = "/configure.Service/UpdateServer"
 type ServiceHTTPServer interface {
 	AddBusiness(context.Context, *AddBusinessRequest) (*emptypb.Empty, error)
 	// AddEnv AddEnv 添加环境
-	AddEnv(context.Context, *AddEnvRequest) (*emptypb.Empty, error)
+	AddEnv(context.Context, *AddEnvRequest) (*AddEnvReply, error)
 	AddResource(context.Context, *AddResourceRequest) (*emptypb.Empty, error)
-	AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error)
+	AddServer(context.Context, *AddServerRequest) (*AddServerReply, error)
 	AddTemplate(context.Context, *AddTemplateRequest) (*emptypb.Empty, error)
 	AllBusinessValue(context.Context, *AllBusinessValueRequest) (*AllBusinessValueReply, error)
 	// AllEnv AllEnv 获取全部环境
@@ -227,7 +227,7 @@ func _Service_AddEnv0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context)
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*AddEnvReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -369,7 +369,7 @@ func _Service_AddServer0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Conte
 		if err != nil {
 			return err
 		}
-		reply := out.(*emptypb.Empty)
+		reply := out.(*AddServerReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -931,9 +931,9 @@ func _Service_CompareConfigure0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 
 type ServiceHTTPClient interface {
 	AddBusiness(ctx context.Context, req *AddBusinessRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	AddEnv(ctx context.Context, req *AddEnvRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	AddEnv(ctx context.Context, req *AddEnvRequest, opts ...http.CallOption) (rsp *AddEnvReply, err error)
 	AddResource(ctx context.Context, req *AddResourceRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	AddServer(ctx context.Context, req *AddServerRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	AddServer(ctx context.Context, req *AddServerRequest, opts ...http.CallOption) (rsp *AddServerReply, err error)
 	AddTemplate(ctx context.Context, req *AddTemplateRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AllBusinessValue(ctx context.Context, req *AllBusinessValueRequest, opts ...http.CallOption) (rsp *AllBusinessValueReply, err error)
 	AllEnv(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *AllEnvReply, err error)
@@ -991,8 +991,8 @@ func (c *ServiceHTTPClientImpl) AddBusiness(ctx context.Context, in *AddBusiness
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) AddEnv(ctx context.Context, in *AddEnvRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *ServiceHTTPClientImpl) AddEnv(ctx context.Context, in *AddEnvRequest, opts ...http.CallOption) (*AddEnvReply, error) {
+	var out AddEnvReply
 	pattern := "/configure/v1/env"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceAddEnv))
@@ -1017,8 +1017,8 @@ func (c *ServiceHTTPClientImpl) AddResource(ctx context.Context, in *AddResource
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) AddServer(ctx context.Context, in *AddServerRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
+func (c *ServiceHTTPClientImpl) AddServer(ctx context.Context, in *AddServerRequest, opts ...http.CallOption) (*AddServerReply, error) {
+	var out AddServerReply
 	pattern := "/configure/v1/server"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceAddServer))

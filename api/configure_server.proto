@@ -42,6 +42,10 @@ message AddServerRequest {
   optional bool allow_registry = 6;
 }
 
+message AddServerReply {
+  uint32 id = 1;
+}
+
 // 修改环境
 message UpdateServerRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];

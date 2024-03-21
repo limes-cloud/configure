@@ -41,7 +41,7 @@ service Service {
   }
 
   // AddEnv 添加环境
-  rpc AddEnv (AddEnvRequest) returns (google.protobuf.Empty) {
+  rpc AddEnv (AddEnvRequest) returns (AddEnvReply) {
     option (google.api.http) = {
       post: "/configure/v1/env",
       body:"*",
@@ -91,7 +91,7 @@ service Service {
     };
   }
 
-  rpc AddServer (AddServerRequest) returns (google.protobuf.Empty) {
+  rpc AddServer (AddServerRequest) returns (AddServerReply) {
     option (google.api.http) = {
       post: "/configure/v1/server",
       body:"*"

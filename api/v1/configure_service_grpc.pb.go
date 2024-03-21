@@ -72,7 +72,7 @@ type ServiceClient interface {
 	// AllEnv 获取全部环境
 	AllEnv(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AllEnvReply, error)
 	// AddEnv 添加环境
-	AddEnv(ctx context.Context, in *AddEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddEnv(ctx context.Context, in *AddEnvRequest, opts ...grpc.CallOption) (*AddEnvReply, error)
 	// UpdateEnv 更新环境信息
 	UpdateEnv(ctx context.Context, in *UpdateEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// DeleteEnv 删除环境信息
@@ -83,7 +83,7 @@ type ServiceClient interface {
 	ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...grpc.CallOption) (*ResetEnvTokenReply, error)
 	PageServer(ctx context.Context, in *PageServerRequest, opts ...grpc.CallOption) (*PageServerReply, error)
 	GetServer(ctx context.Context, in *GetServerRequest, opts ...grpc.CallOption) (*GetServerReply, error)
-	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*AddServerReply, error)
 	UpdateServer(ctx context.Context, in *UpdateServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	DeleteServer(ctx context.Context, in *DeleteServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	PageResource(ctx context.Context, in *PageResourceRequest, opts ...grpc.CallOption) (*PageResourceReply, error)
@@ -149,8 +149,8 @@ func (c *serviceClient) AllEnv(ctx context.Context, in *emptypb.Empty, opts ...g
 	return out, nil
 }
 
-func (c *serviceClient) AddEnv(ctx context.Context, in *AddEnvRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *serviceClient) AddEnv(ctx context.Context, in *AddEnvRequest, opts ...grpc.CallOption) (*AddEnvReply, error) {
+	out := new(AddEnvReply)
 	err := c.cc.Invoke(ctx, Service_AddEnv_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -212,8 +212,8 @@ func (c *serviceClient) GetServer(ctx context.Context, in *GetServerRequest, opt
 	return out, nil
 }
 
-func (c *serviceClient) AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *serviceClient) AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*AddServerReply, error) {
+	out := new(AddServerReply)
 	err := c.cc.Invoke(ctx, Service_AddServer_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -507,7 +507,7 @@ type ServiceServer interface {
 	// AllEnv 获取全部环境
 	AllEnv(context.Context, *emptypb.Empty) (*AllEnvReply, error)
 	// AddEnv 添加环境
-	AddEnv(context.Context, *AddEnvRequest) (*emptypb.Empty, error)
+	AddEnv(context.Context, *AddEnvRequest) (*AddEnvReply, error)
 	// UpdateEnv 更新环境信息
 	UpdateEnv(context.Context, *UpdateEnvRequest) (*emptypb.Empty, error)
 	// DeleteEnv 删除环境信息
@@ -518,7 +518,7 @@ type ServiceServer interface {
 	ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error)
 	PageServer(context.Context, *PageServerRequest) (*PageServerReply, error)
 	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
-	AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error)
+	AddServer(context.Context, *AddServerRequest) (*AddServerReply, error)
 	UpdateServer(context.Context, *UpdateServerRequest) (*emptypb.Empty, error)
 	DeleteServer(context.Context, *DeleteServerRequest) (*emptypb.Empty, error)
 	PageResource(context.Context, *PageResourceRequest) (*PageResourceReply, error)
@@ -563,7 +563,7 @@ func (UnimplementedServiceServer) RefreshToken(context.Context, *emptypb.Empty) 
 func (UnimplementedServiceServer) AllEnv(context.Context, *emptypb.Empty) (*AllEnvReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AllEnv not implemented")
 }
-func (UnimplementedServiceServer) AddEnv(context.Context, *AddEnvRequest) (*emptypb.Empty, error) {
+func (UnimplementedServiceServer) AddEnv(context.Context, *AddEnvRequest) (*AddEnvReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddEnv not implemented")
 }
 func (UnimplementedServiceServer) UpdateEnv(context.Context, *UpdateEnvRequest) (*emptypb.Empty, error) {
@@ -584,7 +584,7 @@ func (UnimplementedServiceServer) PageServer(context.Context, *PageServerRequest
 func (UnimplementedServiceServer) GetServer(context.Context, *GetServerRequest) (*GetServerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetServer not implemented")
 }
-func (UnimplementedServiceServer) AddServer(context.Context, *AddServerRequest) (*emptypb.Empty, error) {
+func (UnimplementedServiceServer) AddServer(context.Context, *AddServerRequest) (*AddServerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddServer not implemented")
 }
 func (UnimplementedServiceServer) UpdateServer(context.Context, *UpdateServerRequest) (*emptypb.Empty, error) {

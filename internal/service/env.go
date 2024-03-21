@@ -3,13 +3,12 @@ package service
 import (
 	"context"
 
-	"github.com/limes-cloud/configure/internal/biz"
-
 	"github.com/jinzhu/copier"
-
-	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/configure/api/v1"
+	"github.com/limes-cloud/configure/internal/biz"
 )
 
 func (s *Service) AllEnv(ctx context.Context, in *emptypb.Empty) (*v1.AllEnvReply, error) {
@@ -24,13 +23,13 @@ func (s *Service) AllEnv(ctx context.Context, in *emptypb.Empty) (*v1.AllEnvRepl
 	return &reply, nil
 }
 
-func (s *Service) AddEnv(ctx context.Context, in *v1.AddEnvRequest) (*emptypb.Empty, error) {
+func (s *Service) AddEnv(ctx context.Context, in *v1.AddEnvRequest) (*v1.AddEnvReply, error) {
 	env := &biz.Env{}
 	if err := copier.Copy(env, in); err != nil {
 		return nil, v1.TransformError()
 	}
-	_, err := s.EnvUseCase.Add(kratosx.MustContext(ctx), env)
-	return nil, err
+	id, err := s.EnvUseCase.Add(kratosx.MustContext(ctx), env)
+	return &v1.AddEnvReply{Id: id}, err
 }
 
 func (s *Service) UpdateEnv(ctx context.Context, in *v1.UpdateEnvRequest) (*emptypb.Empty, error) {
