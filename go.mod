@@ -10,7 +10,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.7.2
 	github.com/google/uuid v1.5.0
 	github.com/jinzhu/copier v0.4.0
-	github.com/limes-cloud/kratosx v1.0.25
+	github.com/limes-cloud/kratosx v1.0.26
 	github.com/limes-cloud/manager v1.0.5
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917
