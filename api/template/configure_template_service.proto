@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package configure_template;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "configure_template.proto";
+
+
+service Service {
+  rpc PageTemplate (PageTemplateRequest) returns (PageTemplateReply) {
+    option (google.api.http) = {
+      get: "/configure/v1/templates",
+      response_body: "*"
+    };
+  }
+
+  rpc GetTemplate (GetTemplateRequest) returns (GetTemplateReply) {
+    option (google.api.http) = {
+      get: "/configure/v1/template",
+    };
+  }
+
+  rpc CurrentTemplate (CurrentTemplateRequest) returns (CurrentTemplateReply) {
+    option (google.api.http) = {
+      get: "/configure/v1/template/current",
+    };
+  }
+
+  rpc AddTemplate (AddTemplateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/configure/v1/template",
+      body:"*"
+    };
+  }
+
+  rpc SwitchTemplate (SwitchTemplateRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/configure/v1/template/switch",
+      body:"*"
+    };
+  }
+
+  rpc CompareTemplate (CompareTemplateRequest) returns (CompareTemplateReply) {
+    option (google.api.http) = {
+      post: "/configure/v1/template/compare",
+      body:"*",
+    };
+  }
+
+  rpc PreviewTemplate (PreviewTemplateRequest) returns (PreviewTemplateReply) {
+    option (google.api.http) = {
+      post: "/configure/v1/template/preview",
+      body:"*"
+    };
+  }
+
+  rpc ParseTemplate (ParseTemplateRequest) returns (ParseTemplateReply) {
+    option (google.api.http) = {
+      post: "/configure/v1/template/parse",
+      body:"*"
+    };
+  }
+}

@@ -15,13 +15,11 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/config"
+	"github.com/limes-cloud/kratosx/pkg/print"
 	_ "go.uber.org/automaxprocs"
 
-	v1 "github.com/limes-cloud/configure/api/v1"
-	systemConfig "github.com/limes-cloud/configure/config"
-	"github.com/limes-cloud/configure/internal/initiator"
+	systemConfig "github.com/limes-cloud/configure/internal/config"
 	"github.com/limes-cloud/configure/internal/service"
-	"github.com/limes-cloud/configure/pkg/pt"
 )
 
 const (
@@ -30,10 +28,10 @@ const (
 
 func main() {
 	app := kratosx.New(
-		kratosx.Config(file.NewSource("config/config.yaml")),
+		kratosx.Config(file.NewSource("internal/config/config.yaml")),
 		kratosx.RegistrarServer(RegisterServer),
 		kratosx.Options(kratos.AfterStart(func(_ context.Context) error {
-			pt.ArtFont(fmt.Sprintf("Hello %s !", AppName))
+			print.ArtFont(fmt.Sprintf("Hello %s !", AppName))
 			return nil
 		})),
 	)
@@ -59,15 +57,7 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 	})
 
 	go RegisterWebServer(conf)
-	srv := service.New(conf)
-	v1.RegisterServiceHTTPServer(hs, srv)
-	v1.RegisterServiceServer(gs, srv)
-
-	// 初始化逻辑
-	ior := initiator.New(conf)
-	if err := ior.Run(srv); err != nil {
-		panic("initiator error:" + err.Error())
-	}
+	service.New(conf, hs, gs)
 }
 
 func RegisterWebServer(config *systemConfig.Config) {

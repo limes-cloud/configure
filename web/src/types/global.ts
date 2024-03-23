@@ -39,3 +39,11 @@ export interface GeneralChart {
   xAxis: string[];
   data: Array<{ name: string; value: number[] }>;
 }
+
+export interface Resource {
+  name: string;
+  type: string;
+  size: number;
+  sha: string;
+  src: string;
+}

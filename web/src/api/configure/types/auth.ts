@@ -1,16 +1,16 @@
 export interface LoginReq {
-  username: string;
-  password: string;
-  captcha: string;
-  captcha_id: string;
+    username: string;
+    password: string;
+    captcha: string;
+    captcha_id: string;
 }
 
 export interface LoginRes {
-  token: string;
+    token: string;
 }
 
 export interface LoginCaptchaRes {
-  uuid: string;
-  captcha: string;
-  expire: number;
+    uuid: string;
+    captcha: string;
+    expire: number;
 }

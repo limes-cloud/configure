@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package configure_user;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "configure_user.proto";
+
+
+service Service {
+  // 用户登录
+  rpc Login(LoginRequest) returns(LoginReply){
+    option (google.api.http) = {
+      post: "/configure/v1/login",
+      body: "*"
+    };
+  }
+
+  // RefreshToken 刷新token
+  rpc RefreshToken(google.protobuf.Empty) returns(RefreshTokenReply){
+    option (google.api.http) = {
+      post: "/configure/v1/token/refresh",
+    };
+  }
+}

@@ -3,81 +3,103 @@ package service
 import (
 	"context"
 
-	"github.com/limes-cloud/configure/internal/biz"
-
-	"github.com/limes-cloud/configure/internal/biz/types"
-
 	"github.com/jinzhu/copier"
-
-	v1 "github.com/limes-cloud/configure/api/v1"
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/configure/api/configure/v1"
+	"github.com/limes-cloud/configure/api/errors"
+	biz "github.com/limes-cloud/configure/internal/biz/configure"
+	envbiz "github.com/limes-cloud/configure/internal/biz/env"
+	srvbiz "github.com/limes-cloud/configure/internal/biz/server"
+	tpbiz "github.com/limes-cloud/configure/internal/biz/template"
+	"github.com/limes-cloud/configure/internal/config"
+	data "github.com/limes-cloud/configure/internal/data/configure"
 )
 
-func (s *Service) CompareConfigure(ctx context.Context, in *v1.CompareConfigureRequest) (*v1.CompareConfigureReply, error) {
+type ConfigureService struct {
+	v1.UnimplementedServiceServer
+	uc    *biz.UseCase
+	tpuc  *tpbiz.UseCase
+	envuc *envbiz.UseCase
+	srvuc *srvbiz.UseCase
+}
+
+func NewConfigureService(conf *config.Config, tpuc *tpbiz.UseCase, envuc *envbiz.UseCase, srvuc *srvbiz.UseCase) *ConfigureService {
+	return &ConfigureService{
+		uc:    biz.NewUseCase(conf, data.NewRepo()),
+		tpuc:  tpuc,
+		envuc: envuc,
+		srvuc: srvuc,
+	}
+}
+
+func (s *ConfigureService) CompareConfigure(ctx context.Context, in *v1.CompareConfigureRequest) (*v1.CompareConfigureReply, error) {
 	kCtx := kratosx.MustContext(ctx)
-	parseReply, err := s.TemplateUseCase.Parse(kCtx, &types.ParseRequest{EnvId: in.EnvId, ServerId: in.ServerId})
+	res, err := s.tpuc.ParseTemplate(kCtx, &tpbiz.ParseTemplateRequest{EnvId: in.EnvId, ServerId: in.ServerId})
 	if err != nil {
 		return nil, err
 	}
 
-	list, err := s.ConfigureUseCase.Compare(kCtx, &types.CompareConfigureRequest{
-		EnvID:    in.EnvId,
-		ServerID: in.ServerId,
-		Format:   parseReply.Format,
-		Content:  parseReply.Content,
+	list, err := s.uc.CompareConfigure(kratosx.MustContext(ctx), &biz.CompareConfigureRequest{
+		EnvId:    in.EnvId,
+		ServerId: in.ServerId,
+		Content:  res.Content,
+		Format:   res.Format,
 	})
+	if err != nil {
+		return nil, err
+	}
 	reply := v1.CompareConfigureReply{}
 	if err := copier.Copy(&reply.List, list); err != nil {
-		return nil, v1.TransformError()
+		return nil, errors.TransformError()
 	}
 	return &reply, nil
 }
 
-func (s *Service) GetConfigure(ctx context.Context, in *v1.GetConfigureRequest) (*v1.GetConfigureReply, error) {
-	configure, err := s.ConfigureUseCase.GetByEnvAndSrc(kratosx.MustContext(ctx), in.EnvId, in.ServerId)
+func (s *ConfigureService) GetConfigure(ctx context.Context, in *v1.GetConfigureRequest) (*v1.GetConfigureReply, error) {
+	configure, err := s.uc.GetConfigureByEnvAndSrv(kratosx.MustContext(ctx), in.EnvId, in.ServerId)
 	if err != nil {
 		return nil, err
 	}
 	reply := v1.GetConfigureReply{}
 	if err := copier.Copy(&reply, configure); err != nil {
-		return nil, v1.TransformError()
+		return nil, errors.TransformError()
 	}
 	return &reply, nil
 }
 
-func (s *Service) UpdateConfigure(ctx context.Context, in *v1.UpdateConfigureRequest) (*emptypb.Empty, error) {
+func (s *ConfigureService) UpdateConfigure(ctx context.Context, in *v1.UpdateConfigureRequest) (*emptypb.Empty, error) {
 	kCtx := kratosx.MustContext(ctx)
-	parseReply, err := s.TemplateUseCase.Parse(kCtx, &types.ParseRequest{EnvId: in.EnvId, ServerId: in.ServerId})
+	res, err := s.tpuc.ParseTemplate(kCtx, &tpbiz.ParseTemplateRequest{EnvId: in.EnvId, ServerId: in.ServerId})
 	if err != nil {
 		return nil, err
 	}
-
-	return nil, s.ConfigureUseCase.Update(kratosx.MustContext(ctx), &biz.Configure{
-		ServerID:    in.ServerId,
-		EnvID:       in.EnvId,
+	return nil, s.uc.UpdateConfigure(kratosx.MustContext(ctx), &biz.Configure{
+		ServerId:    in.ServerId,
+		EnvId:       in.EnvId,
 		Description: &in.Description,
-		Format:      parseReply.Format,
-		Content:     parseReply.Content,
+		Content:     res.Content,
+		Format:      res.Format,
 	})
 }
 
-func (s *Service) WatchConfigure(in *v1.WatchConfigureRequest, reply v1.Service_WatchConfigureServer) error {
+func (s *ConfigureService) WatchConfigure(in *v1.WatchConfigureRequest, reply v1.Service_WatchConfigureServer) error {
 	kCtx := kratosx.MustContext(reply.Context())
 
-	env, err := s.EnvUseCase.GetByToken(kCtx, in.Token)
+	env, err := s.envuc.GetEnvByToken(kCtx, in.Token)
 	if err != nil {
-		return v1.TokenAuthError()
+		return errors.TokenAuthError()
 	}
-	server, err := s.ServerUseCase.GetByKeyword(kCtx, in.Server)
+	server, err := s.srvuc.GetServerByKeyword(kCtx, in.Server)
 	if err != nil {
-		return v1.TokenAuthError()
+		return errors.TokenAuthError()
 	}
 
-	return s.ConfigureUseCase.Watch(kratosx.MustContext(reply.Context()), &types.WatcherConfigRequest{
-		EnvID:    env.ID,
-		ServerID: server.ID,
-	}, func(data *types.WatcherConfigureReply) error {
+	return s.uc.Watch(kCtx, &biz.WatcherConfigRequest{
+		ServerId: server.ID,
+		EnvId:    env.ID,
+	}, func(data *biz.WatcherConfigureReply) error {
 		return reply.Send(&v1.WatchConfigureReply{
 			Format:  data.Format,
 			Content: data.Content,

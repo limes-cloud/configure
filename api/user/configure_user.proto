@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package configure_user;
+option go_package = "./v1;v1";
+import "validate/validate.proto";
+
+message LoginRequest {
+  string username = 1[(validate.rules).string = {min_len:6}];
+  string password = 2[(validate.rules).string = {min_len:6}];
+}
+
+message LoginReply{
+  string token = 1;
+}
+
+message RefreshTokenReply{
+  string token = 1;
+}
