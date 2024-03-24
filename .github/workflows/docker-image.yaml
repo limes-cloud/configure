@@ -40,8 +40,8 @@ jobs:  # workflow中的job
           password: ${{ secrets.SERVER_PWD }} # 服务器密码；需要去仓库的 settings/secrets/actions 去创建
           port: ${{ secrets.SERVER_PORT }} # 服务器端口，默认22；需要去仓库的 settings/secrets/actions 去创建
           script: | # 重启更新镜像
-            docker stop ${{ secrets.DOCKERHUB_USERNAME }}/configure
-            docker rm ${{ secrets.DOCKERHUB_USERNAME }}/configure
+            docker stop configure
+            docker rm configure
             # docker login -u 你的github名称 -p 你的github token https://ghcr.io 
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/configure
             docker run -d --network host --restart=always --name configure ${{ secrets.DOCKERHUB_USERNAME }}/configure
