@@ -42,7 +42,7 @@ database:
     config:
       initializer:
         enable: true
-        path: deploy/configure.sql
+        path: deploy/data.sql
       transformError:
         enable: true
       maxLifetime: 2h #最大生存时间
