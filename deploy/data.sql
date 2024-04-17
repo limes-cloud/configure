@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 80200
  Source Host           : localhost:3306
- Source Schema         : configure_hello
+ Source Schema         : configure
 
  Target Server Type    : MySQL
  Target Server Version : 80200
@@ -34,7 +34,7 @@ CREATE TABLE `business` (
   KEY `idx_business_updated_at` (`updated_at`),
   KEY `fk_business_server` (`server_id`),
   CONSTRAINT `fk_business_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='业务变量';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4  COMMENT='业务变量';
 
 -- ----------------------------
 -- Records of business
@@ -69,7 +69,7 @@ CREATE TABLE `business_value` (
   KEY `fk_business_values` (`business_id`),
   CONSTRAINT `fk_business_value_env` FOREIGN KEY (`env_id`) REFERENCES `env` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_business_values` FOREIGN KEY (`business_id`) REFERENCES `business` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='业务变量值';
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4  COMMENT='业务变量值';
 
 -- ----------------------------
 -- Records of business_value
@@ -125,7 +125,7 @@ CREATE TABLE `configure` (
   KEY `fk_configure_env` (`env_id`),
   CONSTRAINT `fk_configure_env` FOREIGN KEY (`env_id`) REFERENCES `env` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_configure_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='配置内容';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4  COMMENT='配置内容';
 
 -- ----------------------------
 -- Records of configure
@@ -164,7 +164,7 @@ CREATE TABLE `env` (
   PRIMARY KEY (`id`),
   KEY `idx_env_created_at` (`created_at`),
   KEY `idx_env_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='环境信息';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4  COMMENT='环境信息';
 
 -- ----------------------------
 -- Records of env
@@ -191,7 +191,7 @@ CREATE TABLE `resource` (
   PRIMARY KEY (`id`),
   KEY `idx_resource_created_at` (`created_at`),
   KEY `idx_resource_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资源变量';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4  COMMENT='资源变量';
 
 -- ----------------------------
 -- Records of resource
@@ -231,7 +231,7 @@ CREATE TABLE `resource_server` (
   KEY `fk_resource_resource_server` (`resource_id`),
   CONSTRAINT `fk_resource_resource_server` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_resource_server_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资源服务信息';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4  COMMENT='资源服务信息';
 
 -- ----------------------------
 -- Records of resource_server
@@ -262,7 +262,7 @@ CREATE TABLE `resource_value` (
   KEY `fk_resource_resource_value` (`resource_id`),
   CONSTRAINT `fk_resource_resource_value` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_resource_value_env` FOREIGN KEY (`env_id`) REFERENCES `env` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资源变量值';
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4  COMMENT='资源变量值';
 
 -- ----------------------------
 -- Records of resource_value
@@ -335,7 +335,7 @@ CREATE TABLE `server` (
   PRIMARY KEY (`id`),
   KEY `idx_server_created_at` (`created_at`),
   KEY `idx_server_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='服务信息';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4  COMMENT='服务信息';
 
 -- ----------------------------
 -- Records of server
@@ -369,7 +369,7 @@ CREATE TABLE `template` (
   KEY `idx_template_created_at` (`created_at`),
   KEY `idx_template_updated_at` (`updated_at`),
   CONSTRAINT `fk_template_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='配置模板';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4  COMMENT='配置模板';
 
 -- ----------------------------
 -- Records of template
