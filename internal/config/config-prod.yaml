@@ -59,6 +59,10 @@ jwt:
     POST:/configure/v1/token/refresh: true # 刷新
 loader:
   login: static/cert/login.pem
+logging:
+  enable: true
+  whitelist:
+    GET:/configure/v1/list: true  # 跳过
 business:
   webui:
     addr: ":6080"
