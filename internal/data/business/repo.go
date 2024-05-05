@@ -116,6 +116,13 @@ func (s *repo) CheckBusinessValue(ctx kratosx.Context, id uint32, value string) 
 	// if err != nil {
 	//	return false
 	// }
+	// switch business.Type {
+	// case ""
+	// }
+	// business.Type ==
+	// if err != nil {
+	//	return false
+	// }
 	//
 	return true
 }

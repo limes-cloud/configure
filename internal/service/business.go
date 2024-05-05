@@ -76,7 +76,7 @@ func (s *BusinessService) GetBusinessValues(ctx context.Context, in *v1.GetBusin
 	return &reply, nil
 }
 
-func (s *BusinessService) UpdateBusinessValue(ctx context.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
+func (s *BusinessService) UpdateBusinessValues(ctx context.Context, in *v1.UpdateBusinessValueRequest) (*emptypb.Empty, error) {
 	for _, item := range in.List {
 		rv := biz.BusinessValue{
 			BusinessId: in.BusinessId,

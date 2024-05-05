@@ -12,6 +12,11 @@ type UseCase struct {
 	repo   Repo
 }
 
+const (
+	ObjectType = "object"
+	FloatType  = "float"
+)
+
 func NewUseCase(config *config.Config, repo Repo) *UseCase {
 	return &UseCase{config: config, repo: repo}
 }
@@ -79,7 +84,7 @@ func (u *UseCase) GetBusinessValues(ctx kratosx.Context, bid uint32) ([]*Busines
 
 // UpdateBusinessValue 更新指定业务变量的值
 func (u *UseCase) UpdateBusinessValue(ctx kratosx.Context, rv *BusinessValue) error {
-	if u.repo.CheckBusinessValue(ctx, rv.BusinessId, rv.Value) {
+	if !u.repo.CheckBusinessValue(ctx, rv.BusinessId, rv.Value) {
 		return errors.BusinessValueError()
 	}
 	if err := u.repo.UpdateBusinessValue(ctx, rv); err != nil {
