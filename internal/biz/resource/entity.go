@@ -1,27 +1,34 @@
 package resource
 
-import ktypes "github.com/limes-cloud/kratosx/types"
-
 type Resource struct {
-	ktypes.BaseModel
+	Id              uint32            `json:"id"`
 	Keyword         string            `json:"keyword"`
-	Description     string            `json:"description"`
 	Fields          string            `json:"fields"`
 	Tag             string            `json:"tag"`
 	Private         *bool             `json:"private"`
-	ResourceServers []*ResourceServer `json:"resource_servers"`
+	Description     *string           `json:"description"`
+	CreatedAt       int64             `json:"createdAt"`
+	UpdatedAt       int64             `json:"updatedAt"`
+	Servers         []*Server         `json:"servers"`
+	ResourceServers []*ResourceServer `json:"resourceServers"`
 }
 
-type ResourceValue struct {
-	ktypes.BaseModel
-	EnvId      uint32    `json:"env_id"`
-	ResourceId uint32    `json:"resource_id"`
-	Value      string    `json:"value"`
-	Resource   *Resource `json:"resource" gorm:"foreignKey:resource_id;references:id"`
+type Server struct {
+	Id   uint32 `json:"id"`
+	Name string `json:"name"`
 }
 
 type ResourceServer struct {
-	ktypes.CreateModel
-	ServerId   uint32 `json:"server_id"`
-	ResourceId uint32 `json:"resource_id"`
+	ServerId   uint32 `json:"serverId"`
+	ResourceId uint32 `json:"resourceId"`
+}
+
+type ResourceValue struct {
+	Id         uint32    `json:"id"`
+	EnvId      uint32    `json:"envId"`
+	ResourceId uint32    `json:"resourceId"`
+	Value      string    `json:"value"`
+	CreatedAt  int64     `json:"createdAt"`
+	UpdatedAt  int64     `json:"updatedAt"`
+	Resource   *Resource `json:"resource"`
 }

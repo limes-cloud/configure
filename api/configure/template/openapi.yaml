@@ -1,0 +1,408 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Template API
+    version: 0.0.1
+paths:
+    /configure/api/v1/template:
+        get:
+            tags:
+                - Template
+            operationId: Template_GetTemplate
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Template
+            operationId: Template_CreateTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/template/compare:
+        post:
+            tags:
+                - Template
+            operationId: Template_CompareTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CompareTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CompareTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/template/current:
+        get:
+            tags:
+                - Template
+            operationId: Template_CurrentTemplate
+            parameters:
+                - name: serverId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CurrentTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/template/parse:
+        post:
+            tags:
+                - Template
+            operationId: Template_ParseTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ParseTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ParseTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/template/preview:
+        post:
+            tags:
+                - Template
+            operationId: Template_PreviewTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/PreviewTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PreviewTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/template/switch:
+        post:
+            tags:
+                - Template
+            operationId: Template_SwitchTemplate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SwitchTemplateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SwitchTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/templates:
+        get:
+            tags:
+                - Template
+            operationId: Template_ListTemplate
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: serverId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListTemplateReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CompareTemplateInfo:
+            type: object
+            properties:
+                type:
+                    type: string
+                key:
+                    type: string
+                old:
+                    type: string
+                cur:
+                    type: string
+        CompareTemplateReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CompareTemplateInfo'
+        CompareTemplateRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                format:
+                    type: string
+                content:
+                    type: string
+        CreateTemplateReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateTemplateRequest:
+            type: object
+            properties:
+                serverId:
+                    type: integer
+                    format: uint32
+                content:
+                    type: string
+                description:
+                    type: string
+                format:
+                    type: string
+            description: 新增模板
+        CurrentTemplateReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                serverId:
+                    type: integer
+                    format: uint32
+                description:
+                    type: string
+                version:
+                    type: string
+                format:
+                    type: string
+                isUse:
+                    type: boolean
+                compare:
+                    type: string
+                content:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+        GetTemplateReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                serverId:
+                    type: integer
+                    format: uint32
+                content:
+                    type: string
+                description:
+                    type: string
+                version:
+                    type: string
+                isUse:
+                    type: boolean
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListTemplateReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListTemplateReply_Template'
+        ListTemplateReply_Template:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                serverId:
+                    type: integer
+                    format: uint32
+                description:
+                    type: string
+                version:
+                    type: string
+                format:
+                    type: string
+                isUse:
+                    type: boolean
+                compare:
+                    type: string
+                content:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+        ParseTemplateReply:
+            type: object
+            properties:
+                content:
+                    type: string
+                format:
+                    type: string
+        ParseTemplateRequest:
+            type: object
+            properties:
+                serverId:
+                    type: integer
+                    format: uint32
+                envId:
+                    type: integer
+                    format: uint32
+            description: 解析配置
+        PreviewTemplateReply:
+            type: object
+            properties:
+                content:
+                    type: string
+        PreviewTemplateRequest:
+            type: object
+            properties:
+                envId:
+                    type: integer
+                    format: uint32
+                serverId:
+                    type: integer
+                    format: uint32
+                format:
+                    type: string
+                content:
+                    type: string
+            description: 预览配置
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SwitchTemplateReply:
+            type: object
+            properties: {}
+        SwitchTemplateRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                serverId:
+                    type: integer
+                    format: uint32
+            description: 切换模板
+tags:
+    - name: Template

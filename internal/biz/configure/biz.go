@@ -6,11 +6,11 @@ import (
 
 	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
-	ktypes "github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/kratosx/pkg/crypto"
 
-	"github.com/limes-cloud/configure/api/errors"
-	"github.com/limes-cloud/configure/internal/config"
+	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/internal/factory"
 	"github.com/limes-cloud/configure/internal/pkg"
 )
 
@@ -20,17 +20,19 @@ type watcher struct {
 }
 
 type UseCase struct {
-	config *config.Config
-	repo   Repo
-	mutex  sync.Mutex
-	rs     map[string][]watcher
+	config  *conf.Config
+	repo    Repo
+	factory factory.Factory
+	mutex   sync.Mutex
+	rs      map[string][]watcher
 }
 
-func NewUseCase(config *config.Config, repo Repo) *UseCase {
+func NewUseCase(config *conf.Config, repo Repo, factory factory.Factory) *UseCase {
 	return &UseCase{
-		config: config,
-		repo:   repo,
-		rs:     map[string][]watcher{},
+		config:  config,
+		repo:    repo,
+		factory: factory,
+		rs:      map[string][]watcher{},
 	}
 }
 
@@ -38,47 +40,67 @@ func NewUseCase(config *config.Config, repo Repo) *UseCase {
 func (u *UseCase) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, srvId uint32) (*Configure, error) {
 	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, envId, srvId)
 	if err != nil {
-		return nil, errors.NotRecordError()
+		return nil, errors.GetError()
 	}
 	return configure, nil
 }
 
-// PageConfigure 获取分页配置信息
-func (u *UseCase) PageConfigure(ctx kratosx.Context, page, pageSize uint32) ([]*Configure, uint32, error) {
-	list, total, err := u.repo.PageConfigure(ctx, &ktypes.PageOptions{
-		Page:     page,
-		PageSize: pageSize,
-	})
+// ListConfigure 获取分页配置信息
+func (u *UseCase) ListConfigure(ctx kratosx.Context, req *ListConfigureRequest) ([]*Configure, uint32, error) {
+	list, total, err := u.repo.ListConfigure(ctx, req)
 	if err != nil {
-		return nil, 0, errors.DatabaseErrorFormat(err.Error())
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
 // UpdateConfigure 更新模配置
 func (u *UseCase) UpdateConfigure(ctx kratosx.Context, req *Configure) error {
-	// 生成版本号
-	req.Version = util.MD5([]byte(req.Content))
+	format, content, err := u.RenderCurrentTemplate(ctx, req.ServerId, req.EnvId)
+	if err != nil {
+		return errors.ParseTemplateError(err.Error())
+	}
+
+	// 生成数据
+	req.Version = crypto.MD5([]byte(req.Content))
+	req.Format = format
+	req.Content = content
 
 	// 查询往期配置
 	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, req.EnvId, req.ServerId)
 	if err == nil {
 		if req.Version == configure.Version {
-			return errors.VersionExistError()
+			return errors.ConfigureVersionExistError()
 		}
-		req.ID = configure.ID
-
+		req.Id = configure.Id
 		if err := u.repo.UpdateConfigure(ctx, req); err != nil {
-			return errors.DatabaseErrorFormat(err.Error())
+			return errors.DatabaseError(err.Error())
 		}
 	} else {
-		if _, err := u.repo.AddConfigure(ctx, req); err != nil {
-			return errors.DatabaseErrorFormat(err.Error())
+		if _, err := u.repo.CreateConfigure(ctx, req); err != nil {
+			return errors.DatabaseError(err.Error())
 		}
 	}
 
 	u.SendWatcher(req)
 	return nil
+}
+
+func (u *UseCase) RenderCurrentTemplate(ctx kratosx.Context, srvId, envId uint32) (string, string, error) {
+	format, content, err := u.repo.CurrentTemplate(ctx, srvId)
+	if err != nil {
+		return "", "", err
+	}
+	res, err := u.factory.ParseByContent(ctx, &factory.ParseByContentRequest{
+		EnvId:    envId,
+		ServerId: srvId,
+		Format:   format,
+		Content:  content,
+	})
+	if err != nil {
+		return "", "", err
+	}
+	return format, res, nil
 }
 
 // CompareConfigure 对比配置
@@ -101,9 +123,13 @@ func (u *UseCase) CompareConfigure(ctx kratosx.Context, req *CompareConfigureReq
 
 	// 解析上传的模板
 	var curKeys []string
+	format, content, err := u.RenderCurrentTemplate(ctx, req.ServerId, req.EnvId)
+	if err != nil {
+		return nil, errors.ParseTemplateError(err.Error())
+	}
 	ctc := map[string]any{}
-	ce := encoding.GetCodec(req.Format)
-	if err := ce.Unmarshal([]byte(req.Content), &ctc); err != nil {
+	ce := encoding.GetCodec(format)
+	if err := ce.Unmarshal([]byte(content), &ctc); err != nil {
 		return nil, errors.ParseTemplateError()
 	}
 	for key := range ctc {
@@ -178,10 +204,20 @@ func (u *UseCase) channelKey(envId, srvId uint32) string {
 }
 
 func (u *UseCase) Watch(ctx kratosx.Context, in *WatcherConfigRequest, reply WatcherConfigReplyFunc) error {
-	// 获取配置
-	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, in.EnvId, in.ServerId)
+	srvId, err := u.repo.GetServerIdByKeyword(ctx, in.Server)
 	if err != nil {
-		return errors.DatabaseErrorFormat(err.Error())
+		return errors.ServerNotFound()
+	}
+
+	envId, err := u.repo.GetEnvIdByToken(ctx, in.Token)
+	if err != nil {
+		return errors.TokenAuthError()
+	}
+
+	// 获取配置
+	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, envId, srvId)
+	if err != nil {
+		return errors.DatabaseError(err.Error())
 	}
 
 	// 第一次链接先返回结果
@@ -189,12 +225,12 @@ func (u *UseCase) Watch(ctx kratosx.Context, in *WatcherConfigRequest, reply Wat
 		Content: configure.Content,
 		Format:  configure.Format,
 	}); err != nil {
-		return errors.WatchConfigureErrorFormat(err.Error())
+		return errors.WatchConfigureError(err.Error())
 	}
 
 	// 注册回调监听
-	closer := <-u.registerWatch(in.EnvId, in.ServerId, reply)
-	return errors.WatchConfigureErrorFormat(closer)
+	closer := <-u.registerWatch(envId, srvId, reply)
+	return errors.WatchConfigureError(closer)
 }
 
 func (u *UseCase) registerWatch(envId, srvId uint32, reply WatcherConfigReplyFunc) <-chan string {

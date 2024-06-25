@@ -1,9 +1,9 @@
 package template
 
-type PageTemplateRequest struct {
+type ListTemplateRequest struct {
 	Page     uint32 `json:"page"`
-	PageSize uint32 `json:"page_size"`
-	ServerId uint32 `json:"server_id"`
+	PageSize uint32 `json:"pageSize"`
+	ServerId uint32 `json:"serverId"`
 }
 
 type CompareTemplateRequest struct {
@@ -20,8 +20,8 @@ type CompareTemplateReply struct {
 }
 
 type PreviewTemplateRequest struct {
-	EnvId    uint32 `json:"env_id"`
-	ServerId uint32 `json:"server_id"`
+	EnvId    uint32 `json:"envId"`
+	ServerId uint32 `json:"serverId"`
 	Format   string `json:"format"`
 	Content  string `json:"content"`
 }
@@ -32,11 +32,18 @@ type PreviewTemplateReply struct {
 }
 
 type ParseTemplateRequest struct {
-	EnvId    uint32 `json:"env_id"`
-	ServerId uint32 `json:"server_id"`
+	EnvId    uint32 `json:"envId"`
+	ServerId uint32 `json:"serverId"`
 }
 
 type ParseTemplateReply struct {
 	Format  string `json:"format"`
 	Content string `json:"content"`
+}
+
+type ParseByContentRequest struct {
+	EnvId    uint32 `json:"env_id"`
+	ServerId uint32 `json:"server_id"`
+	Format   string `json:"format"`
+	Content  string `json:"content"`
 }

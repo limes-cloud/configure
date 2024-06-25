@@ -1,9 +1,14 @@
 package business
 
-type PageBusinessRequest struct {
+type GetBusinessRequest struct {
+	Id *uint32 `json:"id"`
+}
+
+type ListBusinessRequest struct {
 	Page     uint32  `json:"page"`
-	PageSize uint32  `json:"page_size"`
-	ServerId uint32  `json:"server_id"`
+	PageSize uint32  `json:"pageSize"`
+	Order    *string `json:"order"`
+	OrderBy  *string `json:"orderBy"`
+	ServerId *uint32 `json:"serverId"`
 	Keyword  *string `json:"keyword"`
-	Tag      *string `json:"tag"`
 }

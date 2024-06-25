@@ -1,78 +1,80 @@
 package server
 
 import (
+	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/internal/conf"
 	"github.com/limes-cloud/kratosx"
-
-	"github.com/limes-cloud/configure/api/errors"
-	"github.com/limes-cloud/configure/internal/config"
 )
 
 type UseCase struct {
-	config *config.Config
-	repo   Repo
+	conf *conf.Config
+	repo Repo
 }
 
-func NewUseCase(config *config.Config, repo Repo) *UseCase {
-	return &UseCase{config: config, repo: repo}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-// GetServer 获取指定服务信息
-func (s *UseCase) GetServer(ctx kratosx.Context, id uint32) (*Server, error) {
-	server, err := s.repo.GetServer(ctx, id)
-	if err != nil {
-		return nil, errors.NotRecordError()
+// GetServer 获取指定的服务信息
+func (u *UseCase) GetServer(ctx kratosx.Context, req *GetServerRequest) (*Server, error) {
+	var (
+		res *Server
+		err error
+	)
+
+	if req.Id != nil {
+		res, err = u.repo.GetServer(ctx, *req.Id)
+	} else if req.Keyword != nil {
+		res, err = u.repo.GetServerByKeyword(ctx, *req.Keyword)
+	} else {
+		return nil, errors.ParamsError()
 	}
-	return server, nil
-}
 
-// GetServerByKeyword 获取指定标识的服务信息
-func (s *UseCase) GetServerByKeyword(ctx kratosx.Context, keyword string) (*Server, error) {
-	server, err := s.repo.GetServerByKeyword(ctx, keyword)
 	if err != nil {
-		return nil, errors.NotRecordError()
+		return nil, errors.GetError(err.Error())
 	}
-	return server, nil
+	return res, nil
 }
 
-// PageServer 获取分页服务信息
-func (s *UseCase) PageServer(ctx kratosx.Context, req *PageServerRequest) ([]*Server, uint32, error) {
-	list, total, err := s.repo.PageServer(ctx, req)
+// ListServer 获取服务信息列表
+func (u *UseCase) ListServer(ctx kratosx.Context, req *ListServerRequest) ([]*Server, uint32, error) {
+	list, total, err := u.repo.ListServer(ctx, req)
 	if err != nil {
-		return nil, 0, errors.DatabaseErrorFormat(err.Error())
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
-// AddServer 添加服务信息
-func (s *UseCase) AddServer(ctx kratosx.Context, server *Server) (uint32, error) {
-	id, err := s.repo.AddServer(ctx, server)
+// CreateServer 创建服务信息
+func (u *UseCase) CreateServer(ctx kratosx.Context, req *Server) (uint32, error) {
+	id, err := u.repo.CreateServer(ctx, req)
 	if err != nil {
-		return 0, errors.DatabaseErrorFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
 
 // UpdateServer 更新服务信息
-func (s *UseCase) UpdateServer(ctx kratosx.Context, server *Server) error {
-	if err := s.repo.UpdateServer(ctx, server); err != nil {
-		return errors.DatabaseErrorFormat(err.Error())
+func (u *UseCase) UpdateServer(ctx kratosx.Context, req *Server) error {
+	if err := u.repo.UpdateServer(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
 // DeleteServer 删除服务信息
-func (s *UseCase) DeleteServer(ctx kratosx.Context, id uint32) error {
-	if err := s.repo.DeleteServer(ctx, id); err != nil {
-		return errors.DatabaseErrorFormat(err.Error())
+func (u *UseCase) DeleteServer(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	total, err := u.repo.DeleteServer(ctx, ids)
+	if err != nil {
+		return 0, errors.DeleteError(err.Error())
+	}
+	return total, nil
+}
+
+// UpdateServerStatus 更新服务信息状态
+func (u *UseCase) UpdateServerStatus(ctx kratosx.Context, id uint32, status bool) error {
+	if err := u.repo.UpdateServerStatus(ctx, id, status); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
-
-// // GetServerByIds 查询所有环境
-// func (s *UseCase) GetServerByIds(ctx kratosx.Context, ids []uint32) ([]*Server, error) {
-//	srvs, err := s.repo.GetServerByIds(ctx, ids)
-//	if err != nil {
-//		return nil, errors.DatabaseErrorFormat(err.Error())
-//	}
-//	return srvs, nil
-// }

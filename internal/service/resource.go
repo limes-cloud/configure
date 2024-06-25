@@ -3,123 +3,183 @@ package service
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
-	"google.golang.org/protobuf/types/known/emptypb"
+	"github.com/limes-cloud/kratosx/pkg/valx"
 
-	"github.com/limes-cloud/configure/api/errors"
-	v1 "github.com/limes-cloud/configure/api/resource/v1"
-	biz "github.com/limes-cloud/configure/internal/biz/resource"
-	"github.com/limes-cloud/configure/internal/config"
-	data "github.com/limes-cloud/configure/internal/data/resource"
+	"github.com/limes-cloud/configure/api/configure/errors"
+	pb "github.com/limes-cloud/configure/api/configure/resource/v1"
+	"github.com/limes-cloud/configure/internal/biz/resource"
+	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/internal/data"
 )
 
 type ResourceService struct {
-	v1.UnimplementedServiceServer
-	uc *biz.UseCase
+	pb.UnimplementedResourceServer
+	uc *resource.UseCase
 }
 
-func NewResourceService(conf *config.Config) *ResourceService {
+func NewResourceService(conf *conf.Config) *ResourceService {
 	return &ResourceService{
-		uc: biz.NewUseCase(conf, data.NewRepo()),
+		uc: resource.NewUseCase(conf, data.NewResourceRepo()),
 	}
 }
 
-func (s *ResourceService) PageResource(ctx context.Context, in *v1.PageResourceRequest) (*v1.PageResourceReply, error) {
-	req := &biz.PageResourceRequest{}
-	if err := util.Transform(in, &req); err != nil {
+func init() {
+	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
+		srv := NewResourceService(c)
+		pb.RegisterResourceHTTPServer(hs, srv)
+		pb.RegisterResourceServer(gs, srv)
+	})
+}
+
+// GetResource 获取指定的资源配置信息
+func (s *ResourceService) GetResource(c context.Context, req *pb.GetResourceRequest) (*pb.GetResourceReply, error) {
+	var (
+		in  = resource.GetResourceRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
 		return nil, errors.TransformError()
 	}
 
-	res, total, err := s.uc.PageResource(kratosx.MustContext(ctx), req)
+	result, err := s.uc.GetResource(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := v1.PageResourceReply{Total: total}
-	if err := util.Transform(res, &reply.List); err != nil {
-		return nil, errors.TransformError()
-	}
-	for ind := range reply.List {
-		var ids []uint32
-		for _, ite := range res[ind].ResourceServers {
-			ids = append(ids, ite.ServerId)
-		}
-		reply.List[ind].Servers = ids
-	}
-
-	return &reply, nil
-}
-
-func (s *ResourceService) AddResource(ctx context.Context, in *v1.AddResourceRequest) (*v1.AddResourceReply, error) {
-	resource := biz.Resource{}
-	if err := util.Transform(in, resource); err != nil {
-		return nil, errors.TransformError()
-	}
-	if in.Private != nil && *in.Private {
-		for _, srvId := range in.Servers {
-			resource.ResourceServers = append(resource.ResourceServers, &biz.ResourceServer{
-				ServerId: srvId,
-			})
-		}
-	}
-	id, err := s.uc.AddResource(kratosx.MustContext(ctx), &resource)
-	return &v1.AddResourceReply{
-		Id: id,
-	}, err
-}
-
-func (s *ResourceService) UpdateResource(ctx context.Context, in *v1.UpdateResourceRequest) (*emptypb.Empty, error) {
-	resource := &biz.Resource{}
-	if err := util.Transform(in, resource); err != nil {
-		return nil, errors.TransformError()
-	}
-	if in.Private != nil && *in.Private {
-		for _, srvId := range in.Servers {
-			resource.ResourceServers = append(resource.ResourceServers, &biz.ResourceServer{
-				ServerId: srvId,
-			})
-		}
-	}
-	return nil, s.uc.UpdateResource(kratosx.MustContext(ctx), resource)
-}
-
-func (s *ResourceService) DeleteResource(ctx context.Context, in *v1.DeleteResourceRequest) (*emptypb.Empty, error) {
-	return nil, s.uc.DeleteResource(kratosx.MustContext(ctx), in.Id)
-}
-
-func (s *ResourceService) GetResourceServerIds(ctx context.Context, in *v1.GetResourceServerIdsRequest) (*v1.GetResourceServerIdsReply, error) {
-	kCtx := kratosx.MustContext(ctx)
-	ids, err := s.uc.GetResourceServerIds(kCtx, in.ResourceId)
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.GetResourceServerIdsReply{List: ids}, nil
-}
-
-func (s *ResourceService) GetResourceValues(ctx context.Context, in *v1.GetResourceValuesRequest) (*v1.GetResourceValuesReply, error) {
-	list, err := s.uc.GetResourceValues(kratosx.MustContext(ctx), in.ResourceId)
-	if err != nil {
-		return nil, err
-	}
-	reply := v1.GetResourceValuesReply{}
-	if err := util.Transform(list, &reply.List); err != nil {
+	reply := pb.GetResourceReply{}
+	if err := valx.Transform(result, &reply); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
 		return nil, errors.TransformError()
 	}
 	return &reply, nil
 }
 
-func (s *ResourceService) UpdateResourceValues(ctx context.Context, in *v1.UpdateResourceValuesRequest) (*emptypb.Empty, error) {
-	for _, item := range in.List {
-		rv := biz.ResourceValue{
-			ResourceId: in.ResourceId,
+// ListResource 获取资源配置信息列表
+func (s *ResourceService) ListResource(c context.Context, req *pb.ListResourceRequest) (*pb.ListResourceReply, error) {
+	var (
+		in  = resource.ListResourceRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	result, total, err := s.uc.ListResource(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListResourceReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// CreateResource 创建资源配置信息
+func (s *ResourceService) CreateResource(c context.Context, req *pb.CreateResourceRequest) (*pb.CreateResourceReply, error) {
+	var (
+		in  = resource.Resource{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+	for _, id := range req.ServerIds {
+		in.ResourceServers = append(in.ResourceServers, &resource.ResourceServer{
+			ServerId: id,
+		})
+	}
+
+	id, err := s.uc.CreateResource(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateResourceReply{Id: id}, nil
+}
+
+// UpdateResource 更新资源配置信息
+func (s *ResourceService) UpdateResource(c context.Context, req *pb.UpdateResourceRequest) (*pb.UpdateResourceReply, error) {
+	var (
+		in  = resource.Resource{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+	for _, id := range req.ServerIds {
+		in.ResourceServers = append(in.ResourceServers, &resource.ResourceServer{
+			ServerId: id,
+		})
+	}
+
+	if err := s.uc.UpdateResource(ctx, &in); err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateResourceReply{}, nil
+}
+
+// DeleteResource 删除资源配置信息
+func (s *ResourceService) DeleteResource(c context.Context, req *pb.DeleteResourceRequest) (*pb.DeleteResourceReply, error) {
+	total, err := s.uc.DeleteResource(kratosx.MustContext(c), req.Ids)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteResourceReply{Total: total}, nil
+}
+
+// ListResourceValue 获取业务配置值信息列表
+func (s *ResourceService) ListResourceValue(c context.Context, req *pb.ListResourceValueRequest) (*pb.ListResourceValueReply, error) {
+	var (
+		ctx = kratosx.MustContext(c)
+	)
+	result, total, err := s.uc.ListResourceValue(kratosx.MustContext(c), req.ResourceId)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListResourceValueReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// UpdateResourceValue 更新业务配置值信息
+func (s *ResourceService) UpdateResourceValue(c context.Context, req *pb.UpdateResourceValueRequest) (*pb.UpdateResourceValueReply, error) {
+	var (
+		in  []*resource.ResourceValue
+		ctx = kratosx.MustContext(c)
+	)
+
+	for _, item := range req.List {
+		in = append(in, &resource.ResourceValue{
+			ResourceId: req.ResourceId,
 			EnvId:      item.EnvId,
 			Value:      item.Value,
-		}
-		if err := s.uc.UpdateResourceValue(kratosx.MustContext(ctx), &rv); err != nil {
-			return nil, err
-		}
+		})
 	}
-	return nil, nil
+
+	if err := s.uc.UpdateResourceValue(ctx, in); err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateResourceValueReply{}, nil
 }

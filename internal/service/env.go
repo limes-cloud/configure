@@ -3,73 +3,157 @@ package service
 import (
 	"context"
 
-	"github.com/jinzhu/copier"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/google/uuid"
 	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/types/known/emptypb"
+	"github.com/limes-cloud/kratosx/pkg/crypto"
+	"github.com/limes-cloud/kratosx/pkg/valx"
 
-	v1 "github.com/limes-cloud/configure/api/env/v1"
-	"github.com/limes-cloud/configure/api/errors"
-	biz "github.com/limes-cloud/configure/internal/biz/env"
-	"github.com/limes-cloud/configure/internal/config"
-	data "github.com/limes-cloud/configure/internal/data/env"
+	pb "github.com/limes-cloud/configure/api/configure/env/v1"
+	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/internal/biz/env"
+	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/internal/data"
 )
 
 type EnvService struct {
-	v1.UnimplementedServiceServer
-	uc *biz.UseCase
+	pb.UnimplementedEnvServer
+	uc *env.UseCase
 }
 
-func NewEnvService(conf *config.Config) *EnvService {
+func NewEnvService(conf *conf.Config) *EnvService {
 	return &EnvService{
-		uc: biz.NewUseCase(conf, data.NewRepo()),
+		uc: env.NewUseCase(conf, data.NewEnvRepo()),
 	}
 }
 
-func (s *EnvService) AllEnv(ctx context.Context, in *emptypb.Empty) (*v1.AllEnvReply, error) {
-	envs, err := s.uc.AllEnv(kratosx.MustContext(ctx))
+func init() {
+	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
+		srv := NewEnvService(c)
+		pb.RegisterEnvHTTPServer(hs, srv)
+		pb.RegisterEnvServer(gs, srv)
+	})
+}
+
+// GetEnv 获取指定的环境信息
+func (s *EnvService) GetEnv(c context.Context, req *pb.GetEnvRequest) (*pb.GetEnvReply, error) {
+	var (
+		in  = env.GetEnvRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	result, err := s.uc.GetEnv(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
-	reply := v1.AllEnvReply{}
-	if err := copier.Copy(&reply.List, envs); err != nil {
+
+	reply := pb.GetEnvReply{}
+	if err := valx.Transform(result, &reply); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
 		return nil, errors.TransformError()
 	}
 	return &reply, nil
 }
 
-func (s *EnvService) AddEnv(ctx context.Context, in *v1.AddEnvRequest) (*v1.AddEnvReply, error) {
-	env := &biz.Env{}
-	if err := copier.Copy(env, in); err != nil {
+// ListEnv 获取环境信息列表
+func (s *EnvService) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListEnvReply, error) {
+	var (
+		in  = env.ListEnvRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
 		return nil, errors.TransformError()
 	}
-	id, err := s.uc.AddEnv(kratosx.MustContext(ctx), env)
-	return &v1.AddEnvReply{Id: id}, err
-}
 
-func (s *EnvService) UpdateEnv(ctx context.Context, in *v1.UpdateEnvRequest) (*emptypb.Empty, error) {
-	env := &biz.Env{}
-	if err := copier.Copy(env, in); err != nil {
-		return nil, errors.TransformError()
-	}
-	return nil, s.uc.UpdateEnv(kratosx.MustContext(ctx), env)
-}
-
-func (s *EnvService) DeleteEnv(ctx context.Context, in *v1.DeleteEnvRequest) (*emptypb.Empty, error) {
-	return nil, s.uc.DeleteEnv(kratosx.MustContext(ctx), in.Id)
-}
-
-func (s *EnvService) GetEnvToken(ctx context.Context, in *v1.GetEnvTokenRequest) (*v1.GetEnvTokenReply, error) {
-	env, err := s.uc.GetEnv(kratosx.MustContext(ctx), in.Id)
+	result, total, err := s.uc.ListEnv(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.GetEnvTokenReply{Token: env.Token}, nil
+
+	reply := pb.ListEnvReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
 }
 
-func (s *EnvService) ResetEnvToken(ctx context.Context, in *v1.ResetEnvTokenRequest) (*v1.ResetEnvTokenReply, error) {
-	token, err := s.uc.ResetEnvToken(kratosx.MustContext(ctx), in.Id)
+// CreateEnv 创建环境信息
+func (s *EnvService) CreateEnv(c context.Context, req *pb.CreateEnvRequest) (*pb.CreateEnvReply, error) {
+	var (
+		in = env.Env{
+			Token: crypto.MD5ToUpper([]byte(uuid.NewString())),
+		}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	id, err := s.uc.CreateEnv(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.ResetEnvTokenReply{Token: token}, nil
+
+	return &pb.CreateEnvReply{Id: id}, nil
+}
+
+// UpdateEnv 更新环境信息
+func (s *EnvService) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb.UpdateEnvReply, error) {
+	var (
+		in  = env.Env{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	if err := s.uc.UpdateEnv(ctx, &in); err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateEnvReply{}, nil
+}
+
+// DeleteEnv 删除环境信息
+func (s *EnvService) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.DeleteEnvReply, error) {
+	total, err := s.uc.DeleteEnv(kratosx.MustContext(c), req.Ids)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteEnvReply{Total: total}, nil
+}
+
+// UpdateEnvStatus 更新环境信息状态
+func (s *EnvService) UpdateEnvStatus(c context.Context, req *pb.UpdateEnvStatusRequest) (*pb.UpdateEnvStatusReply, error) {
+	return &pb.UpdateEnvStatusReply{}, s.uc.UpdateEnvStatus(kratosx.MustContext(c), req.Id, req.Status)
+}
+
+func (s *EnvService) GetEnvToken(c context.Context, req *pb.GetEnvTokenRequest) (*pb.GetEnvTokenReply, error) {
+	res, err := s.uc.GetEnv(kratosx.MustContext(c), &env.GetEnvRequest{Id: &req.Id})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.GetEnvTokenReply{Token: res.Token}, nil
+}
+
+func (s *EnvService) ResetEnvToken(c context.Context, req *pb.ResetEnvTokenRequest) (*pb.ResetEnvTokenReply, error) {
+	in := env.Env{
+		Id:    req.Id,
+		Token: crypto.MD5ToUpper([]byte(uuid.NewString())),
+	}
+	return &pb.ResetEnvTokenReply{Token: in.Token}, s.uc.UpdateEnv(kratosx.MustContext(c), &in)
 }

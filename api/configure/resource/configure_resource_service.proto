@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package configure.api.configure.resource.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "configure.api.configure.resource.v1";
+option java_outer_classname = "ResourceV1";
+
+import "api/configure/resource/configure_resource_value.proto";
+import "api/configure/resource/configure_resource.proto";
+import "google/api/annotations.proto";
+
+service Resource{
+
+  // GetResource 获取指定的资源配置信息
+  rpc GetResource (GetResourceRequest) returns (GetResourceReply) {
+    option (google.api.http) = {
+      get: "/configure/api/v1/resource",
+    };
+  }
+
+  // ListResource 获取资源配置信息列表
+  rpc ListResource (ListResourceRequest) returns (ListResourceReply) {
+    option (google.api.http) = {
+      get: "/configure/api/v1/resources",
+    };
+  }
+
+  // CreateResource 创建资源配置信息
+  rpc CreateResource (CreateResourceRequest) returns (CreateResourceReply) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/resource",
+      body: "*"
+    };
+  }
+
+  // UpdateResource 更新资源配置信息
+  rpc UpdateResource (UpdateResourceRequest) returns (UpdateResourceReply) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/resource",
+      body: "*"
+    };
+  }
+
+  // DeleteResource 删除资源配置信息
+  rpc DeleteResource (DeleteResourceRequest) returns (DeleteResourceReply) {
+    option (google.api.http) = {
+      delete: "/configure/api/v1/resource",
+    };
+  }
+
+  // ListResourceValue 获取业务配置值信息列表
+  rpc ListResourceValue (ListResourceValueRequest) returns (ListResourceValueReply) {
+    option (google.api.http) = {
+      get: "/configure/api/v1/resource/values",
+    };
+  }
+
+  // UpdateResourceValue 更新业务配置值信息
+  rpc UpdateResourceValue (UpdateResourceValueRequest) returns (UpdateResourceValueReply) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/resource/values",
+      body: "*"
+    };
+  }
+
+}

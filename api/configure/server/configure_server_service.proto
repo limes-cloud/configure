@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package configure.api.configure.server.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "configure.api.configure.server.v1";
+option java_outer_classname = "ServerV1";
+
+import "api/configure/server/configure_server.proto";
+import "google/api/annotations.proto";
+
+service Server{
+
+  // GetServer 获取指定的服务信息
+  rpc GetServer (GetServerRequest) returns (GetServerReply) {
+    option (google.api.http) = {
+      get: "/configure/api/v1/server",
+    };
+  }
+
+  // ListServer 获取服务信息列表
+  rpc ListServer (ListServerRequest) returns (ListServerReply) {
+    option (google.api.http) = {
+      get: "/configure/api/v1/servers",
+    };
+  }
+
+  // CreateServer 创建服务信息
+  rpc CreateServer (CreateServerRequest) returns (CreateServerReply) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/server",
+      body: "*"
+    };
+  }
+
+  // UpdateServer 更新服务信息
+  rpc UpdateServer (UpdateServerRequest) returns (UpdateServerReply) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/server",
+      body: "*"
+    };
+  }
+
+  // DeleteServer 删除服务信息
+  rpc DeleteServer (DeleteServerRequest) returns (DeleteServerReply) {
+    option (google.api.http) = {
+      delete: "/configure/api/v1/server",
+    };
+  }
+
+  // UpdateServerStatus 更新服务信息状态
+  rpc UpdateServerStatus (UpdateServerStatusRequest) returns (UpdateServerStatusReply) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/server/status",
+      body: "*"
+    };
+  }
+
+}

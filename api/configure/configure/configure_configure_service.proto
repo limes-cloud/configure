@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package configure.api.configure.configure.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "configure.api.configure.configure.v1";
+option java_outer_classname = "ServerV1";
+
+import "api/configure/configure/configure_configure.proto";
+import "google/api/annotations.proto";
+
+
+service Configure {
+  rpc GetConfigure (GetConfigureRequest) returns (GetConfigureReply) {
+    option (google.api.http) = {
+      get: "/configure/api/v1/configure"
+    };
+  }
+
+  rpc UpdateConfigure (UpdateConfigureRequest) returns (UpdateConfigureReply) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/configure",
+      body:"*"
+    };
+  }
+
+  rpc CompareConfigure (CompareConfigureRequest) returns (CompareConfigureReply) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/configure/compare",
+      body:"*",
+    };
+  }
+
+  rpc WatchConfigure (WatchConfigureRequest) returns (stream WatchConfigureReply);
+
+}

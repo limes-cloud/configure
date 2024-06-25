@@ -5,18 +5,30 @@ import (
 )
 
 type Repo interface {
+	// GetBusiness 获取指定的业务配置信息
 	GetBusiness(ctx kratosx.Context, id uint32) (*Business, error)
-	GetBusinessByKeyword(ctx kratosx.Context, key string) (*Business, error)
-	PageBusiness(ctx kratosx.Context, req *PageBusinessRequest) ([]*Business, uint32, error)
 
-	// AllBusiness(ctx kratosx.Context, id uint32) ([]*Business, error)
-	AddBusiness(ctx kratosx.Context, c *Business) (uint32, error)
+	// ListBusiness 获取业务配置信息列表
+	ListBusiness(ctx kratosx.Context, req *ListBusinessRequest) ([]*Business, uint32, error)
 
-	UpdateBusiness(ctx kratosx.Context, c *Business) error
-	DeleteBusiness(ctx kratosx.Context, uint322 uint32) error
-	GetBusinessValues(ctx kratosx.Context, bid uint32) ([]*BusinessValue, error)
-	UpdateBusinessValue(ctx kratosx.Context, rvs *BusinessValue) error
-	CheckBusinessValue(ctx kratosx.Context, id uint32, value string) bool
+	// CreateBusiness 创建业务配置信息
+	CreateBusiness(ctx kratosx.Context, req *Business) (uint32, error)
+
+	// UpdateBusiness 更新业务配置信息
+	UpdateBusiness(ctx kratosx.Context, req *Business) error
+
+	// DeleteBusiness 删除业务配置信息
+	DeleteBusiness(ctx kratosx.Context, ids []uint32) (uint32, error)
+
+	// ListBusinessValue 获取业务配置值信息列表
+	ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*BusinessValue, uint32, error)
+
+	// UpdateBusinessValues 更新业务配置值信息
+	UpdateBusinessValues(ctx kratosx.Context, bs []*BusinessValue) error
+
+	// AllBusinessField 获取全部可用的字段
 	AllBusinessField(ctx kratosx.Context, sid uint32) ([]string, error)
+
+	// AllBusinessValue 获取全部可以用的值
 	AllBusinessValue(ctx kratosx.Context, eid, sid uint32) ([]*BusinessValue, error)
 }

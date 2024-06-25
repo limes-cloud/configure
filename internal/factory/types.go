@@ -8,8 +8,8 @@ type Compare struct {
 }
 
 type ParseByContentRequest struct {
-	EnvId    uint32 `json:"env_id"`
-	ServerId uint32 `json:"server_id"`
+	EnvId    uint32 `json:"envId"`
+	ServerId uint32 `json:"serverId"`
 	Format   string `json:"format"`
 	Content  string `json:"content"`
 }

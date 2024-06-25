@@ -1,15 +1,15 @@
 package configure
 
-//	type UpdateConfigureRequest struct {
-//		ServerId    uint32 `json:"server_id"`
-//		EnvId       uint32 `json:"env_id"`
-//		Description string `json:"description"`
-//	}
+type ListConfigureRequest struct {
+	Page     uint32 `json:"page"`
+	PageSize uint32 `json:"pageSize"`
+	ServerId uint32 `json:"serverId"`
+	EnvId    uint32 `json:"envId"`
+}
+
 type CompareConfigureRequest struct {
-	ServerId uint32 `json:"server_id"`
-	EnvId    uint32 `json:"env_id"`
-	Format   string `json:"format"`
-	Content  string `json:"content"`
+	ServerId uint32 `json:"serverId"`
+	EnvId    uint32 `json:"envId"`
 }
 
 type CompareConfigureReply struct {
@@ -20,8 +20,8 @@ type CompareConfigureReply struct {
 }
 
 type WatcherConfigRequest struct {
-	EnvId    uint32
-	ServerId uint32
+	Token  string
+	Server string
 }
 
 type WatcherConfigureReply struct {

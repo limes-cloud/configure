@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package configure.api.configure.env.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "configure.api.configure.env.v1";
+option java_outer_classname = "EnvV1";
+
+import "validate/validate.proto";
+
+message GetEnvRequest {
+  optional uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+}
+
+message GetEnvReply {
+  uint32 id = 1;
+  string keyword = 2;
+  string name = 3;
+  optional bool status = 4;
+  optional string description = 5;
+  uint32 createdAt = 6;
+  uint32 updatedAt = 7;
+}
+
+message ListEnvRequest {
+  optional string order = 1[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 2[(validate.rules).string = {in: ["id"]}];
+  optional string keyword = 3;
+  optional string name = 4;
+  optional bool status = 5;
+}
+
+message ListEnvReply {
+  message Env {
+    uint32 id = 1;
+    string keyword = 2;
+    string name = 3;
+    optional bool status = 4;
+    optional string description = 5;
+    uint32 createdAt = 6;
+    uint32 updatedAt = 7;
+  }
+
+  uint32 total = 1;
+  repeated Env list = 2;
+}
+
+message CreateEnvRequest {
+  string keyword = 1[(validate.rules).string = {min_len: 1}];
+  string name = 2[(validate.rules).string = {min_len: 1}];
+  optional bool status = 3;
+  optional string description = 4;
+}
+
+message CreateEnvReply {
+  uint32 id = 1;
+}
+
+message UpdateEnvRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string name = 3[(validate.rules).string = {min_len: 1}];
+  optional string description = 4;
+}
+
+message UpdateEnvReply {
+}
+
+message DeleteEnvRequest {
+  repeated uint32 ids = 1[(validate.rules).repeated = {min_items: 1, unique:true, max_items:50}];
+}
+
+message DeleteEnvReply {
+  uint32 total = 1;
+}
+
+message GetEnvTokenRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+}
+
+message GetEnvTokenReply {
+  string token = 1;
+}
+
+message ResetEnvTokenRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+}
+
+message ResetEnvTokenReply{
+  string token = 1;
+}
+
+message UpdateEnvStatusRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  bool status = 2;
+}
+
+message UpdateEnvStatusReply {
+  string token = 1;
+}
+

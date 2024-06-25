@@ -1,94 +1,124 @@
 package business
 
 import (
+	"encoding/json"
+	"strconv"
+
 	"github.com/limes-cloud/kratosx"
 
-	"github.com/limes-cloud/configure/api/errors"
-	"github.com/limes-cloud/configure/internal/config"
+	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/internal/conf"
 )
 
 type UseCase struct {
-	config *config.Config
-	repo   Repo
+	conf *conf.Config
+	repo Repo
 }
 
-const (
-	ObjectType = "object"
-	FloatType  = "float"
-)
-
-func NewUseCase(config *config.Config, repo Repo) *UseCase {
-	return &UseCase{config: config, repo: repo}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-// GetBusiness 获取指定业务变量信息
-func (u *UseCase) GetBusiness(ctx kratosx.Context, id uint32) (*Business, error) {
-	business, err := u.repo.GetBusiness(ctx, id)
+// GetBusiness 获取指定的业务配置信息
+func (u *UseCase) GetBusiness(ctx kratosx.Context, req *GetBusinessRequest) (*Business, error) {
+	var (
+		res *Business
+		err error
+	)
+
+	if req.Id != nil {
+		res, err = u.repo.GetBusiness(ctx, *req.Id)
+	} else {
+		return nil, errors.ParamsError()
+	}
+
 	if err != nil {
-		return nil, errors.NotRecordError()
+		return nil, errors.GetError(err.Error())
 	}
-	return business, nil
+	return res, nil
 }
 
-// GetBusinessByKeyword 获取指定标识的业务变量信息
-func (u *UseCase) GetBusinessByKeyword(ctx kratosx.Context, keyword string) (*Business, error) {
-	business, err := u.repo.GetBusinessByKeyword(ctx, keyword)
+// ListBusiness 获取业务配置信息列表
+func (u *UseCase) ListBusiness(ctx kratosx.Context, req *ListBusinessRequest) ([]*Business, uint32, error) {
+	list, total, err := u.repo.ListBusiness(ctx, req)
 	if err != nil {
-		return nil, errors.NotRecordError()
-	}
-	return business, nil
-}
-
-// AddBusiness 添加业务变量信息
-func (u *UseCase) AddBusiness(ctx kratosx.Context, business *Business) (uint32, error) {
-	id, err := u.repo.AddBusiness(ctx, business)
-	if err != nil {
-		return 0, errors.DatabaseErrorFormat(err.Error())
-	}
-	return id, nil
-}
-
-// UpdateBusiness 更新业务变量信息
-func (u *UseCase) UpdateBusiness(ctx kratosx.Context, business *Business) error {
-	if err := u.repo.UpdateBusiness(ctx, business); err != nil {
-		return errors.DatabaseErrorFormat(err.Error())
-	}
-	return nil
-}
-
-// DeleteBusiness 删除业务变量信息
-func (u *UseCase) DeleteBusiness(ctx kratosx.Context, id uint32) error {
-	if err := u.repo.DeleteBusiness(ctx, id); err != nil {
-		return errors.DatabaseErrorFormat(err.Error())
-	}
-	return nil
-}
-
-// PageBusiness 获取指定服务的业务变量
-func (u *UseCase) PageBusiness(ctx kratosx.Context, req *PageBusinessRequest) ([]*Business, uint32, error) {
-	list, total, err := u.repo.PageBusiness(ctx, req)
-	if err != nil {
-		return nil, 0, errors.DatabaseErrorFormat(err.Error())
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
-// GetBusinessValues 获取指定业务变量的所有环境值
-func (u *UseCase) GetBusinessValues(ctx kratosx.Context, bid uint32) ([]*BusinessValue, error) {
-	list, err := u.repo.GetBusinessValues(ctx, bid)
+// CreateBusiness 创建业务配置信息
+func (u *UseCase) CreateBusiness(ctx kratosx.Context, req *Business) (uint32, error) {
+	id, err := u.repo.CreateBusiness(ctx, req)
 	if err != nil {
-		return nil, errors.DatabaseErrorFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
-	return list, nil
+	return id, nil
 }
 
-// UpdateBusinessValue 更新指定业务变量的值
-func (u *UseCase) UpdateBusinessValue(ctx kratosx.Context, rv *BusinessValue) error {
-	if !u.repo.CheckBusinessValue(ctx, rv.BusinessId, rv.Value) {
-		return errors.BusinessValueError()
+// UpdateBusiness 更新业务配置信息
+func (u *UseCase) UpdateBusiness(ctx kratosx.Context, req *Business) error {
+	if err := u.repo.UpdateBusiness(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
-	if err := u.repo.UpdateBusinessValue(ctx, rv); err != nil {
-		return errors.DatabaseErrorFormat(err.Error())
+	return nil
+}
+
+// DeleteBusiness 删除业务配置信息
+func (u *UseCase) DeleteBusiness(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	total, err := u.repo.DeleteBusiness(ctx, ids)
+	if err != nil {
+		return 0, errors.DeleteError(err.Error())
+	}
+	return total, nil
+}
+
+// ListBusinessValue 获取业务配置值信息列表
+func (u *UseCase) ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*BusinessValue, uint32, error) {
+	list, total, err := u.repo.ListBusinessValue(ctx, bid)
+	if err != nil {
+		return nil, 0, errors.ListError(err.Error())
+	}
+	return list, total, nil
+}
+
+// UpdateBusinessValue 更新业务配置值信息
+func (u *UseCase) UpdateBusinessValue(ctx kratosx.Context, list []*BusinessValue) error {
+	// 检验数据类型
+	business, err := u.repo.GetBusiness(ctx, list[0].BusinessId)
+	if err != nil {
+		return errors.GetError(err.Error())
+	}
+
+	for _, item := range list {
+		var (
+			isAllow = true
+			value   = item.Value
+		)
+		switch business.Type {
+		case "int":
+			_, err := strconv.Atoi(value)
+			isAllow = err == nil
+		case "float":
+			_, err := strconv.ParseFloat(value, 64)
+			isAllow = err == nil
+		case "string":
+			isAllow = true
+		case "bool":
+			isAllow = value == "true" || value == "false"
+		case "object":
+			var m any
+			isAllow = json.Unmarshal([]byte(value), &m) == nil
+		default:
+			isAllow = false
+		}
+		if !isAllow {
+			return errors.BusinessValueTypeError()
+		}
+	}
+
+	if err := u.repo.UpdateBusinessValues(ctx, list); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }

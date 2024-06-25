@@ -1,10 +1,12 @@
 package server
 
-import ktypes "github.com/limes-cloud/kratosx/types"
-
 type Server struct {
-	ktypes.BaseModel
-	Keyword     string `json:"keyword"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Id          uint32  `json:"id"`
+	Token       string  `json:"token"`
+	Keyword     string  `json:"keyword"`
+	Name        string  `json:"name"`
+	Description *string `json:"description"`
+	Status      *bool   `json:"status"`
+	CreatedAt   int64   `json:"createdAt"`
+	UpdatedAt   int64   `json:"updatedAt"`
 }

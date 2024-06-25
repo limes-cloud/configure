@@ -2,14 +2,13 @@ package factory
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"regexp"
 	"strings"
 
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
 
-	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/biz/business"
 	"github.com/limes-cloud/configure/internal/biz/resource"
 )
@@ -26,7 +25,6 @@ type factory struct {
 }
 
 type Factory interface {
-	TemplateVersion(body []byte) string
 	CheckTemplate(ctx kratosx.Context, srvId uint32, template string) error
 	ParseByContent(ctx kratosx.Context, req *ParseByContentRequest) (string, error)
 }
@@ -36,11 +34,6 @@ func New(bsRepo business.Repo, rsRepo resource.Repo) Factory {
 		bsRepo: bsRepo,
 		rsRepo: rsRepo,
 	}
-}
-
-// TemplateVersion 获取模板的版本信息
-func (f *factory) TemplateVersion(body []byte) string {
-	return util.MD5ToUpper(body)[:12]
 }
 
 // fillKey 获取真实的模板变量
@@ -69,7 +62,7 @@ func (f *factory) CheckTemplate(ctx kratosx.Context, srvId uint32, template stri
 	// 进行参数判断
 	for _, key := range tempKeys {
 		if !keys[key] {
-			return errors.CheckTemplateErrorFormat("非法字段：%v", key)
+			return errors.New("非法字段：" + key)
 		}
 	}
 	return nil
@@ -156,7 +149,7 @@ func (f *factory) ParseByContent(ctx kratosx.Context, req *ParseByContentRequest
 	// 获取字段的配置值
 	values, err := f.getVariableValue(ctx, req.EnvId, req.ServerId)
 	if err != nil {
-		return "", errors.ResourceFormatValueErrorFormat(err.Error())
+		return "", err
 	}
 
 	// 进行值替换
@@ -164,7 +157,7 @@ func (f *factory) ParseByContent(ctx kratosx.Context, req *ParseByContentRequest
 	tempKeys := reg.FindAllString(req.Content, -1)
 	for _, key := range tempKeys {
 		if val, ok := values[key]; !ok {
-			return "", errors.ParseTemplateErrorFormat("非法字段：%v", key)
+			return "", errors.New("非法字段：" + key)
 		} else {
 			if req.Format == FormatJson {
 				req.Content = f.replaceByFormatJson(req.Content, key, val)

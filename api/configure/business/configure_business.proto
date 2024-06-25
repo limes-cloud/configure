@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package configure.api.configure.business.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "configure.api.configure.business.v1";
+option java_outer_classname = "BusinessV1";
+
+import "validate/validate.proto";
+
+message GetBusinessRequest {
+  optional uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message GetBusinessReply {
+  uint32 id = 1;
+  uint32 serverId = 2;
+  string keyword = 3;
+  string type = 4;
+  optional string description = 5;
+  uint32 createdAt = 6;
+  uint32 updatedAt = 7;
+}
+
+message ListBusinessRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id"]}];
+  optional uint32 serverId = 5;
+  optional string keyword = 6;
+}
+
+message ListBusinessReply {
+  message Business {
+    uint32 id = 1;
+    uint32 serverId = 2;
+    string keyword = 3;
+    string type = 4;
+    optional string description = 5;
+    uint32 createdAt = 6;
+    uint32 updatedAt = 7;
+  }
+
+  uint32 total = 1;
+  repeated Business list = 2;
+}
+
+message CreateBusinessRequest {
+  uint32 serverId = 1[(validate.rules).uint32 = {gt: 0}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string type = 3[(validate.rules).string = {min_len: 1}];
+  optional string description = 4;
+}
+
+message CreateBusinessReply {
+  uint32 id = 1;
+}
+
+message UpdateBusinessRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string type = 3[(validate.rules).string = {min_len: 1}];
+  optional string description = 4;
+}
+
+message UpdateBusinessReply {
+}
+
+message DeleteBusinessRequest {
+  repeated uint32 ids = 1[(validate.rules).repeated = {min_items: 1, unique:true, max_items:50}];
+}
+
+message DeleteBusinessReply {
+  uint32 total = 1;
+}
+
