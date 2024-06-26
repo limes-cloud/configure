@@ -5,13 +5,13 @@ import (
 )
 
 type Resource struct {
-	Keyword        string            `json:"keyword" gorm:"column:keyword"`
-	Fields         string            `json:"fields" gorm:"column:fields"`
-	Tag            string            `json:"tag" gorm:"column:tag"`
-	Private        *bool             `json:"private" gorm:"column:private"`
-	Description    *string           `json:"description" gorm:"column:description"`
-	Servers        []*Server         `json:"servers" gorm:"many2many:resource_server"`
-	ResourceServer []*ResourceServer `json:"resourceServer"`
+	Keyword         string            `json:"keyword" gorm:"column:keyword"`
+	Fields          string            `json:"fields" gorm:"column:fields"`
+	Tag             string            `json:"tag" gorm:"column:tag"`
+	Private         *bool             `json:"private" gorm:"column:private"`
+	Description     *string           `json:"description" gorm:"column:description"`
+	Servers         []*Server         `json:"servers" gorm:"many2many:resource_server"`
+	ResourceServers []*ResourceServer `json:"resourceServers"`
 	types.BaseModel
 }
 

@@ -62,7 +62,7 @@ func (u *UseCase) UpdateConfigure(ctx kratosx.Context, req *Configure) error {
 	}
 
 	// 生成数据
-	req.Version = crypto.MD5([]byte(req.Content))
+	req.Version = crypto.MD5([]byte(content))
 	req.Format = format
 	req.Content = content
 

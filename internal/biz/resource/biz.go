@@ -1,10 +1,10 @@
 package resource
 
 import (
-	"encoding/json"
 	"fmt"
 	"strings"
 
+	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
 
 	"github.com/limes-cloud/configure/api/configure/errors"
@@ -94,7 +94,7 @@ func (u *UseCase) UpdateResourceValue(ctx kratosx.Context, list []*ResourceValue
 	}
 	fields := strings.Split(resource.Fields, ",")
 
-	for _, item := range list {
+	for ind, item := range list {
 		var (
 			value = item.Value
 		)
@@ -107,6 +107,7 @@ func (u *UseCase) UpdateResourceValue(ctx kratosx.Context, list []*ResourceValue
 				return fmt.Errorf("缺少字段%s", key)
 			}
 		}
+		list[ind].Value, _ = json.MarshalToString(m)
 	}
 
 	if err := u.repo.UpdateResourceValues(ctx, list); err != nil {

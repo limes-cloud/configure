@@ -1,9 +1,9 @@
 package business
 
 import (
-	"encoding/json"
 	"strconv"
 
+	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
 
 	"github.com/limes-cloud/configure/api/configure/errors"
@@ -90,7 +90,7 @@ func (u *UseCase) UpdateBusinessValue(ctx kratosx.Context, list []*BusinessValue
 		return errors.GetError(err.Error())
 	}
 
-	for _, item := range list {
+	for ind, item := range list {
 		var (
 			isAllow = true
 			value   = item.Value
@@ -109,6 +109,7 @@ func (u *UseCase) UpdateBusinessValue(ctx kratosx.Context, list []*BusinessValue
 		case "object":
 			var m any
 			isAllow = json.Unmarshal([]byte(value), &m) == nil
+			list[ind].Value, _ = json.MarshalToString(m)
 		default:
 			isAllow = false
 		}

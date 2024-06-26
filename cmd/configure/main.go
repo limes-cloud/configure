@@ -23,7 +23,6 @@ const (
 
 func main() {
 	app := kratosx.New(
-		// kratosx.Config(file.NewSource("internal/config/config.yaml")),
 		kratosx.RegistrarServer(RegisterServer),
 		kratosx.Options(kratos.AfterStart(func(_ context.Context) error {
 			printx.ArtFont(fmt.Sprintf("Hello %s !", AppName))

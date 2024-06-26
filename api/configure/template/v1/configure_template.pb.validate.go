@@ -680,15 +680,19 @@ func (m *GetTemplateReply) validate(all bool) error {
 
 	// no validation rules for ServerId
 
-	// no validation rules for Content
-
 	// no validation rules for Description
 
 	// no validation rules for Version
 
-	if m.IsUse != nil {
-		// no validation rules for IsUse
-	}
+	// no validation rules for Format
+
+	// no validation rules for IsUse
+
+	// no validation rules for Compare
+
+	// no validation rules for Content
+
+	// no validation rules for CreatedAt
 
 	if len(errors) > 0 {
 		return GetTemplateReplyMultiError(errors)
@@ -2186,10 +2190,6 @@ func (m *ListTemplateReply_Template) validate(all bool) error {
 	// no validation rules for Format
 
 	// no validation rules for IsUse
-
-	// no validation rules for Compare
-
-	// no validation rules for Content
 
 	// no validation rules for CreatedAt
 

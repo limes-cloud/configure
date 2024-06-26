@@ -24,9 +24,7 @@ message ListTemplateReply {
     string version = 4;
     string format = 5;
     bool isUse = 6;
-    string compare = 7;
-    string content = 8;
-    uint32 createdAt = 9;
+    uint32 createdAt = 7;
   }
   uint32 total = 1;
   repeated Template list = 2;
@@ -57,10 +55,13 @@ message GetTemplateRequest{
 message GetTemplateReply{
   uint32 id = 1;
   uint32 serverId = 2;
-  string content = 3;
-  string description = 4;
-  string version = 5;
-  optional bool isUse = 6;
+  string description = 3;
+  string version = 4;
+  string format = 5;
+  bool isUse = 6;
+  string compare = 7;
+  string content = 8;
+  uint32 createdAt = 9;
 }
 
 // 新增模板

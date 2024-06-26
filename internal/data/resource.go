@@ -190,7 +190,7 @@ func (r resourceRepo) UpdateResourceValues(ctx kratosx.Context, bs []*biz.Resour
 func (r resourceRepo) AllResourceField(ctx kratosx.Context, sid uint32) ([]string, error) {
 	var (
 		ids  []uint32
-		list []*biz.Resource
+		list []*model.Resource
 	)
 	if err := ctx.DB().Select("resource_id").
 		Model(model.ResourceServer{}).
@@ -200,7 +200,7 @@ func (r resourceRepo) AllResourceField(ctx kratosx.Context, sid uint32) ([]strin
 	}
 
 	if err := ctx.DB().Model(model.Resource{}).
-		Select("fields").
+		Select("fields", "keyword").
 		Where("id in ? or private=false", ids).
 		Find(&list).Error; err != nil {
 		return nil, err
