@@ -1,7 +1,8 @@
 env: TEST
 server:
   http:
-    addr: 0.0.0.0:6081
+    host: 0.0.0.0
+    port: 6081
     timeout: 10s
     cors:
       allowCredentials: true
@@ -13,7 +14,8 @@ server:
       emitUnpopulated: true
       useProtoNames: true
   grpc:
-    addr: 0.0.0.0:6082
+    host: 0.0.0.0
+    port: 6082
     timeout: 10s
 log:
   level: 0 #日志输出等级
@@ -52,13 +54,16 @@ database:
       slowThreshold: 2s #慢sql阈值
 loader:
   login: static/cert/login.pem
+jwt:
+  secret: limeschool
+  expire: 2h
+  renewal: 600s
+  whitelist:
+    POST:/configure/api/v1/login: true
+    POST:/configure/api/v1/token/refresh: true
 business:
   webui:
     addr: ":6080"
   author:
     adminUser: 1280291001@qq.com
     adminPassword: xrxy0852
-logging:
-  enable: true
-  whitelist:
-    GET:/configure/v1/list: true  # 登录

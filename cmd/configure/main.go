@@ -11,6 +11,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/config"
 	"github.com/limes-cloud/kratosx/pkg/printx"
+	"github.com/limes-cloud/kratosx/pkg/webserver"
 	_ "go.uber.org/automaxprocs"
 
 	"github.com/limes-cloud/configure/internal/conf"
@@ -44,8 +45,8 @@ func RegisterServer(c config.Config, hs *thttp.Server, gs *grpc.Server) {
 			log.Printf("business配置变更失败：%s", err.Error())
 		}
 	})
-	// go webserver.Run("web/dist/", cfg.WebUI.Addr, map[string]any{
-	//	"port": c.App().Server.Http.Port,
-	// })
+	go webserver.Run("web/dist/", cfg.WebUI.Addr, map[string]any{
+		"Port": c.App().Server.Http.Port,
+	})
 	service.New(cfg, hs, gs)
 }

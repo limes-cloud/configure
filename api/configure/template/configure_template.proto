@@ -24,7 +24,8 @@ message ListTemplateReply {
     string version = 4;
     string format = 5;
     bool isUse = 6;
-    uint32 createdAt = 7;
+    string compare = 7;
+    uint32 createdAt = 8;
   }
   uint32 total = 1;
   repeated Template list = 2;

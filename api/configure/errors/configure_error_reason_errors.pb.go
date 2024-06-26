@@ -470,3 +470,83 @@ func ServerNotFound(args ...any) *errors.Error {
 		return errors.New(500, ErrorReason_ServerNotFound.String(), "服务不存在:"+msg)
 	}
 }
+
+func IsPasswordError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_PasswordError.String() && e.Code == 500
+}
+
+func PasswordError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_PasswordError.String(), "密码错误")
+	case 1:
+		return errors.New(500, ErrorReason_PasswordError.String(), "密码错误:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_PasswordError.String(), "密码错误:"+msg)
+	}
+}
+
+func IsPasswordExpireError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_PasswordExpireError.String() && e.Code == 500
+}
+
+func PasswordExpireError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_PasswordExpireError.String(), "密码已过期")
+	case 1:
+		return errors.New(500, ErrorReason_PasswordExpireError.String(), "密码已过期:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_PasswordExpireError.String(), "密码已过期:"+msg)
+	}
+}
+
+func IsRefreshTokenError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_RefreshTokenError.String() && e.Code == 401
+}
+
+func RefreshTokenError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败")
+	case 1:
+		return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败:"+msg)
+	}
+}
+
+func IsSystemError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_SystemError.String() && e.Code == 500
+}
+
+func SystemError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_SystemError.String(), "系统错误")
+	case 1:
+		return errors.New(500, ErrorReason_SystemError.String(), "系统错误:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_SystemError.String(), "系统错误:"+msg)
+	}
+}

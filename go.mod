@@ -4,6 +4,7 @@ go 1.21.1
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
+	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12

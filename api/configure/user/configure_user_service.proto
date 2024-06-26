@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package configure.api.configure.user.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "configure.api.configure.user.v1";
+option java_outer_classname = "UserV1";
+
+import "api/configure/user/configure_user.proto";
+import "google/api/annotations.proto";
+
+service User {
+  // 用户登录
+  rpc Login(LoginRequest) returns(LoginReply){
+    option (google.api.http) = {
+      post: "/configure/api/v1/login",
+      body: "*"
+    };
+  }
+
+  // RefreshToken 刷新token
+  rpc RefreshToken(RefreshTokenRequest) returns(RefreshTokenReply){
+    option (google.api.http) = {
+      post: "/configure/api/v1/token/refresh",
+    };
+  }
+}

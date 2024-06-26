@@ -86,7 +86,7 @@ func (r templateRepo) ListTemplate(ctx kratosx.Context, req *biz.ListTemplateReq
 		bs    []*biz.Template
 		ms    []*model.Template
 		total int64
-		fs    = []string{"id", "is_use", "version", "description", "created_at", "updated_at"}
+		fs    = []string{"id", "is_use", "version", "compare", "description", "created_at", "updated_at"}
 	)
 
 	db := ctx.DB().Model(model.Template{}).Select(fs).Where("server_id=?", req.ServerId)
