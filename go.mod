@@ -8,7 +8,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratosx v1.0.44
+	github.com/limes-cloud/kratosx v1.0.45
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917
 	google.golang.org/grpc v1.60.1

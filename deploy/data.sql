@@ -1,3 +1,4 @@
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -17,7 +18,7 @@ SET time_zone = "+00:00";
 --
 -- 表的结构 `business`
 --
-
+DROP TABLE IF EXISTS `business`;
 CREATE TABLE `business` (
                             `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                             `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -47,7 +48,7 @@ INSERT INTO `business` (`id`, `created_at`, `updated_at`, `server_id`, `keyword`
 --
 -- 表的结构 `business_value`
 --
-
+DROP TABLE IF EXISTS `business_value`;
 CREATE TABLE `business_value` (
                                   `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                                   `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -57,9 +58,6 @@ CREATE TABLE `business_value` (
                                   `value` text NOT NULL COMMENT '业务变量id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='业务变量值';
 
---
--- 转存表中的数据 `business_value`
---
 
 INSERT INTO `business_value` (`id`, `created_at`, `updated_at`, `env_id`, `business_id`, `value`) VALUES
                                                                                                       (52, 1719371012, 1719465259, 1, 6, '[\"jpg\",\"png\",\"txt\",\"ppt\",\"pptx\",\"mp4\",\"pdf\"]'),
@@ -87,12 +85,8 @@ INSERT INTO `business_value` (`id`, `created_at`, `updated_at`, `env_id`, `busin
                                                                                                       (86, 1719463217, 1719463217, 2, 5, '{\"title\":\"统一应用管理平台\",\"desc\":\"开放协作，拥抱未来，统一应用管理平台\",\"copyright\":\"Copyright © 2024 lime.qlime.cn. All rights reserved.\",\"logo\":\"http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image\",\"watermark\":\"go-platform\"}'),
                                                                                                       (87, 1719463217, 1719463217, 3, 5, '{\"title\":\"统一应用管理平台\",\"desc\":\"开放协作，拥抱未来，统一应用管理平台\",\"copyright\":\"Copyright © 2024 lime.qlime.cn. All rights reserved.\",\"logo\":\"http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image\",\"watermark\":\"go-platform\"}');
 
--- --------------------------------------------------------
 
---
--- 表的结构 `configure`
---
-
+DROP TABLE IF EXISTS `configure`;
 CREATE TABLE `configure` (
                              `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                              `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -105,9 +99,7 @@ CREATE TABLE `configure` (
                              `description` varchar(128) DEFAULT NULL COMMENT '配置描述'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置内容';
 
---
--- 转存表中的数据 `configure`
---
+
 
 INSERT INTO `configure` (`id`, `created_at`, `updated_at`, `server_id`, `env_id`, `content`, `version`, `format`, `description`) VALUES
                                                                                                                                      (1, 1712995716, 1719466969, 1, 1, 'addr: 0.0.0.0:7080\nname: gateway\nversion: v1\nmiddlewares:\n  - name: bbr\n  - name: cors\n    options:\n      allowCredentials: true\n      allowOrigins:\n        - \'*\'\n      allowMethods:\n        - GET\n        - POST\n        - PUT\n        - DELETE\n        - OPTIONS\n      AllowHeaders:\n        - Content-Type\n        - Content-Length\n        - Authorization\n      ExposeHeaders:\n        - Content-Length\n        - Access-Control-Allow-Headers\n  - name: tracing\n  - name: logging\n  - name: transcoder\nendpoints:\n  - path: /manager/api/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7010\n  - path: /manager/client/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7010\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/usercenter/client/v1/auth\n          method: POST\n  - path: /configure/api/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:6081\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/manager/api/v1/auth\n          method: POST\n  - path: /resource/api/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7020\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/manager/api/v1/auth\n          method: POST\n          whiteList:\n            - path: /resource/api/v1/static/*\n              method: GET\n            - path: /resource/api/v1/download/*\n              method: GET\n  - path: /resource/client/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7020\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/user-center/client/token/parse\n          method: POST\n  - path: /usercenter/api/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7030\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/manager/api/v1/auth\n          method: POST\n  - path: /usercenter/client/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7030\n  - path: /cron/api/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7040\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/manager/api/v1/auth\n          method: POST\n  - path: /partyaffairs/api/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7100\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/manager/api/v1/auth\n          method: POST\n  - path: /partyaffairs/client/*\n    timeout: 10s\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: 127.0.0.1:7100\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:7080/usercenter/api/v1/auth\n          method: POST', 'a7775b6bde7833d9171d6365dc49640c', 'yaml', '初始化模板'),
@@ -126,12 +118,8 @@ INSERT INTO `configure` (`id`, `created_at`, `updated_at`, `server_id`, `env_id`
                                                                                                                                      (14, 1712995716, 1719474386, 5, 3, '\nenv: PROD\nserver:\n  http:\n    host: 127.0.0.1\n    port: 7030\n    timeout: 10s\n    marshal:\n      emitUnpopulated: true\n      useProtoNames: true\n  grpc:\n    host: 127.0.0.1\n    port: 8030\n    timeout: 10s\nclient:\n  - server: Resource\n    type: direct\n    backends:\n      - target: 127.0.0.1:8020\nlog:\n  level: 0\n  output:\n    - stdout\n    - file\n  file:\n    name: ./tmp/runtime/output.log\n    maxSize: 1\n    maxBackup: 5\n    maxAge: 1\n    compress: false\ndatabase:\n  system:\n    enable: true #是否启用数据库\n    drive: mysql #数据库类型\n    autoCreate: true #是否自动创建数据库\n    connect:\n      username: user_center\n      password: Ti7MaKJJznywNBJb\n      host: 127.0.0.1\n      port: 3306\n      dbName: usercenter\n      option: ?charset=utf8mb4&parseTime=True&loc=Local\n    config:\n      transformError:\n        enable: true\n      initializer:\n        enable: true\n        path: deploy/data.sql\n      maxLifetime: 2h #最大生存时间\n      maxOpenConn: 20 #最大连接数量\n      maxIdleConn: 10 #最大空闲数量\n      logLevel: 4 #日志等级\n      slowThreshold: 2s #慢sql阈值\nredis:\n  cache:\n    enable: true\n    host: 127.0.0.1:6379\n    username: \n    password: \ncaptcha:\n  loginImage:\n    type: image\n    length: 6\n    expire: 180s\n    redis: cache\n    height: 80\n    width: 200\n    skew: 0.7\n    dotCount: 80\n    refresh: true\n  bindImage:\n    type: image\n    length: 6\n    expire: 180s\n    redis: cache\n    height: 80\n    width: 200\n    skew: 0.7\n    dotCount: 80\n    refresh: true\n  registerImage:\n    type: image\n    length: 6\n    expire: 180s\n    redis: cache\n    height: 80\n    width: 200\n    skew: 0.7\n    dotCount: 80\n    refresh: true\n  loginEmail:\n    type: email\n    length: 6\n    expire: 180s\n    redis: cache\n    template: login\n  bindEmail:\n    type: email\n    length: 6\n    expire: 180s\n    redis: cache\n    template: bind\n  registerEmail:\n    type: email\n    length: 6\n    expire: 180s\n    redis: cache\n    template: register\nloader:\n  password: static/cert/password.pem\nemail:\n  template:\n    login:\n      subject: 登录验证码发送通知\n      path: static/template/email/default.html\n      type: text/html\n    bind:\n      subject: 绑定验证码发送通知\n      path: static/template/email/default.html\n      type: text/html\n    register:\n      subject: 注册验证码发送通知\n      path: static/template/email/default.html\n      type: text/html\n  user: 860808187@qq.com\n  name: 青岑云\n  host: smtp.qq.com\n  port: 25\n  password: fyudafdzqmhwbfbd\njwt:\n  redis: cache\n  secret: limes-cloud-client-prod\n  expire: 2h\n  renewal: 600s\n  whitelist: {\"*:/usercenter/api/*\":true,\"*:/usercenter/client/*\":true}\nbusiness:\n  service:\n    resource: 127.0.0.1:8020\n', '7e70eea5f29a991ac6d0b7c8c876c398', 'yaml', '初始化配置'),
                                                                                                                                      (15, 1712995716, 1712995716, 6, 3, '\nenv: PROD\nserver:\n  http:\n    host: 127.0.0.1\n    port: 7100\n    timeout: 10s\n    marshal:\n      emitUnpopulated: true\n      useProtoNames: true\n  grpc:\n    host: 127.0.0.1\n    port: 8100\n    timeout: 10s\nclient:\n  - server: Resource\n    type: direct\n    backends:\n      - target: 127.0.0.1:8003\n  - server: UserCenter\n    type: direct\n    backends:\n      - target: 127.0.0.1:8004\nlog:\n  level: 0\n  output:\n    - stdout\n    - file\n  file:\n    name: ./tmp/runtime/output.log\n    maxSize: 1\n    maxBackup: 5\n    maxAge: 1\n    compress: false\ndatabase:\n  system:\n    enable: true #是否启用数据库\n    drive: mysql #数据库类型\n    autoCreate: true #是否自动创建数据库\n    connect:\n      username: party_affairs\n      password: Ti7MaKJJznywNBJb\n      host: 127.0.0.1\n      port: 3306\n      dbName: party_affairs\n      option: ?charset=utf8mb4&parseTime=True&loc=Local\n    config:\n      transformError:\n        enable: true\n      initializer:\n        enable: true\n        path: deploy/data.sql\n      maxLifetime: 2h #最大生存时间\n      maxOpenConn: 20 #最大连接数量\n      maxIdleConn: 10 #最大空闲数量\n      logLevel: 4 #日志等级\n      slowThreshold: 2s #慢sql阈值\nbusiness:\n  auth:\n    yiBan:\n      appId: e4750b34230b48e1\n      appSecret: b0891a7f6018e5a76b085e3cb9548edd\n', '8cd386b9b9f1f4be35be3695edf65380', 'yaml', '自动初始化');
 
--- --------------------------------------------------------
 
---
--- 表的结构 `env`
---
-
+DROP TABLE IF EXISTS `env`;
 CREATE TABLE `env` (
                        `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                        `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -143,39 +131,25 @@ CREATE TABLE `env` (
                        `status` tinyint(1) DEFAULT '0' COMMENT '环境状态'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='环境信息';
 
---
--- 转存表中的数据 `env`
---
+
 
 INSERT INTO `env` (`id`, `created_at`, `updated_at`, `keyword`, `name`, `description`, `token`, `status`) VALUES
                                                                                                               (1, 1712995716, 1719369848, 'TEST', '测试环境', '用于本地测试', '1025D32F6CA7A2A320FE091B22C5DF3C', 1),
                                                                                                               (2, 1712995716, 1719245213, 'PRE', '预发布环境', '用于上线前测试', '862BBE3D5BE34A780305DA84A8DD5147', 1),
                                                                                                               (3, 1712995716, 1712995716, 'PROD', '生产环境', '用于线上真实环境', '5B655B7D4A51BF79C974C9F27C27D992', 1);
 
--- --------------------------------------------------------
-
---
--- 表的结构 `gorm_init`
---
-
+DROP TABLE IF EXISTS `gorm_init`;
 CREATE TABLE `gorm_init` (
                              `id` int(10) UNSIGNED NOT NULL,
                              `init` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- 转存表中的数据 `gorm_init`
---
 
 INSERT INTO `gorm_init` (`id`, `init`) VALUES
     (1, 1);
 
--- --------------------------------------------------------
 
---
--- 表的结构 `resource`
---
-
+DROP TABLE IF EXISTS `resource`;
 CREATE TABLE `resource` (
                             `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                             `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -187,9 +161,7 @@ CREATE TABLE `resource` (
                             `private` tinyint(1) DEFAULT '0' COMMENT '是否私有'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资源变量';
 
---
--- 转存表中的数据 `resource`
---
+
 
 INSERT INTO `resource` (`id`, `created_at`, `updated_at`, `keyword`, `description`, `fields`, `tag`, `private`) VALUES
                                                                                                                     (1, 1712995716, 1712995716, 'Env', '环境标识信息', 'Keyword', 'env', 0),
@@ -210,12 +182,8 @@ INSERT INTO `resource` (`id`, `created_at`, `updated_at`, `keyword`, `descriptio
                                                                                                                     (16, 1712995716, 1712995716, 'PartyAffairsServer', '信号灯服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', 0),
                                                                                                                     (17, 1712995716, 1719371833, 'PartyAffairsDatabase', '信号灯数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', 1);
 
--- --------------------------------------------------------
 
---
--- 表的结构 `resource_server`
---
-
+DROP TABLE IF EXISTS `resource_server`;
 CREATE TABLE `resource_server` (
                                    `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                                    `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -223,9 +191,7 @@ CREATE TABLE `resource_server` (
                                    `resource_id` int(10) UNSIGNED NOT NULL COMMENT '资源id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资源服务信息';
 
---
--- 转存表中的数据 `resource_server`
---
+
 
 INSERT INTO `resource_server` (`id`, `created_at`, `server_id`, `resource_id`) VALUES
                                                                                    (1, 1712995716, 2, 8),
@@ -234,12 +200,7 @@ INSERT INTO `resource_server` (`id`, `created_at`, `server_id`, `resource_id`) V
                                                                                    (4, 1712995716, 5, 15),
                                                                                    (6, NULL, 6, 17);
 
--- --------------------------------------------------------
-
---
--- 表的结构 `resource_value`
---
-
+DROP TABLE IF EXISTS `resource_value`;
 CREATE TABLE `resource_value` (
                                   `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
                                   `created_at` bigint(20) DEFAULT NULL COMMENT '创建时间',
@@ -249,9 +210,7 @@ CREATE TABLE `resource_value` (
                                   `value` text NOT NULL COMMENT '资源id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资源变量值';
 
---
--- 转存表中的数据 `resource_value`
---
+
 
 INSERT INTO `resource_value` (`id`, `created_at`, `updated_at`, `env_id`, `resource_id`, `value`) VALUES
                                                                                                       (1, 1712995716, 1719371433, 1, 1, '{\"Keyword\":\"TEST\"}'),
@@ -306,11 +265,7 @@ INSERT INTO `resource_value` (`id`, `created_at`, `updated_at`, `env_id`, `resou
                                                                                                       (50, 1712995716, 1712995716, 2, 17, '{\"Password\":\"root\",\"Host\":\"127.0.0.1\",\"Port\":\"3306\",\"Type\":\"mysql\",\"Database\":\"party_affairs\",\"Option\":\"?charset=utf8mb4\\u0026parseTime=True\\u0026loc=Local\",\"Username\":\"root\"}'),
                                                                                                       (51, 1712995716, 1712995716, 3, 17, '{\"Type\":\"mysql\",\"Database\":\"party_affairs\",\"Option\":\"?charset=utf8mb4\\u0026parseTime=True\\u0026loc=Local\",\"Username\":\"party_affairs\",\"Password\":\"Ti7MaKJJznywNBJb\",\"Host\":\"127.0.0.1\",\"Port\":\"3306\"}');
 
--- --------------------------------------------------------
 
---
--- 表的结构 `server`
---
 
 CREATE TABLE `server` (
                           `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
@@ -322,9 +277,7 @@ CREATE TABLE `server` (
                           `status` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='服务信息';
 
---
--- 转存表中的数据 `server`
---
+
 
 INSERT INTO `server` (`id`, `created_at`, `updated_at`, `keyword`, `name`, `description`, `status`) VALUES
                                                                                                         (1, 1712995716, 1719246376, 'Gateway', '通用网关', '主要负责前端到后端的转发', 1),
@@ -334,11 +287,7 @@ INSERT INTO `server` (`id`, `created_at`, `updated_at`, `keyword`, `name`, `desc
                                                                                                         (5, 1712995716, 1719467324, 'UserCenter', '用户中心', '主要负责业务用户的管理', 1),
                                                                                                         (6, 1712995716, 1712995716, 'PartyAffairs', '信号灯系统', '指尖上的党务系统', 0);
 
--- --------------------------------------------------------
 
---
--- 表的结构 `template`
---
 
 CREATE TABLE `template` (
                             `id` int(10) UNSIGNED NOT NULL COMMENT '主键ID',
@@ -353,9 +302,7 @@ CREATE TABLE `template` (
                             `compare` text NOT NULL COMMENT '变更详情'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置模板';
 
---
--- 转存表中的数据 `template`
---
+
 
 INSERT INTO `template` (`id`, `created_at`, `updated_at`, `server_id`, `content`, `version`, `is_use`, `format`, `description`, `compare`) VALUES
                                                                                                                                                (1, 1712995716, 1719466963, 1, '\ndebug: true\naddr: 0.0.0.0:${GatewayServer.HttpPort}\nname: gateway\nversion: v1\nmiddlewares:\n  - name: bbr\n  - name: cors\n    options:\n      allowCredentials: true\n      allowOrigins:\n        - \'*\'\n      allowMethods:\n        - GET\n        - POST\n        - PUT\n        - DELETE\n        - OPTIONS\n      AllowHeaders:\n        - Content-Type\n        - Content-Length\n        - Authorization\n      ExposeHeaders:\n        - Content-Length\n        - Access-Control-Allow-Headers\n  - name: tracing\n  - name: logging\n  - name: transcoder\nendpoints:\n  - path: /manager/v1/*\n    timeout: ${ManagerServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  - path: /manager/client/*\n    timeout: ${ManagerServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse\n          method: POST\n  - path: /configure/*\n    timeout: ${ConfigureServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth\n          method: POST\n  - path: /resource/v1/*\n    timeout: ${ResourceServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth\n          method: POST\n          whiteList:\n            - path: /resource/v1/static/*\n              method: GET\n  - path: /cron/v1/*\n    timeout: ${CronServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${CronServer.Host}:${CronServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth\n          method: POST\n  - path: /resource/client/*\n    timeout: ${ResourceServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse\n          method: POST\n  - path: /user-center/v1/*\n    timeout: ${UserCenterServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth\n          method: POST\n  - path: /user-center/client/*\n    timeout: ${UserCenterServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n  - path: /party-affairs/v1/*\n    timeout: ${PartyAffairsServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/v1/auth\n          method: POST\n  - path: /party-affairs/client/*\n    timeout: ${PartyAffairsServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse\n          method: POST\n', '54E50FB3522C', 0, 'yaml', '初始化模板', ''),
@@ -376,22 +323,15 @@ INSERT INTO `template` (`id`, `created_at`, `updated_at`, `server_id`, `content`
                                                                                                                                                (16, 1719466963, 1719466963, 1, 'addr: 0.0.0.0:${GatewayServer.HttpPort}\nname: gateway\nversion: v1\nmiddlewares:\n  - name: bbr\n  - name: cors\n    options:\n      allowCredentials: true\n      allowOrigins:\n        - \'*\'\n      allowMethods:\n        - GET\n        - POST\n        - PUT\n        - DELETE\n        - OPTIONS\n      AllowHeaders:\n        - Content-Type\n        - Content-Length\n        - Authorization\n      ExposeHeaders:\n        - Content-Length\n        - Access-Control-Allow-Headers\n  - name: tracing\n  - name: logging\n  - name: transcoder\nendpoints:\n  - path: /manager/api/*\n    timeout: ${ManagerServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  - path: /manager/client/*\n    timeout: ${ManagerServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n          method: POST\n  - path: /configure/api/*\n    timeout: ${ConfigureServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n          method: POST\n  - path: /resource/api/*\n    timeout: ${ResourceServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n          method: POST\n          whiteList:\n            - path: /resource/api/v1/static/*\n              method: GET\n            - path: /resource/api/v1/download/*\n              method: GET\n  - path: /resource/client/*\n    timeout: ${ResourceServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse\n          method: POST\n  - path: /usercenter/api/*\n    timeout: ${UserCenterServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n          method: POST\n  - path: /usercenter/client/*\n    timeout: ${UserCenterServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n  - path: /cron/api/*\n    timeout: ${CronServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${CronServer.Host}:${CronServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n          method: POST\n  - path: /partyaffairs/api/*\n    timeout: ${PartyAffairsServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n          method: POST\n  - path: /partyaffairs/client/*\n    timeout: ${PartyAffairsServer.Timeout}\n    protocol: HTTP\n    responseFormat: true\n    backends:\n      - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n    middlewares:\n      - name: auth\n        options:\n          url: http://localhost:${GatewayServer.HttpPort}/usercenter/api/v1/auth\n          method: POST', 'D810212421E6DB836EA3CEA6C2E6DCFF', 1, 'yaml', '初始化模板', '[{\"type\":\"update\",\"key\":\"endpoints\",\"old\":\"- backends:\\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\\n  path: /manager/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ManagerServer.Timeout}\\n- backends:\\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\\n  path: /manager/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ManagerServer.Timeout}\\n- backends:\\n    - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /configure/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ConfigureServer.Timeout}\\n- backends:\\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n        whiteList:\\n            - method: GET\\n              path: /resource/api/v1/static/*\\n  path: /resource/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ResourceServer.Timeout}\\n- backends:\\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse\\n  path: /resource/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ResourceServer.Timeout}\\n- backends:\\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /usercenter/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${UserCenterServer.Timeout}\\n- backends:\\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\\n  path: /usercenter/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${UserCenterServer.Timeout}\\n- backends:\\n    - target: ${CronServer.Host}:${CronServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /cron/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${CronServer.Timeout}\\n- backends:\\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /partyaffairs/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${PartyAffairsServer.Timeout}\\n- backends:\\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/api/v1/auth\\n  path: /partyaffairs/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${PartyAffairsServer.Timeout}\\n\",\"cur\":\"- backends:\\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\\n  path: /manager/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ManagerServer.Timeout}\\n- backends:\\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\\n  path: /manager/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ManagerServer.Timeout}\\n- backends:\\n    - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /configure/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ConfigureServer.Timeout}\\n- backends:\\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n        whiteList:\\n            - method: GET\\n              path: /resource/api/v1/static/*\\n            - method: GET\\n              path: /resource/api/v1/download/*\\n  path: /resource/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ResourceServer.Timeout}\\n- backends:\\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/user-center/client/token/parse\\n  path: /resource/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${ResourceServer.Timeout}\\n- backends:\\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /usercenter/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${UserCenterServer.Timeout}\\n- backends:\\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\\n  path: /usercenter/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${UserCenterServer.Timeout}\\n- backends:\\n    - target: ${CronServer.Host}:${CronServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /cron/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${CronServer.Timeout}\\n- backends:\\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\\n  path: /partyaffairs/api/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${PartyAffairsServer.Timeout}\\n- backends:\\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\\n  middlewares:\\n    - name: auth\\n      options:\\n        method: POST\\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/api/v1/auth\\n  path: /partyaffairs/client/*\\n  protocol: HTTP\\n  responseFormat: true\\n  timeout: ${PartyAffairsServer.Timeout}\\n\"}]'),
                                                                                                                                                (17, 1719473730, 1719473730, 2, 'test: 11\nenv: ${Env.Keyword}\nserver:\n  http:\n    host: ${ManagerServer.Host}\n    port: ${ManagerServer.HttpPort}\n    timeout: ${ManagerServer.Timeout}\n    marshal:\n      emitUnpopulated: true\n      useProtoNames: true\n  grpc:\n    host: ${ManagerServer.Host}\n    port: ${ManagerServer.GrpcPort}\n    timeout: ${ManagerServer.Timeout}\nlog:\n  level: 0\n  caller: true\n  output:\n    - stdout\n    - file\n  file:\n    name: ./tmp/runtime/output.log\n    maxSize: 1\n    maxBackup: 5\n    maxAge: 1\n    compress: false\ndatabase:\n  system:\n    enable: true #是否启用数据库\n    drive: ${ManagerDatabase.Type} #数据库类型\n    autoCreate: true #是否自动创建数据库\n    connect:\n      username: ${ManagerDatabase.Username}\n      password: ${ManagerDatabase.Password}\n      host: ${ManagerDatabase.Host}\n      port: ${ManagerDatabase.Port}\n      dbName: ${ManagerDatabase.Database}\n      option: ${ManagerDatabase.Option}\n    config:\n      transformError:\n        enable: true\n      initializer:\n        enable: true\n        path: deploy/data.sql\n      maxLifetime: 2h #最大生存时间\n      maxOpenConn: 20 #最大连接数量\n      maxIdleConn: 10 #最大空闲数量\n      logLevel: 4 #日志等级\n      slowThreshold: 2s #慢sql阈值\nredis:\n  cache:\n    enable: true\n    host: ${Redis.Host}:${Redis.Port}\n    username: ${Redis.Username}\n    password: ${Redis.Password}\ncaptcha:\n  login:\n    type: image\n    length: 6\n    expire: 180s\n    redis: cache\n    height: 80\n    width: 240\n    skew: 0.7\n    refresh: true\n    dotCount: 80\n  changePassword:\n    type: email\n    length: 6\n    expire: 180s\n    redis: cache\n    template: captcha\nloader:\n  login: ${LoginPrivatePath}\nemail:\n  template:\n    captcha:\n      subject: 验证码发送通知\n      path: static/template/email/default.html\n      from: 统一应用管理中心\n      type: text/html\n  user: ${Email.Username}\n  name: ${Email.Company}\n  host: ${Email.Host}\n  port: ${Email.Port}\n  password: ${Email.Password}\njwt:\n  redis: cache\n  secret: ${AdminJwt.Secret}\n  expire: ${AdminJwt.Expire}\n  renewal: ${AdminJwt.Renewal}\n  whitelist: ${AdminJwt.Whitelist}\nauthentication:\n  db: system\n  redis: cache\n  roleKey: roleKeyword\n  skipRole: ${AuthSkipRoles}\nclient:\n  - server: Resource\n    type: direct\n    backends:\n      - target: ${ResourceServer.Host}:${ResourceServer.GrpcPort}\nbusiness:\n  changePasswordType: ${ChangePasswordType}\n  defaultUserPassword: ${DefaultUserPassword}\n  setting: ${Setting}\n', 'D69ED17B11BA6B9C08A906818FD83937', 1, 'yaml', '初始化模板', '[{\"type\":\"update\",\"key\":\"client\",\"old\":\"- backends:\\n    - target: ${ManagerServer.Host}:${ManagerServer.GrpcPort}\\n  server: Resource\\n  type: direct\\n\",\"cur\":\"- backends:\\n    - target: ${ResourceServer.Host}:${ResourceServer.GrpcPort}\\n  server: Resource\\n  type: direct\\n\"}]');
 
---
--- 转储表的索引
---
 
---
--- 表的索引 `business`
---
+
 ALTER TABLE `business`
     ADD PRIMARY KEY (`id`),
   ADD KEY `idx_business_created_at` (`created_at`),
   ADD KEY `idx_business_updated_at` (`updated_at`),
   ADD KEY `fk_business_server` (`server_id`);
 
---
--- 表的索引 `business_value`
---
+
 ALTER TABLE `business_value`
     ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `env_id` (`env_id`,`business_id`),
@@ -400,9 +340,7 @@ ALTER TABLE `business_value`
   ADD KEY `fk_business_value_env` (`env_id`),
   ADD KEY `fk_business_values` (`business_id`);
 
---
--- 表的索引 `configure`
---
+
 ALTER TABLE `configure`
     ADD PRIMARY KEY (`id`),
   ADD KEY `idx_configure_updated_at` (`updated_at`),
@@ -410,40 +348,29 @@ ALTER TABLE `configure`
   ADD KEY `fk_configure_server` (`server_id`),
   ADD KEY `fk_configure_env` (`env_id`);
 
---
--- 表的索引 `env`
---
+
 ALTER TABLE `env`
     ADD PRIMARY KEY (`id`),
   ADD KEY `idx_env_created_at` (`created_at`),
   ADD KEY `idx_env_updated_at` (`updated_at`);
 
---
--- 表的索引 `gorm_init`
---
+
 ALTER TABLE `gorm_init`
     ADD PRIMARY KEY (`id`);
 
---
--- 表的索引 `resource`
---
+
 ALTER TABLE `resource`
     ADD PRIMARY KEY (`id`),
   ADD KEY `idx_resource_created_at` (`created_at`),
   ADD KEY `idx_resource_updated_at` (`updated_at`);
 
---
--- 表的索引 `resource_server`
---
+
 ALTER TABLE `resource_server`
     ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `sr` (`server_id`,`resource_id`),
   ADD KEY `idx_resource_server_created_at` (`created_at`),
   ADD KEY `fk_resource_resource_server` (`resource_id`);
 
---
--- 表的索引 `resource_value`
---
 ALTER TABLE `resource_value`
     ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `er` (`env_id`,`resource_id`),
@@ -451,128 +378,85 @@ ALTER TABLE `resource_value`
   ADD KEY `idx_resource_value_created_at` (`created_at`),
   ADD KEY `fk_resource_resource_value` (`resource_id`);
 
---
--- 表的索引 `server`
---
+
 ALTER TABLE `server`
     ADD PRIMARY KEY (`id`),
   ADD KEY `idx_server_created_at` (`created_at`),
   ADD KEY `idx_server_updated_at` (`updated_at`);
 
---
--- 表的索引 `template`
---
+
 ALTER TABLE `template`
     ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `sv` (`server_id`,`version`),
   ADD KEY `idx_template_created_at` (`created_at`),
   ADD KEY `idx_template_updated_at` (`updated_at`);
 
---
--- 在导出的表使用AUTO_INCREMENT
---
 
---
--- 使用表AUTO_INCREMENT `business`
---
 ALTER TABLE `business`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=16;
 
---
--- 使用表AUTO_INCREMENT `business_value`
---
+
 ALTER TABLE `business_value`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=94;
 
---
--- 使用表AUTO_INCREMENT `configure`
---
+
 ALTER TABLE `configure`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=19;
 
---
--- 使用表AUTO_INCREMENT `env`
---
+
 ALTER TABLE `env`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=5;
 
---
--- 使用表AUTO_INCREMENT `gorm_init`
---
+
 ALTER TABLE `gorm_init`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
---
--- 使用表AUTO_INCREMENT `resource`
---
+
 ALTER TABLE `resource`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=19;
 
---
--- 使用表AUTO_INCREMENT `resource_server`
---
+
 ALTER TABLE `resource_server`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=7;
 
---
--- 使用表AUTO_INCREMENT `resource_value`
---
+
 ALTER TABLE `resource_value`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=85;
 
---
--- 使用表AUTO_INCREMENT `server`
---
+
 ALTER TABLE `server`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=9;
 
---
--- 使用表AUTO_INCREMENT `template`
---
+
 ALTER TABLE `template`
     MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键ID', AUTO_INCREMENT=18;
 
---
--- 限制导出的表
---
 
---
--- 限制表 `business`
---
 ALTER TABLE `business`
     ADD CONSTRAINT `fk_business_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE;
 
---
--- 限制表 `business_value`
---
+
 ALTER TABLE `business_value`
     ADD CONSTRAINT `fk_business_value_env` FOREIGN KEY (`env_id`) REFERENCES `env` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_business_values` FOREIGN KEY (`business_id`) REFERENCES `business` (`id`) ON DELETE CASCADE;
 
---
--- 限制表 `configure`
---
+
 ALTER TABLE `configure`
     ADD CONSTRAINT `fk_configure_env` FOREIGN KEY (`env_id`) REFERENCES `env` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_configure_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE;
 
---
--- 限制表 `resource_server`
---
+
 ALTER TABLE `resource_server`
     ADD CONSTRAINT `fk_resource_resource_server` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_resource_server_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE;
 
---
--- 限制表 `resource_value`
---
+
 ALTER TABLE `resource_value`
     ADD CONSTRAINT `fk_resource_resource_value` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_resource_value_env` FOREIGN KEY (`env_id`) REFERENCES `env` (`id`) ON DELETE CASCADE;
 
---
--- 限制表 `template`
---
+
 ALTER TABLE `template`
     ADD CONSTRAINT `fk_template_server` FOREIGN KEY (`server_id`) REFERENCES `server` (`id`) ON DELETE CASCADE;
 COMMIT;
+
