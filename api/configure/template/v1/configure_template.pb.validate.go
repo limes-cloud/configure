@@ -2191,6 +2191,8 @@ func (m *ListTemplateReply_Template) validate(all bool) error {
 
 	// no validation rules for IsUse
 
+	// no validation rules for Compare
+
 	// no validation rules for CreatedAt
 
 	if len(errors) > 0 {

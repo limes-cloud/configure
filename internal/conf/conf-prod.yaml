@@ -19,6 +19,7 @@ server:
     timeout: 5s
 log:
   level: 0 #日志输出等级
+  caller: true
   output:
     - stdout # stdout:控制台输出，k8s日志收集
     - file # file:输出到文件
@@ -57,6 +58,13 @@ logging:
   enable: true
   whitelist:
     GET:/configure/api/v1/*: true  # 跳过
+jwt:
+  secret: limes-cloud-prod
+  expire: 2h
+  renewal: 600s
+  whitelist:
+    POST:/configure/api/v1/login: true
+    POST:/configure/api/v1/token/refresh: true
 business:
   webui:
     addr: ":6080"

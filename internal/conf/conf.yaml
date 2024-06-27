@@ -39,7 +39,7 @@ database:
       password: root
       host: 127.0.0.1
       port: 3306
-      dbName: configure_hello
+      dbName: configure
       option: ?charset=utf8mb4&parseTime=True&loc=Local
     config:
       initializer:
@@ -55,7 +55,7 @@ database:
 loader:
   login: static/cert/login.pem
 jwt:
-  secret: limeschool
+  secret: limes-cloud-test
   expire: 2h
   renewal: 600s
   whitelist:
