@@ -36,4 +36,6 @@ enum ErrorReason {
   PasswordExpireError = 24[(errors.message)="密码已过期"];
   RefreshTokenError = 25[(errors.code)=401,(errors.message)="刷新token失败"];
   SystemError = 26[(errors.message)="系统错误"];
+  ManagerServerError = 27[(errors.message)="管理中心服务异常"];
+
 }

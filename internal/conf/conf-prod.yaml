@@ -17,6 +17,11 @@ server:
     host: 0.0.0.0
     port: 6082
     timeout: 5s
+client:
+  - server: Manager
+    type: direct
+    backends:
+      - target: 127.0.0.1:8010
 log:
   level: 0 #日志输出等级
   caller: true

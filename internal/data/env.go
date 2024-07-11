@@ -1,6 +1,8 @@
 package data
 
 import (
+	"errors"
+
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
 
@@ -76,6 +78,15 @@ func (r envRepo) ListEnv(ctx kratosx.Context, req *biz.ListEnvRequest) ([]*biz.E
 	}
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
+	}
+
+	// 资源权限限制
+	all, scopes, err := GetEnvPermission(ctx)
+	if err != nil {
+		return nil, 0, errors.New(err.Error())
+	}
+	if !all {
+		db = db.Where("id  in ?", scopes)
 	}
 
 	if err := db.Count(&total).Error; err != nil {
