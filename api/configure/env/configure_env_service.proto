@@ -13,11 +13,7 @@ import "google/api/annotations.proto";
 service Env{
 
   // GetEnv 获取指定的环境信息
-  rpc GetEnv (GetEnvRequest) returns (GetEnvReply) {
-    option (google.api.http) = {
-      get: "/configure/api/v1/env",
-    };
-  }
+  rpc GetEnv (GetEnvRequest) returns (GetEnvReply) { }
 
   // ListEnv 获取环境信息列表
   rpc ListEnv (ListEnvRequest) returns (ListEnvReply) {

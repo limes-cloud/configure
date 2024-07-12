@@ -21,7 +21,6 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationServerCreateServer = "/configure.api.configure.server.v1.Server/CreateServer"
 const OperationServerDeleteServer = "/configure.api.configure.server.v1.Server/DeleteServer"
-const OperationServerGetServer = "/configure.api.configure.server.v1.Server/GetServer"
 const OperationServerListServer = "/configure.api.configure.server.v1.Server/ListServer"
 const OperationServerUpdateServer = "/configure.api.configure.server.v1.Server/UpdateServer"
 const OperationServerUpdateServerStatus = "/configure.api.configure.server.v1.Server/UpdateServerStatus"
@@ -31,8 +30,6 @@ type ServerHTTPServer interface {
 	CreateServer(context.Context, *CreateServerRequest) (*CreateServerReply, error)
 	// DeleteServer DeleteServer 删除服务信息
 	DeleteServer(context.Context, *DeleteServerRequest) (*DeleteServerReply, error)
-	// GetServer GetServer 获取指定的服务信息
-	GetServer(context.Context, *GetServerRequest) (*GetServerReply, error)
 	// ListServer ListServer 获取服务信息列表
 	ListServer(context.Context, *ListServerRequest) (*ListServerReply, error)
 	// UpdateServer UpdateServer 更新服务信息
@@ -43,31 +40,11 @@ type ServerHTTPServer interface {
 
 func RegisterServerHTTPServer(s *http.Server, srv ServerHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/server", _Server_GetServer0_HTTP_Handler(srv))
 	r.GET("/configure/api/v1/servers", _Server_ListServer0_HTTP_Handler(srv))
 	r.POST("/configure/api/v1/server", _Server_CreateServer0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/server", _Server_UpdateServer0_HTTP_Handler(srv))
 	r.DELETE("/configure/api/v1/server", _Server_DeleteServer0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/server/status", _Server_UpdateServerStatus0_HTTP_Handler(srv))
-}
-
-func _Server_GetServer0_HTTP_Handler(srv ServerHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetServerRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationServerGetServer)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetServer(ctx, req.(*GetServerRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetServerReply)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _Server_ListServer0_HTTP_Handler(srv ServerHTTPServer) func(ctx http.Context) error {
@@ -177,7 +154,6 @@ func _Server_UpdateServerStatus0_HTTP_Handler(srv ServerHTTPServer) func(ctx htt
 type ServerHTTPClient interface {
 	CreateServer(ctx context.Context, req *CreateServerRequest, opts ...http.CallOption) (rsp *CreateServerReply, err error)
 	DeleteServer(ctx context.Context, req *DeleteServerRequest, opts ...http.CallOption) (rsp *DeleteServerReply, err error)
-	GetServer(ctx context.Context, req *GetServerRequest, opts ...http.CallOption) (rsp *GetServerReply, err error)
 	ListServer(ctx context.Context, req *ListServerRequest, opts ...http.CallOption) (rsp *ListServerReply, err error)
 	UpdateServer(ctx context.Context, req *UpdateServerRequest, opts ...http.CallOption) (rsp *UpdateServerReply, err error)
 	UpdateServerStatus(ctx context.Context, req *UpdateServerStatusRequest, opts ...http.CallOption) (rsp *UpdateServerStatusReply, err error)
@@ -211,19 +187,6 @@ func (c *ServerHTTPClientImpl) DeleteServer(ctx context.Context, in *DeleteServe
 	opts = append(opts, http.Operation(OperationServerDeleteServer))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ServerHTTPClientImpl) GetServer(ctx context.Context, in *GetServerRequest, opts ...http.CallOption) (*GetServerReply, error) {
-	var out GetServerReply
-	pattern := "/configure/api/v1/server"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationServerGetServer))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

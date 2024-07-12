@@ -18,7 +18,7 @@ type Repo interface {
 	UpdateServer(ctx kratosx.Context, req *Server) error
 
 	// DeleteServer 删除服务信息
-	DeleteServer(ctx kratosx.Context, ids []uint32) (uint32, error)
+	DeleteServer(ctx kratosx.Context, id uint32) error
 
 	// GetServerByKeyword 获取指定的服务信息
 	GetServerByKeyword(ctx kratosx.Context, keyword string) (*Server, error)

@@ -36,31 +36,6 @@ func init() {
 	})
 }
 
-// GetEnv 获取指定的环境信息
-func (s *EnvService) GetEnv(c context.Context, req *pb.GetEnvRequest) (*pb.GetEnvReply, error) {
-	var (
-		in  = env.GetEnvRequest{}
-		ctx = kratosx.MustContext(c)
-	)
-
-	if err := valx.Transform(req, &in); err != nil {
-		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-
-	result, err := s.uc.GetEnv(ctx, &in)
-	if err != nil {
-		return nil, err
-	}
-
-	reply := pb.GetEnvReply{}
-	if err := valx.Transform(result, &reply); err != nil {
-		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
-}
-
 // ListEnv 获取环境信息列表
 func (s *EnvService) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListEnvReply, error) {
 	var (
@@ -130,11 +105,10 @@ func (s *EnvService) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb
 
 // DeleteEnv 删除环境信息
 func (s *EnvService) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.DeleteEnvReply, error) {
-	total, err := s.uc.DeleteEnv(kratosx.MustContext(c), req.Ids)
-	if err != nil {
+	if err := s.uc.DeleteEnv(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &pb.DeleteEnvReply{Total: total}, nil
+	return &pb.DeleteEnvReply{}, nil
 }
 
 // UpdateEnvStatus 更新环境信息状态
@@ -143,11 +117,11 @@ func (s *EnvService) UpdateEnvStatus(c context.Context, req *pb.UpdateEnvStatusR
 }
 
 func (s *EnvService) GetEnvToken(c context.Context, req *pb.GetEnvTokenRequest) (*pb.GetEnvTokenReply, error) {
-	res, err := s.uc.GetEnv(kratosx.MustContext(c), &env.GetEnvRequest{Id: &req.Id})
+	token, err := s.uc.GetEnvToken(kratosx.MustContext(c), req.Id)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetEnvTokenReply{Token: res.Token}, nil
+	return &pb.GetEnvTokenReply{Token: token}, nil
 }
 
 func (s *EnvService) ResetEnvToken(c context.Context, req *pb.ResetEnvTokenRequest) (*pb.ResetEnvTokenReply, error) {

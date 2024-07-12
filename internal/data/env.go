@@ -1,8 +1,6 @@
 package data
 
 import (
-	"errors"
-
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
 
@@ -79,14 +77,8 @@ func (r envRepo) ListEnv(ctx kratosx.Context, req *biz.ListEnvRequest) ([]*biz.E
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
 	}
-
-	// 资源权限限制
-	all, scopes, err := GetEnvPermission(ctx)
-	if err != nil {
-		return nil, 0, errors.New(err.Error())
-	}
-	if !all {
-		db = db.Where("id  in ?", scopes)
+	if req.Ids != nil {
+		db = db.Where("id in ?", req.Ids)
 	}
 
 	if err := db.Count(&total).Error; err != nil {
@@ -115,9 +107,8 @@ func (r envRepo) UpdateEnv(ctx kratosx.Context, req *biz.Env) error {
 }
 
 // DeleteEnv 删除数据
-func (r envRepo) DeleteEnv(ctx kratosx.Context, ids []uint32) (uint32, error) {
-	db := ctx.DB().Where("id in ?", ids).Delete(&model.Env{})
-	return uint32(db.RowsAffected), db.Error
+func (r envRepo) DeleteEnv(ctx kratosx.Context, id uint32) error {
+	return ctx.DB().Where("id=?", id).Delete(&model.Env{}).Error
 }
 
 // UpdateEnvStatus 更新数据状态

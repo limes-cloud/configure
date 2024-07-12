@@ -2,15 +2,17 @@ package service
 
 import (
 	"context"
+
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+
 	"github.com/limes-cloud/configure/api/configure/errors"
 	pb "github.com/limes-cloud/configure/api/configure/server/v1"
 	"github.com/limes-cloud/configure/internal/biz/server"
 	"github.com/limes-cloud/configure/internal/conf"
 	"github.com/limes-cloud/configure/internal/data"
-	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
 )
 
 type ServerService struct {
@@ -30,31 +32,6 @@ func init() {
 		pb.RegisterServerHTTPServer(hs, srv)
 		pb.RegisterServerServer(gs, srv)
 	})
-}
-
-// GetServer 获取指定的服务信息
-func (s *ServerService) GetServer(c context.Context, req *pb.GetServerRequest) (*pb.GetServerReply, error) {
-	var (
-		in  = server.GetServerRequest{}
-		ctx = kratosx.MustContext(c)
-	)
-
-	if err := valx.Transform(req, &in); err != nil {
-		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-
-	result, err := s.uc.GetServer(ctx, &in)
-	if err != nil {
-		return nil, err
-	}
-
-	reply := pb.GetServerReply{}
-	if err := valx.Transform(result, &reply); err != nil {
-		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
 }
 
 // ListServer 获取服务信息列表
@@ -124,11 +101,10 @@ func (s *ServerService) UpdateServer(c context.Context, req *pb.UpdateServerRequ
 
 // DeleteServer 删除服务信息
 func (s *ServerService) DeleteServer(c context.Context, req *pb.DeleteServerRequest) (*pb.DeleteServerReply, error) {
-	total, err := s.uc.DeleteServer(kratosx.MustContext(c), req.Ids)
-	if err != nil {
+	if err := s.uc.DeleteServer(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &pb.DeleteServerReply{Total: total}, nil
+	return &pb.DeleteServerReply{}, nil
 }
 
 // UpdateServerStatus 更新服务信息状态

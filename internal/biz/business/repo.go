@@ -18,7 +18,7 @@ type Repo interface {
 	UpdateBusiness(ctx kratosx.Context, req *Business) error
 
 	// DeleteBusiness 删除业务配置信息
-	DeleteBusiness(ctx kratosx.Context, ids []uint32) (uint32, error)
+	DeleteBusiness(ctx kratosx.Context, id uint32) error
 
 	// ListBusinessValue 获取业务配置值信息列表
 	ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*BusinessValue, uint32, error)

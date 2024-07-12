@@ -19,7 +19,6 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Business_GetBusiness_FullMethodName         = "/configure.api.configure.business.v1.Business/GetBusiness"
 	Business_ListBusiness_FullMethodName        = "/configure.api.configure.business.v1.Business/ListBusiness"
 	Business_CreateBusiness_FullMethodName      = "/configure.api.configure.business.v1.Business/CreateBusiness"
 	Business_UpdateBusiness_FullMethodName      = "/configure.api.configure.business.v1.Business/UpdateBusiness"
@@ -32,8 +31,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BusinessClient interface {
-	// GetBusiness 获取指定的业务配置信息
-	GetBusiness(ctx context.Context, in *GetBusinessRequest, opts ...grpc.CallOption) (*GetBusinessReply, error)
 	// ListBusiness 获取业务配置信息列表
 	ListBusiness(ctx context.Context, in *ListBusinessRequest, opts ...grpc.CallOption) (*ListBusinessReply, error)
 	// CreateBusiness 创建业务配置信息
@@ -54,15 +51,6 @@ type businessClient struct {
 
 func NewBusinessClient(cc grpc.ClientConnInterface) BusinessClient {
 	return &businessClient{cc}
-}
-
-func (c *businessClient) GetBusiness(ctx context.Context, in *GetBusinessRequest, opts ...grpc.CallOption) (*GetBusinessReply, error) {
-	out := new(GetBusinessReply)
-	err := c.cc.Invoke(ctx, Business_GetBusiness_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *businessClient) ListBusiness(ctx context.Context, in *ListBusinessRequest, opts ...grpc.CallOption) (*ListBusinessReply, error) {
@@ -123,8 +111,6 @@ func (c *businessClient) UpdateBusinessValue(ctx context.Context, in *UpdateBusi
 // All implementations must embed UnimplementedBusinessServer
 // for forward compatibility
 type BusinessServer interface {
-	// GetBusiness 获取指定的业务配置信息
-	GetBusiness(context.Context, *GetBusinessRequest) (*GetBusinessReply, error)
 	// ListBusiness 获取业务配置信息列表
 	ListBusiness(context.Context, *ListBusinessRequest) (*ListBusinessReply, error)
 	// CreateBusiness 创建业务配置信息
@@ -144,9 +130,6 @@ type BusinessServer interface {
 type UnimplementedBusinessServer struct {
 }
 
-func (UnimplementedBusinessServer) GetBusiness(context.Context, *GetBusinessRequest) (*GetBusinessReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBusiness not implemented")
-}
 func (UnimplementedBusinessServer) ListBusiness(context.Context, *ListBusinessRequest) (*ListBusinessReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListBusiness not implemented")
 }
@@ -176,24 +159,6 @@ type UnsafeBusinessServer interface {
 
 func RegisterBusinessServer(s grpc.ServiceRegistrar, srv BusinessServer) {
 	s.RegisterService(&Business_ServiceDesc, srv)
-}
-
-func _Business_GetBusiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetBusinessRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BusinessServer).GetBusiness(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Business_GetBusiness_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BusinessServer).GetBusiness(ctx, req.(*GetBusinessRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Business_ListBusiness_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -311,10 +276,6 @@ var Business_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "configure.api.configure.business.v1.Business",
 	HandlerType: (*BusinessServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetBusiness",
-			Handler:    _Business_GetBusiness_Handler,
-		},
 		{
 			MethodName: "ListBusiness",
 			Handler:    _Business_ListBusiness_Handler,

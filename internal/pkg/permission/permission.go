@@ -1,7 +1,8 @@
-package data
+package permission
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/valx"
 	"github.com/limes-cloud/manager/api/manager/auth"
 	resourcev1 "github.com/limes-cloud/manager/api/manager/resource/v1"
 
@@ -9,8 +10,9 @@ import (
 )
 
 const (
-	Manager       = "Manager"
-	PermissionEnv = "cfg/env"
+	Manager = "Manager"
+	Env     = "cfg_env"
+	Server  = "cfg_server"
 )
 
 func NewClient(ctx kratosx.Context) (resourcev1.ResourceClient, error) {
@@ -26,9 +28,9 @@ func GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error) 
 	if err != nil {
 		return false, nil, err
 	}
-	// if info.UserId == 1 || info.RoleId == 1 {
-	//	return true, nil, nil
-	// }
+	if info.UserId == 1 || info.RoleId == 1 {
+		return true, nil, nil
+	}
 
 	client, err := NewClient(ctx)
 	if err != nil {
@@ -45,6 +47,40 @@ func GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error) 
 	return reply.All, reply.Scopes, nil
 }
 
-func GetEnvPermission(ctx kratosx.Context) (bool, []uint32, error) {
-	return GetPermission(ctx, PermissionEnv)
+func GetEnv(ctx kratosx.Context) (bool, []uint32, error) {
+	all, ids, err := GetPermission(ctx, Env)
+	if ids == nil {
+		ids = []uint32{}
+	}
+	return all, ids, err
+}
+
+func HasEnv(ctx kratosx.Context, id uint32) bool {
+	all, ids, err := GetPermission(ctx, Env)
+	if err != nil {
+		return false
+	}
+	if all {
+		return true
+	}
+	return valx.InList(ids, id)
+}
+
+func GetServer(ctx kratosx.Context) (bool, []uint32, error) {
+	all, ids, err := GetPermission(ctx, Server)
+	if ids == nil {
+		ids = []uint32{}
+	}
+	return all, ids, err
+}
+
+func HasServer(ctx kratosx.Context, id uint32) bool {
+	all, ids, err := GetPermission(ctx, Server)
+	if err != nil {
+		return false
+	}
+	if all {
+		return true
+	}
+	return valx.InList(ids, id)
 }

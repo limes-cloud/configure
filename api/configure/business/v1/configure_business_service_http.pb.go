@@ -21,7 +21,6 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationBusinessCreateBusiness = "/configure.api.configure.business.v1.Business/CreateBusiness"
 const OperationBusinessDeleteBusiness = "/configure.api.configure.business.v1.Business/DeleteBusiness"
-const OperationBusinessGetBusiness = "/configure.api.configure.business.v1.Business/GetBusiness"
 const OperationBusinessListBusiness = "/configure.api.configure.business.v1.Business/ListBusiness"
 const OperationBusinessListBusinessValue = "/configure.api.configure.business.v1.Business/ListBusinessValue"
 const OperationBusinessUpdateBusiness = "/configure.api.configure.business.v1.Business/UpdateBusiness"
@@ -32,8 +31,6 @@ type BusinessHTTPServer interface {
 	CreateBusiness(context.Context, *CreateBusinessRequest) (*CreateBusinessReply, error)
 	// DeleteBusiness DeleteBusiness 删除业务配置信息
 	DeleteBusiness(context.Context, *DeleteBusinessRequest) (*DeleteBusinessReply, error)
-	// GetBusiness GetBusiness 获取指定的业务配置信息
-	GetBusiness(context.Context, *GetBusinessRequest) (*GetBusinessReply, error)
 	// ListBusiness ListBusiness 获取业务配置信息列表
 	ListBusiness(context.Context, *ListBusinessRequest) (*ListBusinessReply, error)
 	// ListBusinessValue ListBusinessValue 获取业务配置值信息列表
@@ -46,32 +43,12 @@ type BusinessHTTPServer interface {
 
 func RegisterBusinessHTTPServer(s *http.Server, srv BusinessHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/business", _Business_GetBusiness0_HTTP_Handler(srv))
 	r.GET("/configure/api/v1/businesses", _Business_ListBusiness0_HTTP_Handler(srv))
 	r.POST("/configure/api/v1/business", _Business_CreateBusiness0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/business", _Business_UpdateBusiness0_HTTP_Handler(srv))
 	r.DELETE("/configure/api/v1/business", _Business_DeleteBusiness0_HTTP_Handler(srv))
 	r.GET("/configure/api/v1/business/values", _Business_ListBusinessValue0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/business/values", _Business_UpdateBusinessValue0_HTTP_Handler(srv))
-}
-
-func _Business_GetBusiness0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetBusinessRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationBusinessGetBusiness)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetBusiness(ctx, req.(*GetBusinessRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetBusinessReply)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _Business_ListBusiness0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.Context) error {
@@ -200,7 +177,6 @@ func _Business_UpdateBusinessValue0_HTTP_Handler(srv BusinessHTTPServer) func(ct
 type BusinessHTTPClient interface {
 	CreateBusiness(ctx context.Context, req *CreateBusinessRequest, opts ...http.CallOption) (rsp *CreateBusinessReply, err error)
 	DeleteBusiness(ctx context.Context, req *DeleteBusinessRequest, opts ...http.CallOption) (rsp *DeleteBusinessReply, err error)
-	GetBusiness(ctx context.Context, req *GetBusinessRequest, opts ...http.CallOption) (rsp *GetBusinessReply, err error)
 	ListBusiness(ctx context.Context, req *ListBusinessRequest, opts ...http.CallOption) (rsp *ListBusinessReply, err error)
 	ListBusinessValue(ctx context.Context, req *ListBusinessValueRequest, opts ...http.CallOption) (rsp *ListBusinessValueReply, err error)
 	UpdateBusiness(ctx context.Context, req *UpdateBusinessRequest, opts ...http.CallOption) (rsp *UpdateBusinessReply, err error)
@@ -235,19 +211,6 @@ func (c *BusinessHTTPClientImpl) DeleteBusiness(ctx context.Context, in *DeleteB
 	opts = append(opts, http.Operation(OperationBusinessDeleteBusiness))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *BusinessHTTPClientImpl) GetBusiness(ctx context.Context, in *GetBusinessRequest, opts ...http.CallOption) (*GetBusinessReply, error) {
-	var out GetBusinessReply
-	pattern := "/configure/api/v1/business"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationBusinessGetBusiness))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

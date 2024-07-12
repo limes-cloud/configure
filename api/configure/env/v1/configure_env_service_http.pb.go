@@ -21,7 +21,6 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationEnvCreateEnv = "/configure.api.configure.env.v1.Env/CreateEnv"
 const OperationEnvDeleteEnv = "/configure.api.configure.env.v1.Env/DeleteEnv"
-const OperationEnvGetEnv = "/configure.api.configure.env.v1.Env/GetEnv"
 const OperationEnvGetEnvToken = "/configure.api.configure.env.v1.Env/GetEnvToken"
 const OperationEnvListEnv = "/configure.api.configure.env.v1.Env/ListEnv"
 const OperationEnvResetEnvToken = "/configure.api.configure.env.v1.Env/ResetEnvToken"
@@ -33,8 +32,6 @@ type EnvHTTPServer interface {
 	CreateEnv(context.Context, *CreateEnvRequest) (*CreateEnvReply, error)
 	// DeleteEnv DeleteEnv 删除环境信息
 	DeleteEnv(context.Context, *DeleteEnvRequest) (*DeleteEnvReply, error)
-	// GetEnv GetEnv 获取指定的环境信息
-	GetEnv(context.Context, *GetEnvRequest) (*GetEnvReply, error)
 	// GetEnvToken GetEnvToken 获取环境token
 	GetEnvToken(context.Context, *GetEnvTokenRequest) (*GetEnvTokenReply, error)
 	// ListEnv ListEnv 获取环境信息列表
@@ -49,7 +46,6 @@ type EnvHTTPServer interface {
 
 func RegisterEnvHTTPServer(s *http.Server, srv EnvHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/env", _Env_GetEnv0_HTTP_Handler(srv))
 	r.GET("/configure/api/v1/envs", _Env_ListEnv0_HTTP_Handler(srv))
 	r.POST("/configure/api/v1/env", _Env_CreateEnv0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/env", _Env_UpdateEnv0_HTTP_Handler(srv))
@@ -57,25 +53,6 @@ func RegisterEnvHTTPServer(s *http.Server, srv EnvHTTPServer) {
 	r.GET("/configure/api/v1/env/token", _Env_GetEnvToken0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/env/status", _Env_UpdateEnvStatus0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/env/token", _Env_ResetEnvToken0_HTTP_Handler(srv))
-}
-
-func _Env_GetEnv0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetEnvRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationEnvGetEnv)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetEnv(ctx, req.(*GetEnvRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetEnvReply)
-		return ctx.Result(200, reply)
-	}
 }
 
 func _Env_ListEnv0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) error {
@@ -226,7 +203,6 @@ func _Env_ResetEnvToken0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) 
 type EnvHTTPClient interface {
 	CreateEnv(ctx context.Context, req *CreateEnvRequest, opts ...http.CallOption) (rsp *CreateEnvReply, err error)
 	DeleteEnv(ctx context.Context, req *DeleteEnvRequest, opts ...http.CallOption) (rsp *DeleteEnvReply, err error)
-	GetEnv(ctx context.Context, req *GetEnvRequest, opts ...http.CallOption) (rsp *GetEnvReply, err error)
 	GetEnvToken(ctx context.Context, req *GetEnvTokenRequest, opts ...http.CallOption) (rsp *GetEnvTokenReply, err error)
 	ListEnv(ctx context.Context, req *ListEnvRequest, opts ...http.CallOption) (rsp *ListEnvReply, err error)
 	ResetEnvToken(ctx context.Context, req *ResetEnvTokenRequest, opts ...http.CallOption) (rsp *ResetEnvTokenReply, err error)
@@ -262,19 +238,6 @@ func (c *EnvHTTPClientImpl) DeleteEnv(ctx context.Context, in *DeleteEnvRequest,
 	opts = append(opts, http.Operation(OperationEnvDeleteEnv))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *EnvHTTPClientImpl) GetEnv(ctx context.Context, in *GetEnvRequest, opts ...http.CallOption) (*GetEnvReply, error) {
-	var out GetEnvReply
-	pattern := "/configure/api/v1/env"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationEnvGetEnv))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

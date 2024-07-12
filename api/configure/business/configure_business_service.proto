@@ -13,13 +13,6 @@ import "api/configure/business/configure_business_value.proto";
 
 service Business{
 
-  // GetBusiness 获取指定的业务配置信息
-  rpc GetBusiness (GetBusinessRequest) returns (GetBusinessReply) {
-    option (google.api.http) = {
-      get: "/configure/api/v1/business",
-    };
-  }
-
   // ListBusiness 获取业务配置信息列表
   rpc ListBusiness (ListBusinessRequest) returns (ListBusinessReply) {
     option (google.api.http) = {

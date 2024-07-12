@@ -180,6 +180,7 @@ func (r resourceRepo) UpdateResourceValues(ctx kratosx.Context, bs []*biz.Resour
 	var (
 		ms []*model.ResourceValue
 	)
+
 	for _, b := range bs {
 		ms = append(ms, r.ToResourceValueModel(b))
 	}

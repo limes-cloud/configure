@@ -12,6 +12,7 @@ import (
 	"github.com/limes-cloud/configure/internal/conf"
 	"github.com/limes-cloud/configure/internal/factory"
 	"github.com/limes-cloud/configure/internal/pkg"
+	"github.com/limes-cloud/configure/internal/pkg/permission"
 )
 
 type watcher struct {
@@ -38,6 +39,13 @@ func NewUseCase(config *conf.Config, repo Repo, factory factory.Factory) *UseCas
 
 // GetConfigureByEnvAndSrv 获取指定标识的配置信息
 func (u *UseCase) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, srvId uint32) (*Configure, error) {
+	if !permission.HasServer(ctx, envId) {
+		return nil, errors.NotPermissionError()
+	}
+	if !permission.HasEnv(ctx, srvId) {
+		return nil, errors.NotPermissionError()
+	}
+
 	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, envId, srvId)
 	if err != nil {
 		return nil, errors.GetError()
@@ -56,6 +64,13 @@ func (u *UseCase) ListConfigure(ctx kratosx.Context, req *ListConfigureRequest) 
 
 // UpdateConfigure 更新模配置
 func (u *UseCase) UpdateConfigure(ctx kratosx.Context, req *Configure) error {
+	if !permission.HasServer(ctx, req.EnvId) {
+		return errors.NotPermissionError()
+	}
+	if !permission.HasEnv(ctx, req.ServerId) {
+		return errors.NotPermissionError()
+	}
+
 	format, content, err := u.RenderCurrentTemplate(ctx, req.ServerId, req.EnvId)
 	if err != nil {
 		return errors.ParseTemplateError(err.Error())
@@ -87,6 +102,13 @@ func (u *UseCase) UpdateConfigure(ctx kratosx.Context, req *Configure) error {
 }
 
 func (u *UseCase) RenderCurrentTemplate(ctx kratosx.Context, srvId, envId uint32) (string, string, error) {
+	if !permission.HasServer(ctx, srvId) {
+		return "", "", errors.NotPermissionError()
+	}
+	if !permission.HasEnv(ctx, envId) {
+		return "", "", errors.NotPermissionError()
+	}
+
 	format, content, err := u.repo.CurrentTemplate(ctx, srvId)
 	if err != nil {
 		return "", "", err
@@ -105,6 +127,13 @@ func (u *UseCase) RenderCurrentTemplate(ctx kratosx.Context, srvId, envId uint32
 
 // CompareConfigure 对比配置
 func (u *UseCase) CompareConfigure(ctx kratosx.Context, req *CompareConfigureRequest) ([]*CompareConfigureReply, error) {
+	if !permission.HasServer(ctx, req.ServerId) {
+		return nil, errors.NotPermissionError()
+	}
+	if !permission.HasEnv(ctx, req.EnvId) {
+		return nil, errors.NotPermissionError()
+	}
+
 	// 获取当前配置
 	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, req.EnvId, req.ServerId)
 

@@ -56,11 +56,8 @@ func (r businessRepo) ListBusiness(ctx kratosx.Context, req *biz.ListBusinessReq
 		fs    = []string{"*"}
 	)
 
-	db := ctx.DB().Model(model.Business{}).Select(fs)
+	db := ctx.DB().Model(model.Business{}).Select(fs).Where("server_id = ?", req.ServerId)
 
-	if req.ServerId != nil {
-		db = db.Where("server_id = ?", *req.ServerId)
-	}
 	if req.Keyword != nil {
 		db = db.Where("keyword = ?", *req.Keyword)
 	}
@@ -103,9 +100,8 @@ func (r businessRepo) UpdateBusiness(ctx kratosx.Context, req *biz.Business) err
 }
 
 // DeleteBusiness 删除数据
-func (r businessRepo) DeleteBusiness(ctx kratosx.Context, ids []uint32) (uint32, error) {
-	db := ctx.DB().Where("id in ?", ids).Delete(&model.Business{})
-	return uint32(db.RowsAffected), db.Error
+func (r businessRepo) DeleteBusiness(ctx kratosx.Context, id uint32) error {
+	return ctx.DB().Where("id = ?", id).Delete(&model.Business{}).Error
 }
 
 // ToBusinessValueEntity model转entity
@@ -147,6 +143,7 @@ func (r businessRepo) UpdateBusinessValues(ctx kratosx.Context, bs []*biz.Busine
 	var (
 		ms []*model.BusinessValue
 	)
+
 	for _, b := range bs {
 		ms = append(ms, r.ToBusinessValueModel(b))
 	}
@@ -154,7 +151,7 @@ func (r businessRepo) UpdateBusinessValues(ctx kratosx.Context, bs []*biz.Busine
 }
 
 // AllBusinessValue 获取指定环境的变量的所有值
-func (s *businessRepo) AllBusinessValue(ctx kratosx.Context, eid, sid uint32) ([]*biz.BusinessValue, error) {
+func (r businessRepo) AllBusinessValue(ctx kratosx.Context, eid, sid uint32) ([]*biz.BusinessValue, error) {
 	// 获取指定服务的全部业务字段
 	var ids []uint32
 	if err := ctx.DB().Select("id").Model(biz.Business{}).Where("server_id=?", sid).Scan(&ids).Error; err != nil {
@@ -173,13 +170,13 @@ func (s *businessRepo) AllBusinessValue(ctx kratosx.Context, eid, sid uint32) ([
 		return nil, err
 	}
 	for _, item := range ms {
-		bs = append(bs, s.ToBusinessValueEntity(item))
+		bs = append(bs, r.ToBusinessValueEntity(item))
 	}
 	return bs, nil
 }
 
 // AllBusinessField 获取可用的业务字段key列表
-func (s *businessRepo) AllBusinessField(ctx kratosx.Context, srvId uint32) ([]string, error) {
+func (r businessRepo) AllBusinessField(ctx kratosx.Context, srvId uint32) ([]string, error) {
 	var list []string
 	return list, ctx.DB().Select("keyword").
 		Model(model.Business{}).

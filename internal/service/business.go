@@ -34,31 +34,6 @@ func init() {
 	})
 }
 
-// GetBusiness 获取指定的业务配置信息
-func (s *BusinessService) GetBusiness(c context.Context, req *pb.GetBusinessRequest) (*pb.GetBusinessReply, error) {
-	var (
-		in  = business.GetBusinessRequest{}
-		ctx = kratosx.MustContext(c)
-	)
-
-	if err := valx.Transform(req, &in); err != nil {
-		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-
-	result, err := s.uc.GetBusiness(ctx, &in)
-	if err != nil {
-		return nil, err
-	}
-
-	reply := pb.GetBusinessReply{}
-	if err := valx.Transform(result, &reply); err != nil {
-		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
-}
-
 // ListBusiness 获取业务配置信息列表
 func (s *BusinessService) ListBusiness(c context.Context, req *pb.ListBusinessRequest) (*pb.ListBusinessReply, error) {
 	var (
@@ -126,11 +101,10 @@ func (s *BusinessService) UpdateBusiness(c context.Context, req *pb.UpdateBusine
 
 // DeleteBusiness 删除业务配置信息
 func (s *BusinessService) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRequest) (*pb.DeleteBusinessReply, error) {
-	total, err := s.uc.DeleteBusiness(kratosx.MustContext(c), req.Ids)
-	if err != nil {
+	if err := s.uc.DeleteBusiness(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &pb.DeleteBusinessReply{Total: total}, nil
+	return &pb.DeleteBusinessReply{}, nil
 }
 
 // ListBusinessValue 获取业务配置值信息列表

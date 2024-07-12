@@ -80,6 +80,9 @@ func (r serverRepo) ListServer(ctx kratosx.Context, req *biz.ListServerRequest) 
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
 	}
+	if req.Ids != nil {
+		db = db.Where("id in ?", req.Ids)
+	}
 
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
@@ -119,9 +122,8 @@ func (r serverRepo) UpdateServer(ctx kratosx.Context, req *biz.Server) error {
 }
 
 // DeleteServer 删除数据
-func (r serverRepo) DeleteServer(ctx kratosx.Context, ids []uint32) (uint32, error) {
-	db := ctx.DB().Where("id in ?", ids).Delete(&model.Server{})
-	return uint32(db.RowsAffected), db.Error
+func (r serverRepo) DeleteServer(ctx kratosx.Context, id uint32) error {
+	return ctx.DB().Where("id=?", id).Delete(&model.Server{}).Error
 }
 
 // UpdateServerStatus 更新数据状态

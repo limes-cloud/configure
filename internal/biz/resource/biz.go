@@ -6,9 +6,11 @@ import (
 
 	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/valx"
 
 	"github.com/limes-cloud/configure/api/configure/errors"
 	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/internal/pkg/permission"
 )
 
 type UseCase struct {
@@ -82,6 +84,21 @@ func (u *UseCase) ListResourceValue(ctx kratosx.Context, bid uint32) ([]*Resourc
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
 	}
+
+	all, scopes, err := permission.GetEnv(ctx)
+	if err != nil {
+		return nil, 0, err
+	}
+	var (
+		result []*ResourceValue
+		ir     = valx.New[uint32](scopes)
+	)
+	for _, item := range list {
+		if all || ir.Has(item.EnvId) {
+			result = append(result, item)
+		}
+	}
+
 	return list, total, nil
 }
 
@@ -93,6 +110,13 @@ func (u *UseCase) UpdateResourceValue(ctx kratosx.Context, list []*ResourceValue
 		return errors.GetError(err.Error())
 	}
 	fields := strings.Split(resource.Fields, ",")
+
+	var result []*ResourceValue
+	all, scopes, err := permission.GetEnv(ctx)
+	if err != nil {
+		return err
+	}
+	ir := valx.New[uint32](scopes)
 
 	for ind, item := range list {
 		var (
@@ -108,9 +132,13 @@ func (u *UseCase) UpdateResourceValue(ctx kratosx.Context, list []*ResourceValue
 			}
 		}
 		list[ind].Value, _ = json.MarshalToString(m)
+
+		if all || ir.Has(item.EnvId) {
+			result = append(result, list[ind])
+		}
 	}
 
-	if err := u.repo.UpdateResourceValues(ctx, list); err != nil {
+	if err := u.repo.UpdateResourceValues(ctx, result); err != nil {
 		return errors.UpdateError(err.Error())
 	}
 	return nil

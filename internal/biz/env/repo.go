@@ -18,7 +18,7 @@ type Repo interface {
 	UpdateEnv(ctx kratosx.Context, req *Env) error
 
 	// DeleteEnv 删除环境信息
-	DeleteEnv(ctx kratosx.Context, ids []uint32) (uint32, error)
+	DeleteEnv(ctx kratosx.Context, ids uint32) error
 
 	// GetEnvByKeyword 获取指定的环境信息
 	GetEnvByKeyword(ctx kratosx.Context, keyword string) (*Env, error)

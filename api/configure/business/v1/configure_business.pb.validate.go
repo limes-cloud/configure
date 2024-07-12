@@ -35,239 +35,6 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on GetBusinessRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetBusinessRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetBusinessRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetBusinessRequestMultiError, or nil if none found.
-func (m *GetBusinessRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetBusinessRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.Id != nil {
-
-		if m.GetId() <= 0 {
-			err := GetBusinessRequestValidationError{
-				field:  "Id",
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return GetBusinessRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetBusinessRequestMultiError is an error wrapping multiple validation errors
-// returned by GetBusinessRequest.ValidateAll() if the designated constraints
-// aren't met.
-type GetBusinessRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetBusinessRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetBusinessRequestMultiError) AllErrors() []error { return m }
-
-// GetBusinessRequestValidationError is the validation error returned by
-// GetBusinessRequest.Validate if the designated constraints aren't met.
-type GetBusinessRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetBusinessRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetBusinessRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetBusinessRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetBusinessRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetBusinessRequestValidationError) ErrorName() string {
-	return "GetBusinessRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetBusinessRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetBusinessRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetBusinessRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetBusinessRequestValidationError{}
-
-// Validate checks the field values on GetBusinessReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetBusinessReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetBusinessReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetBusinessReplyMultiError, or nil if none found.
-func (m *GetBusinessReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetBusinessReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for ServerId
-
-	// no validation rules for Keyword
-
-	// no validation rules for Type
-
-	// no validation rules for CreatedAt
-
-	// no validation rules for UpdatedAt
-
-	if m.Description != nil {
-		// no validation rules for Description
-	}
-
-	if len(errors) > 0 {
-		return GetBusinessReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetBusinessReplyMultiError is an error wrapping multiple validation errors
-// returned by GetBusinessReply.ValidateAll() if the designated constraints
-// aren't met.
-type GetBusinessReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetBusinessReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetBusinessReplyMultiError) AllErrors() []error { return m }
-
-// GetBusinessReplyValidationError is the validation error returned by
-// GetBusinessReply.Validate if the designated constraints aren't met.
-type GetBusinessReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetBusinessReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetBusinessReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetBusinessReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetBusinessReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetBusinessReplyValidationError) ErrorName() string { return "GetBusinessReplyValidationError" }
-
-// Error satisfies the builtin error interface
-func (e GetBusinessReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetBusinessReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetBusinessReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetBusinessReplyValidationError{}
-
 // Validate checks the field values on ListBusinessRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -312,6 +79,17 @@ func (m *ListBusinessRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.GetServerId() <= 0 {
+		err := ListBusinessRequestValidationError{
+			field:  "ServerId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if m.Order != nil {
 
 		if _, ok := _ListBusinessRequest_Order_InLookup[m.GetOrder()]; !ok {
@@ -340,10 +118,6 @@ func (m *ListBusinessRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-	}
-
-	if m.ServerId != nil {
-		// no validation rules for ServerId
 	}
 
 	if m.Keyword != nil {
@@ -1083,36 +857,15 @@ func (m *DeleteBusinessRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := len(m.GetIds()); l < 1 || l > 50 {
+	if m.GetId() <= 0 {
 		err := DeleteBusinessRequestValidationError{
-			field:  "Ids",
-			reason: "value must contain between 1 and 50 items, inclusive",
+			field:  "Id",
+			reason: "value must be greater than 0",
 		}
 		if !all {
 			return err
 		}
 		errors = append(errors, err)
-	}
-
-	_DeleteBusinessRequest_Ids_Unique := make(map[uint32]struct{}, len(m.GetIds()))
-
-	for idx, item := range m.GetIds() {
-		_, _ = idx, item
-
-		if _, exists := _DeleteBusinessRequest_Ids_Unique[item]; exists {
-			err := DeleteBusinessRequestValidationError{
-				field:  fmt.Sprintf("Ids[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_DeleteBusinessRequest_Ids_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for Ids[idx]
 	}
 
 	if len(errors) > 0 {
@@ -1216,8 +969,6 @@ func (m *DeleteBusinessReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	if len(errors) > 0 {
 		return DeleteBusinessReplyMultiError(errors)
