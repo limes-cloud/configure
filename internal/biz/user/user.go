@@ -51,7 +51,7 @@ func (uc *UseCase) Login(ctx kratosx.Context, username, password string) (string
 	}
 
 	// 生成登陆token
-	token, err := ctx.JWT().NewToken(map[string]any{})
+	token, err := ctx.JWT().NewToken(map[string]any{"userId": 1, "roleKeyword": "superAdmin"})
 	if err != nil {
 		return "", errors.SystemError(err.Error())
 	}

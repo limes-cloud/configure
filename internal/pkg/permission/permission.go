@@ -4,6 +4,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
 	"github.com/limes-cloud/manager/api/manager/auth"
+	v1 "github.com/limes-cloud/manager/api/manager/auth/v1"
 	resourcev1 "github.com/limes-cloud/manager/api/manager/resource/v1"
 
 	"github.com/limes-cloud/configure/api/configure/errors"
@@ -24,7 +25,16 @@ func NewClient(ctx kratosx.Context) (resourcev1.ResourceClient, error) {
 }
 
 func GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
-	info, err := auth.GetAuthInfo(ctx)
+	var (
+		info = &v1.AuthReply{}
+		err  error
+	)
+	if ctx.Token() != "" {
+		err = ctx.JWT().Parse(ctx, info)
+	} else {
+		info, err = auth.GetAuthInfo(ctx)
+	}
+
 	if err != nil {
 		return false, nil, err
 	}
