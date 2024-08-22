@@ -8,7 +8,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratosx v1.0.47
+	github.com/limes-cloud/kratosx v1.0.52
 	github.com/limes-cloud/manager v1.0.20
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240429193739-8cf5692501f6
@@ -135,3 +135,4 @@ require (
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/sqlite v1.29.8 // indirect
 )
+
