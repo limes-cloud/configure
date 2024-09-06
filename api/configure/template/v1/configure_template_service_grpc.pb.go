@@ -26,7 +26,6 @@ const (
 	Template_SwitchTemplate_FullMethodName  = "/configure.api.configure.template.v1.Template/SwitchTemplate"
 	Template_CompareTemplate_FullMethodName = "/configure.api.configure.template.v1.Template/CompareTemplate"
 	Template_PreviewTemplate_FullMethodName = "/configure.api.configure.template.v1.Template/PreviewTemplate"
-	Template_ParseTemplate_FullMethodName   = "/configure.api.configure.template.v1.Template/ParseTemplate"
 )
 
 // TemplateClient is the client API for Template service.
@@ -40,7 +39,6 @@ type TemplateClient interface {
 	SwitchTemplate(ctx context.Context, in *SwitchTemplateRequest, opts ...grpc.CallOption) (*SwitchTemplateReply, error)
 	CompareTemplate(ctx context.Context, in *CompareTemplateRequest, opts ...grpc.CallOption) (*CompareTemplateReply, error)
 	PreviewTemplate(ctx context.Context, in *PreviewTemplateRequest, opts ...grpc.CallOption) (*PreviewTemplateReply, error)
-	ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...grpc.CallOption) (*ParseTemplateReply, error)
 }
 
 type templateClient struct {
@@ -114,15 +112,6 @@ func (c *templateClient) PreviewTemplate(ctx context.Context, in *PreviewTemplat
 	return out, nil
 }
 
-func (c *templateClient) ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...grpc.CallOption) (*ParseTemplateReply, error) {
-	out := new(ParseTemplateReply)
-	err := c.cc.Invoke(ctx, Template_ParseTemplate_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // TemplateServer is the server API for Template service.
 // All implementations must embed UnimplementedTemplateServer
 // for forward compatibility
@@ -134,7 +123,6 @@ type TemplateServer interface {
 	SwitchTemplate(context.Context, *SwitchTemplateRequest) (*SwitchTemplateReply, error)
 	CompareTemplate(context.Context, *CompareTemplateRequest) (*CompareTemplateReply, error)
 	PreviewTemplate(context.Context, *PreviewTemplateRequest) (*PreviewTemplateReply, error)
-	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
 	mustEmbedUnimplementedTemplateServer()
 }
 
@@ -162,9 +150,6 @@ func (UnimplementedTemplateServer) CompareTemplate(context.Context, *CompareTemp
 }
 func (UnimplementedTemplateServer) PreviewTemplate(context.Context, *PreviewTemplateRequest) (*PreviewTemplateReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PreviewTemplate not implemented")
-}
-func (UnimplementedTemplateServer) ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ParseTemplate not implemented")
 }
 func (UnimplementedTemplateServer) mustEmbedUnimplementedTemplateServer() {}
 
@@ -305,24 +290,6 @@ func _Template_PreviewTemplate_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Template_ParseTemplate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ParseTemplateRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(TemplateServer).ParseTemplate(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Template_ParseTemplate_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TemplateServer).ParseTemplate(ctx, req.(*ParseTemplateRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Template_ServiceDesc is the grpc.ServiceDesc for Template service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -357,10 +324,6 @@ var Template_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PreviewTemplate",
 			Handler:    _Template_PreviewTemplate_Handler,
-		},
-		{
-			MethodName: "ParseTemplate",
-			Handler:    _Template_ParseTemplate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

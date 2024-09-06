@@ -25,11 +25,9 @@ message GetEnvReply {
 }
 
 message ListEnvRequest {
-  optional string order = 1[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 2[(validate.rules).string = {in: ["id"]}];
-  optional string keyword = 3;
-  optional string name = 4;
-  optional bool status = 5;
+  optional string keyword = 1;
+  optional string name = 2;
+  optional bool status = 3;
 }
 
 message ListEnvReply {
@@ -60,9 +58,10 @@ message CreateEnvReply {
 
 message UpdateEnvRequest {
   uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  string keyword = 2[(validate.rules).string = {min_len: 1}];
-  string name = 3[(validate.rules).string = {min_len: 1}];
-  optional string description = 4;
+  string keyword = 2;
+  string name = 3;
+  optional bool status = 4;
+  optional string description = 5;
 }
 
 message UpdateEnvReply {
@@ -91,12 +90,5 @@ message ResetEnvTokenReply{
   string token = 1;
 }
 
-message UpdateEnvStatusRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  bool status = 2;
-}
 
-message UpdateEnvStatusReply {
-  string token = 1;
-}
 

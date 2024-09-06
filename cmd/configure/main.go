@@ -14,8 +14,8 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/webserver"
 	_ "go.uber.org/automaxprocs"
 
+	"github.com/limes-cloud/configure/internal/app"
 	"github.com/limes-cloud/configure/internal/conf"
-	"github.com/limes-cloud/configure/internal/service"
 )
 
 const (
@@ -23,7 +23,7 @@ const (
 )
 
 func main() {
-	app := kratosx.New(
+	server := kratosx.New(
 		kratosx.RegistrarServer(RegisterServer),
 		kratosx.Options(kratos.AfterStart(func(_ context.Context) error {
 			printx.ArtFont(fmt.Sprintf("Hello %s !", AppName))
@@ -31,7 +31,7 @@ func main() {
 		})),
 	)
 
-	if err := app.Run(); err != nil {
+	if err := server.Run(); err != nil {
 		log.Fatal("run service fail", err.Error())
 	}
 }
@@ -48,5 +48,5 @@ func RegisterServer(c config.Config, hs *thttp.Server, gs *grpc.Server) {
 	go webserver.Run("web/dist/", cfg.WebUI.Addr, map[string]any{
 		"Port": c.App().Server.Http.Port,
 	})
-	service.New(cfg, hs, gs)
+	app.New(cfg, hs, gs)
 }

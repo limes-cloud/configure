@@ -25,7 +25,6 @@ const OperationEnvGetEnvToken = "/configure.api.configure.env.v1.Env/GetEnvToken
 const OperationEnvListEnv = "/configure.api.configure.env.v1.Env/ListEnv"
 const OperationEnvResetEnvToken = "/configure.api.configure.env.v1.Env/ResetEnvToken"
 const OperationEnvUpdateEnv = "/configure.api.configure.env.v1.Env/UpdateEnv"
-const OperationEnvUpdateEnvStatus = "/configure.api.configure.env.v1.Env/UpdateEnvStatus"
 
 type EnvHTTPServer interface {
 	// CreateEnv CreateEnv 创建环境信息
@@ -40,8 +39,6 @@ type EnvHTTPServer interface {
 	ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error)
 	// UpdateEnv UpdateEnv 更新环境信息
 	UpdateEnv(context.Context, *UpdateEnvRequest) (*UpdateEnvReply, error)
-	// UpdateEnvStatus UpdateEnvStatus 更新环境信息状态
-	UpdateEnvStatus(context.Context, *UpdateEnvStatusRequest) (*UpdateEnvStatusReply, error)
 }
 
 func RegisterEnvHTTPServer(s *http.Server, srv EnvHTTPServer) {
@@ -51,7 +48,6 @@ func RegisterEnvHTTPServer(s *http.Server, srv EnvHTTPServer) {
 	r.PUT("/configure/api/v1/env", _Env_UpdateEnv0_HTTP_Handler(srv))
 	r.DELETE("/configure/api/v1/env", _Env_DeleteEnv0_HTTP_Handler(srv))
 	r.GET("/configure/api/v1/env/token", _Env_GetEnvToken0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/env/status", _Env_UpdateEnvStatus0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/env/token", _Env_ResetEnvToken0_HTTP_Handler(srv))
 }
 
@@ -156,28 +152,6 @@ func _Env_GetEnvToken0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) er
 	}
 }
 
-func _Env_UpdateEnvStatus0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateEnvStatusRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationEnvUpdateEnvStatus)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateEnvStatus(ctx, req.(*UpdateEnvStatusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UpdateEnvStatusReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Env_ResetEnvToken0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ResetEnvTokenRequest
@@ -207,7 +181,6 @@ type EnvHTTPClient interface {
 	ListEnv(ctx context.Context, req *ListEnvRequest, opts ...http.CallOption) (rsp *ListEnvReply, err error)
 	ResetEnvToken(ctx context.Context, req *ResetEnvTokenRequest, opts ...http.CallOption) (rsp *ResetEnvTokenReply, err error)
 	UpdateEnv(ctx context.Context, req *UpdateEnvRequest, opts ...http.CallOption) (rsp *UpdateEnvReply, err error)
-	UpdateEnvStatus(ctx context.Context, req *UpdateEnvStatusRequest, opts ...http.CallOption) (rsp *UpdateEnvStatusReply, err error)
 }
 
 type EnvHTTPClientImpl struct {
@@ -288,19 +261,6 @@ func (c *EnvHTTPClientImpl) UpdateEnv(ctx context.Context, in *UpdateEnvRequest,
 	pattern := "/configure/api/v1/env"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEnvUpdateEnv))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *EnvHTTPClientImpl) UpdateEnvStatus(ctx context.Context, in *UpdateEnvStatusRequest, opts ...http.CallOption) (*UpdateEnvStatusReply, error) {
-	var out UpdateEnvStatusReply
-	pattern := "/configure/api/v1/env/status"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationEnvUpdateEnvStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

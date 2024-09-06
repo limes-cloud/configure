@@ -19,11 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Server_ListServer_FullMethodName         = "/configure.api.configure.server.v1.Server/ListServer"
-	Server_CreateServer_FullMethodName       = "/configure.api.configure.server.v1.Server/CreateServer"
-	Server_UpdateServer_FullMethodName       = "/configure.api.configure.server.v1.Server/UpdateServer"
-	Server_DeleteServer_FullMethodName       = "/configure.api.configure.server.v1.Server/DeleteServer"
-	Server_UpdateServerStatus_FullMethodName = "/configure.api.configure.server.v1.Server/UpdateServerStatus"
+	Server_ListServer_FullMethodName   = "/configure.api.configure.server.v1.Server/ListServer"
+	Server_CreateServer_FullMethodName = "/configure.api.configure.server.v1.Server/CreateServer"
+	Server_UpdateServer_FullMethodName = "/configure.api.configure.server.v1.Server/UpdateServer"
+	Server_DeleteServer_FullMethodName = "/configure.api.configure.server.v1.Server/DeleteServer"
 )
 
 // ServerClient is the client API for Server service.
@@ -38,8 +37,6 @@ type ServerClient interface {
 	UpdateServer(ctx context.Context, in *UpdateServerRequest, opts ...grpc.CallOption) (*UpdateServerReply, error)
 	// DeleteServer 删除服务信息
 	DeleteServer(ctx context.Context, in *DeleteServerRequest, opts ...grpc.CallOption) (*DeleteServerReply, error)
-	// UpdateServerStatus 更新服务信息状态
-	UpdateServerStatus(ctx context.Context, in *UpdateServerStatusRequest, opts ...grpc.CallOption) (*UpdateServerStatusReply, error)
 }
 
 type serverClient struct {
@@ -86,15 +83,6 @@ func (c *serverClient) DeleteServer(ctx context.Context, in *DeleteServerRequest
 	return out, nil
 }
 
-func (c *serverClient) UpdateServerStatus(ctx context.Context, in *UpdateServerStatusRequest, opts ...grpc.CallOption) (*UpdateServerStatusReply, error) {
-	out := new(UpdateServerStatusReply)
-	err := c.cc.Invoke(ctx, Server_UpdateServerStatus_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ServerServer is the server API for Server service.
 // All implementations must embed UnimplementedServerServer
 // for forward compatibility
@@ -107,8 +95,6 @@ type ServerServer interface {
 	UpdateServer(context.Context, *UpdateServerRequest) (*UpdateServerReply, error)
 	// DeleteServer 删除服务信息
 	DeleteServer(context.Context, *DeleteServerRequest) (*DeleteServerReply, error)
-	// UpdateServerStatus 更新服务信息状态
-	UpdateServerStatus(context.Context, *UpdateServerStatusRequest) (*UpdateServerStatusReply, error)
 	mustEmbedUnimplementedServerServer()
 }
 
@@ -127,9 +113,6 @@ func (UnimplementedServerServer) UpdateServer(context.Context, *UpdateServerRequ
 }
 func (UnimplementedServerServer) DeleteServer(context.Context, *DeleteServerRequest) (*DeleteServerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteServer not implemented")
-}
-func (UnimplementedServerServer) UpdateServerStatus(context.Context, *UpdateServerStatusRequest) (*UpdateServerStatusReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateServerStatus not implemented")
 }
 func (UnimplementedServerServer) mustEmbedUnimplementedServerServer() {}
 
@@ -216,24 +199,6 @@ func _Server_DeleteServer_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Server_UpdateServerStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateServerStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServerServer).UpdateServerStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Server_UpdateServerStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServerServer).UpdateServerStatus(ctx, req.(*UpdateServerStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Server_ServiceDesc is the grpc.ServiceDesc for Server service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -256,10 +221,6 @@ var Server_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteServer",
 			Handler:    _Server_DeleteServer_Handler,
-		},
-		{
-			MethodName: "UpdateServerStatus",
-			Handler:    _Server_UpdateServerStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

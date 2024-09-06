@@ -304,36 +304,6 @@ func (m *ListEnvRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Order != nil {
-
-		if _, ok := _ListEnvRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListEnvRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.OrderBy != nil {
-
-		if _, ok := _ListEnvRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListEnvRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if m.Keyword != nil {
 		// no validation rules for Keyword
 	}
@@ -423,15 +393,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListEnvRequestValidationError{}
-
-var _ListEnvRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListEnvRequest_OrderBy_InLookup = map[string]struct{}{
-	"id": {},
-}
 
 // Validate checks the field values on ListEnvReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -833,26 +794,12 @@ func (m *UpdateEnvRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-		err := UpdateEnvRequestValidationError{
-			field:  "Keyword",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Keyword
 
-	if utf8.RuneCountInString(m.GetName()) < 1 {
-		err := UpdateEnvRequestValidationError{
-			field:  "Name",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+	// no validation rules for Name
+
+	if m.Status != nil {
+		// no validation rules for Status
 	}
 
 	if m.Description != nil {
@@ -1679,225 +1626,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ResetEnvTokenReplyValidationError{}
-
-// Validate checks the field values on UpdateEnvStatusRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateEnvStatusRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateEnvStatusRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateEnvStatusRequestMultiError, or nil if none found.
-func (m *UpdateEnvStatusRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateEnvStatusRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := UpdateEnvStatusRequestValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	// no validation rules for Status
-
-	if len(errors) > 0 {
-		return UpdateEnvStatusRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateEnvStatusRequestMultiError is an error wrapping multiple validation
-// errors returned by UpdateEnvStatusRequest.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateEnvStatusRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateEnvStatusRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateEnvStatusRequestMultiError) AllErrors() []error { return m }
-
-// UpdateEnvStatusRequestValidationError is the validation error returned by
-// UpdateEnvStatusRequest.Validate if the designated constraints aren't met.
-type UpdateEnvStatusRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateEnvStatusRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateEnvStatusRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateEnvStatusRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateEnvStatusRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateEnvStatusRequestValidationError) ErrorName() string {
-	return "UpdateEnvStatusRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateEnvStatusRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateEnvStatusRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateEnvStatusRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateEnvStatusRequestValidationError{}
-
-// Validate checks the field values on UpdateEnvStatusReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateEnvStatusReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on UpdateEnvStatusReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// UpdateEnvStatusReplyMultiError, or nil if none found.
-func (m *UpdateEnvStatusReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *UpdateEnvStatusReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Token
-
-	if len(errors) > 0 {
-		return UpdateEnvStatusReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// UpdateEnvStatusReplyMultiError is an error wrapping multiple validation
-// errors returned by UpdateEnvStatusReply.ValidateAll() if the designated
-// constraints aren't met.
-type UpdateEnvStatusReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m UpdateEnvStatusReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m UpdateEnvStatusReplyMultiError) AllErrors() []error { return m }
-
-// UpdateEnvStatusReplyValidationError is the validation error returned by
-// UpdateEnvStatusReply.Validate if the designated constraints aren't met.
-type UpdateEnvStatusReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e UpdateEnvStatusReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e UpdateEnvStatusReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e UpdateEnvStatusReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e UpdateEnvStatusReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e UpdateEnvStatusReplyValidationError) ErrorName() string {
-	return "UpdateEnvStatusReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e UpdateEnvStatusReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sUpdateEnvStatusReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = UpdateEnvStatusReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = UpdateEnvStatusReplyValidationError{}
 
 // Validate checks the field values on ListEnvReply_Env with the rules defined
 // in the proto definition for this message. If any rules are violated, the

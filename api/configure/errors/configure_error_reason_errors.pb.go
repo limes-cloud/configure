@@ -331,23 +331,23 @@ func ResourceValueTypeError(args ...any) *errors.Error {
 	}
 }
 
-func IsParseTemplateError(err error) bool {
+func IsRenderTemplateError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_ParseTemplateError.String() && e.Code == 500
+	return e.Reason == ErrorReason_RenderTemplateError.String() && e.Code == 500
 }
 
-func ParseTemplateError(args ...any) *errors.Error {
+func RenderTemplateError(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_ParseTemplateError.String(), "解析模板错误")
+		return errors.New(500, ErrorReason_RenderTemplateError.String(), "渲染模板错误")
 	case 1:
-		return errors.New(500, ErrorReason_ParseTemplateError.String(), "解析模板错误:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_RenderTemplateError.String(), "渲染模板错误:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_ParseTemplateError.String(), "解析模板错误:"+msg)
+		return errors.New(500, ErrorReason_RenderTemplateError.String(), "渲染模板错误:"+msg)
 	}
 }
 
@@ -588,5 +588,25 @@ func NotPermissionError(args ...any) *errors.Error {
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
 		return errors.New(500, ErrorReason_NotPermissionError.String(), "无资源权限:"+msg)
+	}
+}
+
+func IsBroadcastConfigureError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_BroadcastConfigureError.String() && e.Code == 500
+}
+
+func BroadcastConfigureError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_BroadcastConfigureError.String(), "广播配置变更消息失败")
+	case 1:
+		return errors.New(500, ErrorReason_BroadcastConfigureError.String(), "广播配置变更消息失败:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_BroadcastConfigureError.String(), "广播配置变更消息失败:"+msg)
 	}
 }

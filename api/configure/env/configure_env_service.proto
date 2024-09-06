@@ -12,9 +12,6 @@ import "google/api/annotations.proto";
 
 service Env{
 
-  // GetEnv 获取指定的环境信息
-  rpc GetEnv (GetEnvRequest) returns (GetEnvReply) { }
-
   // ListEnv 获取环境信息列表
   rpc ListEnv (ListEnvRequest) returns (ListEnvReply) {
     option (google.api.http) = {
@@ -52,13 +49,6 @@ service Env{
     };
   }
 
-  // UpdateEnvStatus 更新环境信息状态
-  rpc UpdateEnvStatus (UpdateEnvStatusRequest) returns (UpdateEnvStatusReply) {
-    option (google.api.http) = {
-      put: "/configure/api/v1/env/status",
-      body: "*"
-    };
-  }
 
   // ResetEnvToken 重置环境token
   rpc ResetEnvToken (ResetEnvTokenRequest) returns (ResetEnvTokenReply) {

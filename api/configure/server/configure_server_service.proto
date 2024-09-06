@@ -42,12 +42,5 @@ service Server{
     };
   }
 
-  // UpdateServerStatus 更新服务信息状态
-  rpc UpdateServerStatus (UpdateServerStatusRequest) returns (UpdateServerStatusReply) {
-    option (google.api.http) = {
-      put: "/configure/api/v1/server/status",
-      body: "*"
-    };
-  }
 
 }

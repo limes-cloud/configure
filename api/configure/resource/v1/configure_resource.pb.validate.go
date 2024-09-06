@@ -57,7 +57,18 @@ func (m *GetResourceRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
+	switch v := m.Params.(type) {
+	case *GetResourceRequest_Id:
+		if v == nil {
+			err := GetResourceRequestValidationError{
+				field:  "Params",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 
 		if m.GetId() <= 0 {
 			err := GetResourceRequestValidationError{
@@ -70,9 +81,17 @@ func (m *GetResourceRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-	}
-
-	if m.Keyword != nil {
+	case *GetResourceRequest_Keyword:
+		if v == nil {
+			err := GetResourceRequestValidationError{
+				field:  "Params",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 
 		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 			err := GetResourceRequestValidationError{
@@ -85,6 +104,8 @@ func (m *GetResourceRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
+	default:
+		_ = v // ensures v is used
 	}
 
 	if len(errors) > 0 {
@@ -1163,36 +1184,15 @@ func (m *DeleteResourceRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := len(m.GetIds()); l < 1 || l > 50 {
+	if m.GetId() < 1 {
 		err := DeleteResourceRequestValidationError{
-			field:  "Ids",
-			reason: "value must contain between 1 and 50 items, inclusive",
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
 		}
 		errors = append(errors, err)
-	}
-
-	_DeleteResourceRequest_Ids_Unique := make(map[uint32]struct{}, len(m.GetIds()))
-
-	for idx, item := range m.GetIds() {
-		_, _ = idx, item
-
-		if _, exists := _DeleteResourceRequest_Ids_Unique[item]; exists {
-			err := DeleteResourceRequestValidationError{
-				field:  fmt.Sprintf("Ids[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_DeleteResourceRequest_Ids_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for Ids[idx]
 	}
 
 	if len(errors) > 0 {
@@ -1296,8 +1296,6 @@ func (m *DeleteResourceReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	if len(errors) > 0 {
 		return DeleteResourceReplyMultiError(errors)

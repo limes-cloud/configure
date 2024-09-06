@@ -48,9 +48,10 @@ message CreateServerReply {
 
 message UpdateServerRequest {
   uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  string keyword = 2[(validate.rules).string = {min_len: 1}];
-  string name = 3[(validate.rules).string = {min_len: 1}];
-  optional string description = 4;
+  string keyword = 2;
+  string name = 3;
+  optional bool status = 4;
+  optional string description = 5;
 }
 
 message UpdateServerReply {
@@ -61,13 +62,5 @@ message DeleteServerRequest {
 }
 
 message DeleteServerReply {
-}
-
-message UpdateServerStatusRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  bool status = 2;
-}
-
-message UpdateServerStatusReply {
 }
 

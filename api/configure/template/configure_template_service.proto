@@ -57,12 +57,4 @@ service Template{
       body:"*"
     };
   }
-
-  rpc ParseTemplate (ParseTemplateRequest) returns (ParseTemplateReply) {
-    option (google.api.http) = {
-      post: "/configure/api/v1/template/parse",
-      body:"*"
-    };
-  }
-
 }

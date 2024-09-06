@@ -19,22 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Env_GetEnv_FullMethodName          = "/configure.api.configure.env.v1.Env/GetEnv"
-	Env_ListEnv_FullMethodName         = "/configure.api.configure.env.v1.Env/ListEnv"
-	Env_CreateEnv_FullMethodName       = "/configure.api.configure.env.v1.Env/CreateEnv"
-	Env_UpdateEnv_FullMethodName       = "/configure.api.configure.env.v1.Env/UpdateEnv"
-	Env_DeleteEnv_FullMethodName       = "/configure.api.configure.env.v1.Env/DeleteEnv"
-	Env_GetEnvToken_FullMethodName     = "/configure.api.configure.env.v1.Env/GetEnvToken"
-	Env_UpdateEnvStatus_FullMethodName = "/configure.api.configure.env.v1.Env/UpdateEnvStatus"
-	Env_ResetEnvToken_FullMethodName   = "/configure.api.configure.env.v1.Env/ResetEnvToken"
+	Env_ListEnv_FullMethodName       = "/configure.api.configure.env.v1.Env/ListEnv"
+	Env_CreateEnv_FullMethodName     = "/configure.api.configure.env.v1.Env/CreateEnv"
+	Env_UpdateEnv_FullMethodName     = "/configure.api.configure.env.v1.Env/UpdateEnv"
+	Env_DeleteEnv_FullMethodName     = "/configure.api.configure.env.v1.Env/DeleteEnv"
+	Env_GetEnvToken_FullMethodName   = "/configure.api.configure.env.v1.Env/GetEnvToken"
+	Env_ResetEnvToken_FullMethodName = "/configure.api.configure.env.v1.Env/ResetEnvToken"
 )
 
 // EnvClient is the client API for Env service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EnvClient interface {
-	// GetEnv 获取指定的环境信息
-	GetEnv(ctx context.Context, in *GetEnvRequest, opts ...grpc.CallOption) (*GetEnvReply, error)
 	// ListEnv 获取环境信息列表
 	ListEnv(ctx context.Context, in *ListEnvRequest, opts ...grpc.CallOption) (*ListEnvReply, error)
 	// CreateEnv 创建环境信息
@@ -45,8 +41,6 @@ type EnvClient interface {
 	DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...grpc.CallOption) (*DeleteEnvReply, error)
 	// GetEnvToken 获取环境token
 	GetEnvToken(ctx context.Context, in *GetEnvTokenRequest, opts ...grpc.CallOption) (*GetEnvTokenReply, error)
-	// UpdateEnvStatus 更新环境信息状态
-	UpdateEnvStatus(ctx context.Context, in *UpdateEnvStatusRequest, opts ...grpc.CallOption) (*UpdateEnvStatusReply, error)
 	// ResetEnvToken 重置环境token
 	ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...grpc.CallOption) (*ResetEnvTokenReply, error)
 }
@@ -57,15 +51,6 @@ type envClient struct {
 
 func NewEnvClient(cc grpc.ClientConnInterface) EnvClient {
 	return &envClient{cc}
-}
-
-func (c *envClient) GetEnv(ctx context.Context, in *GetEnvRequest, opts ...grpc.CallOption) (*GetEnvReply, error) {
-	out := new(GetEnvReply)
-	err := c.cc.Invoke(ctx, Env_GetEnv_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *envClient) ListEnv(ctx context.Context, in *ListEnvRequest, opts ...grpc.CallOption) (*ListEnvReply, error) {
@@ -113,15 +98,6 @@ func (c *envClient) GetEnvToken(ctx context.Context, in *GetEnvTokenRequest, opt
 	return out, nil
 }
 
-func (c *envClient) UpdateEnvStatus(ctx context.Context, in *UpdateEnvStatusRequest, opts ...grpc.CallOption) (*UpdateEnvStatusReply, error) {
-	out := new(UpdateEnvStatusReply)
-	err := c.cc.Invoke(ctx, Env_UpdateEnvStatus_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *envClient) ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...grpc.CallOption) (*ResetEnvTokenReply, error) {
 	out := new(ResetEnvTokenReply)
 	err := c.cc.Invoke(ctx, Env_ResetEnvToken_FullMethodName, in, out, opts...)
@@ -135,8 +111,6 @@ func (c *envClient) ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest,
 // All implementations must embed UnimplementedEnvServer
 // for forward compatibility
 type EnvServer interface {
-	// GetEnv 获取指定的环境信息
-	GetEnv(context.Context, *GetEnvRequest) (*GetEnvReply, error)
 	// ListEnv 获取环境信息列表
 	ListEnv(context.Context, *ListEnvRequest) (*ListEnvReply, error)
 	// CreateEnv 创建环境信息
@@ -147,8 +121,6 @@ type EnvServer interface {
 	DeleteEnv(context.Context, *DeleteEnvRequest) (*DeleteEnvReply, error)
 	// GetEnvToken 获取环境token
 	GetEnvToken(context.Context, *GetEnvTokenRequest) (*GetEnvTokenReply, error)
-	// UpdateEnvStatus 更新环境信息状态
-	UpdateEnvStatus(context.Context, *UpdateEnvStatusRequest) (*UpdateEnvStatusReply, error)
 	// ResetEnvToken 重置环境token
 	ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error)
 	mustEmbedUnimplementedEnvServer()
@@ -158,9 +130,6 @@ type EnvServer interface {
 type UnimplementedEnvServer struct {
 }
 
-func (UnimplementedEnvServer) GetEnv(context.Context, *GetEnvRequest) (*GetEnvReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEnv not implemented")
-}
 func (UnimplementedEnvServer) ListEnv(context.Context, *ListEnvRequest) (*ListEnvReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListEnv not implemented")
 }
@@ -176,9 +145,6 @@ func (UnimplementedEnvServer) DeleteEnv(context.Context, *DeleteEnvRequest) (*De
 func (UnimplementedEnvServer) GetEnvToken(context.Context, *GetEnvTokenRequest) (*GetEnvTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEnvToken not implemented")
 }
-func (UnimplementedEnvServer) UpdateEnvStatus(context.Context, *UpdateEnvStatusRequest) (*UpdateEnvStatusReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateEnvStatus not implemented")
-}
 func (UnimplementedEnvServer) ResetEnvToken(context.Context, *ResetEnvTokenRequest) (*ResetEnvTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetEnvToken not implemented")
 }
@@ -193,24 +159,6 @@ type UnsafeEnvServer interface {
 
 func RegisterEnvServer(s grpc.ServiceRegistrar, srv EnvServer) {
 	s.RegisterService(&Env_ServiceDesc, srv)
-}
-
-func _Env_GetEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetEnvRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EnvServer).GetEnv(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Env_GetEnv_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EnvServer).GetEnv(ctx, req.(*GetEnvRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Env_ListEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -303,24 +251,6 @@ func _Env_GetEnvToken_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Env_UpdateEnvStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateEnvStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EnvServer).UpdateEnvStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Env_UpdateEnvStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EnvServer).UpdateEnvStatus(ctx, req.(*UpdateEnvStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Env_ResetEnvToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ResetEnvTokenRequest)
 	if err := dec(in); err != nil {
@@ -347,10 +277,6 @@ var Env_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EnvServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetEnv",
-			Handler:    _Env_GetEnv_Handler,
-		},
-		{
 			MethodName: "ListEnv",
 			Handler:    _Env_ListEnv_Handler,
 		},
@@ -369,10 +295,6 @@ var Env_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEnvToken",
 			Handler:    _Env_GetEnvToken_Handler,
-		},
-		{
-			MethodName: "UpdateEnvStatus",
-			Handler:    _Env_UpdateEnvStatus_Handler,
 		},
 		{
 			MethodName: "ResetEnvToken",

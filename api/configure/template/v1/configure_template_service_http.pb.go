@@ -24,7 +24,6 @@ const OperationTemplateCreateTemplate = "/configure.api.configure.template.v1.Te
 const OperationTemplateCurrentTemplate = "/configure.api.configure.template.v1.Template/CurrentTemplate"
 const OperationTemplateGetTemplate = "/configure.api.configure.template.v1.Template/GetTemplate"
 const OperationTemplateListTemplate = "/configure.api.configure.template.v1.Template/ListTemplate"
-const OperationTemplateParseTemplate = "/configure.api.configure.template.v1.Template/ParseTemplate"
 const OperationTemplatePreviewTemplate = "/configure.api.configure.template.v1.Template/PreviewTemplate"
 const OperationTemplateSwitchTemplate = "/configure.api.configure.template.v1.Template/SwitchTemplate"
 
@@ -34,7 +33,6 @@ type TemplateHTTPServer interface {
 	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateReply, error)
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateReply, error)
 	ListTemplate(context.Context, *ListTemplateRequest) (*ListTemplateReply, error)
-	ParseTemplate(context.Context, *ParseTemplateRequest) (*ParseTemplateReply, error)
 	PreviewTemplate(context.Context, *PreviewTemplateRequest) (*PreviewTemplateReply, error)
 	SwitchTemplate(context.Context, *SwitchTemplateRequest) (*SwitchTemplateReply, error)
 }
@@ -48,7 +46,6 @@ func RegisterTemplateHTTPServer(s *http.Server, srv TemplateHTTPServer) {
 	r.POST("/configure/api/v1/template/switch", _Template_SwitchTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/api/v1/template/compare", _Template_CompareTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/api/v1/template/preview", _Template_PreviewTemplate0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/template/parse", _Template_ParseTemplate0_HTTP_Handler(srv))
 }
 
 func _Template_ListTemplate0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
@@ -196,35 +193,12 @@ func _Template_PreviewTemplate0_HTTP_Handler(srv TemplateHTTPServer) func(ctx ht
 	}
 }
 
-func _Template_ParseTemplate0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ParseTemplateRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationTemplateParseTemplate)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ParseTemplate(ctx, req.(*ParseTemplateRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ParseTemplateReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 type TemplateHTTPClient interface {
 	CompareTemplate(ctx context.Context, req *CompareTemplateRequest, opts ...http.CallOption) (rsp *CompareTemplateReply, err error)
 	CreateTemplate(ctx context.Context, req *CreateTemplateRequest, opts ...http.CallOption) (rsp *CreateTemplateReply, err error)
 	CurrentTemplate(ctx context.Context, req *CurrentTemplateRequest, opts ...http.CallOption) (rsp *CurrentTemplateReply, err error)
 	GetTemplate(ctx context.Context, req *GetTemplateRequest, opts ...http.CallOption) (rsp *GetTemplateReply, err error)
 	ListTemplate(ctx context.Context, req *ListTemplateRequest, opts ...http.CallOption) (rsp *ListTemplateReply, err error)
-	ParseTemplate(ctx context.Context, req *ParseTemplateRequest, opts ...http.CallOption) (rsp *ParseTemplateReply, err error)
 	PreviewTemplate(ctx context.Context, req *PreviewTemplateRequest, opts ...http.CallOption) (rsp *PreviewTemplateReply, err error)
 	SwitchTemplate(ctx context.Context, req *SwitchTemplateRequest, opts ...http.CallOption) (rsp *SwitchTemplateReply, err error)
 }
@@ -296,19 +270,6 @@ func (c *TemplateHTTPClientImpl) ListTemplate(ctx context.Context, in *ListTempl
 	opts = append(opts, http.Operation(OperationTemplateListTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *TemplateHTTPClientImpl) ParseTemplate(ctx context.Context, in *ParseTemplateRequest, opts ...http.CallOption) (*ParseTemplateReply, error) {
-	var out ParseTemplateReply
-	pattern := "/configure/api/v1/template/parse"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationTemplateParseTemplate))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

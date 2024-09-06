@@ -25,7 +25,7 @@ enum ErrorReason {
   RevertTrashError = 13[(errors.message)="还原回收站数据失败"];
   BusinessValueTypeError = 14[(errors.message)="业务配置值类型错误"];
   ResourceValueTypeError = 15[(errors.message)="资源配置值类型错误"];
-  ParseTemplateError = 16[(errors.message)="解析模板错误"];
+  RenderTemplateError = 16[(errors.message)="渲染模板错误"];
   TemplateVersionExistError = 17[(errors.message)="模板已存在此版本"];
   ServerNotExistTemplateError = 18[(errors.message)="当前服务还未提交过模板"];
   ConfigureVersionExistError = 19[(errors.message)="配置已存在此版本"];
@@ -38,4 +38,5 @@ enum ErrorReason {
   SystemError = 26[(errors.message)="系统错误"];
   ManagerServerError = 27[(errors.message)="管理中心服务异常"];
   NotPermissionError = 28[(errors.message)="无资源权限"];
+  BroadcastConfigureError = 29[(errors.message)="广播配置变更消息失败"];
 }

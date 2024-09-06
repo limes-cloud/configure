@@ -23,7 +23,6 @@ const OperationServerCreateServer = "/configure.api.configure.server.v1.Server/C
 const OperationServerDeleteServer = "/configure.api.configure.server.v1.Server/DeleteServer"
 const OperationServerListServer = "/configure.api.configure.server.v1.Server/ListServer"
 const OperationServerUpdateServer = "/configure.api.configure.server.v1.Server/UpdateServer"
-const OperationServerUpdateServerStatus = "/configure.api.configure.server.v1.Server/UpdateServerStatus"
 
 type ServerHTTPServer interface {
 	// CreateServer CreateServer 创建服务信息
@@ -34,8 +33,6 @@ type ServerHTTPServer interface {
 	ListServer(context.Context, *ListServerRequest) (*ListServerReply, error)
 	// UpdateServer UpdateServer 更新服务信息
 	UpdateServer(context.Context, *UpdateServerRequest) (*UpdateServerReply, error)
-	// UpdateServerStatus UpdateServerStatus 更新服务信息状态
-	UpdateServerStatus(context.Context, *UpdateServerStatusRequest) (*UpdateServerStatusReply, error)
 }
 
 func RegisterServerHTTPServer(s *http.Server, srv ServerHTTPServer) {
@@ -44,7 +41,6 @@ func RegisterServerHTTPServer(s *http.Server, srv ServerHTTPServer) {
 	r.POST("/configure/api/v1/server", _Server_CreateServer0_HTTP_Handler(srv))
 	r.PUT("/configure/api/v1/server", _Server_UpdateServer0_HTTP_Handler(srv))
 	r.DELETE("/configure/api/v1/server", _Server_DeleteServer0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/server/status", _Server_UpdateServerStatus0_HTTP_Handler(srv))
 }
 
 func _Server_ListServer0_HTTP_Handler(srv ServerHTTPServer) func(ctx http.Context) error {
@@ -129,34 +125,11 @@ func _Server_DeleteServer0_HTTP_Handler(srv ServerHTTPServer) func(ctx http.Cont
 	}
 }
 
-func _Server_UpdateServerStatus0_HTTP_Handler(srv ServerHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateServerStatusRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationServerUpdateServerStatus)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateServerStatus(ctx, req.(*UpdateServerStatusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UpdateServerStatusReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 type ServerHTTPClient interface {
 	CreateServer(ctx context.Context, req *CreateServerRequest, opts ...http.CallOption) (rsp *CreateServerReply, err error)
 	DeleteServer(ctx context.Context, req *DeleteServerRequest, opts ...http.CallOption) (rsp *DeleteServerReply, err error)
 	ListServer(ctx context.Context, req *ListServerRequest, opts ...http.CallOption) (rsp *ListServerReply, err error)
 	UpdateServer(ctx context.Context, req *UpdateServerRequest, opts ...http.CallOption) (rsp *UpdateServerReply, err error)
-	UpdateServerStatus(ctx context.Context, req *UpdateServerStatusRequest, opts ...http.CallOption) (rsp *UpdateServerStatusReply, err error)
 }
 
 type ServerHTTPClientImpl struct {
@@ -211,19 +184,6 @@ func (c *ServerHTTPClientImpl) UpdateServer(ctx context.Context, in *UpdateServe
 	pattern := "/configure/api/v1/server"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServerUpdateServer))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *ServerHTTPClientImpl) UpdateServerStatus(ctx context.Context, in *UpdateServerStatusRequest, opts ...http.CallOption) (*UpdateServerStatusReply, error) {
-	var out UpdateServerStatusReply
-	pattern := "/configure/api/v1/server/status"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationServerUpdateServerStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
