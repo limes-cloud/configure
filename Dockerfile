@@ -1,6 +1,6 @@
 # 构建go
 FROM golang:alpine AS gobuild
-ENV GOPROXY=https://goproxy.cn,direct
+#ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE on
 WORKDIR /go/cache
 ADD go.mod .
