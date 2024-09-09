@@ -7,7 +7,7 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type EnvRepository interface {
+type Env interface {
 	// GetEnvByToken 获取指定的环境信息
 	GetEnvByToken(ctx kratosx.Context, token string) (*entity.Env, error)
 

@@ -2,7 +2,7 @@ package repository
 
 import "github.com/limes-cloud/kratosx"
 
-type PermissionRepository interface {
+type Permission interface {
 	//GetPermission 获取当前用户，指定key的权限
 	GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error)
 

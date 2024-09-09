@@ -6,7 +6,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type ResourceRepository interface {
+type Resource interface {
 	// GetResource 获取指定的资源配置信息
 	GetResource(ctx kratosx.Context, id uint32) (*entity.Resource, error)
 

@@ -12,23 +12,23 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type BusinessInfra struct {
+type Business struct {
 }
 
 var (
-	businessIns  *BusinessInfra
+	businessIns  *Business
 	businessOnce sync.Once
 )
 
-func NewBusinessInfra() *BusinessInfra {
+func NewBusiness() *Business {
 	businessOnce.Do(func() {
-		businessIns = &BusinessInfra{}
+		businessIns = &Business{}
 	})
 	return businessIns
 }
 
 // GetBusiness 获取指定的数据
-func (r BusinessInfra) GetBusiness(ctx kratosx.Context, id uint32) (*entity.Business, error) {
+func (r Business) GetBusiness(ctx kratosx.Context, id uint32) (*entity.Business, error) {
 	var (
 		business = entity.Business{}
 		fs       = []string{"*"}
@@ -37,7 +37,7 @@ func (r BusinessInfra) GetBusiness(ctx kratosx.Context, id uint32) (*entity.Busi
 }
 
 // ListBusiness 获取列表
-func (r BusinessInfra) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
+func (r Business) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
 	var (
 		bs    []*entity.Business
 		total int64
@@ -70,22 +70,22 @@ func (r BusinessInfra) ListBusiness(ctx kratosx.Context, req *types.ListBusiness
 }
 
 // CreateBusiness 创建数据
-func (r BusinessInfra) CreateBusiness(ctx kratosx.Context, business *entity.Business) (uint32, error) {
+func (r Business) CreateBusiness(ctx kratosx.Context, business *entity.Business) (uint32, error) {
 	return business.Id, ctx.DB().Create(business).Error
 }
 
 // UpdateBusiness 更新数据
-func (r BusinessInfra) UpdateBusiness(ctx kratosx.Context, business *entity.Business) error {
+func (r Business) UpdateBusiness(ctx kratosx.Context, business *entity.Business) error {
 	return ctx.DB().Where("id = ?", business.Id).Updates(business).Error
 }
 
 // DeleteBusiness 删除数据
-func (r BusinessInfra) DeleteBusiness(ctx kratosx.Context, id uint32) error {
+func (r Business) DeleteBusiness(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.Business{}).Error
 }
 
 // ListBusinessValue 获取指定业务字段的值列表
-func (r BusinessInfra) ListBusinessValue(ctx kratosx.Context, req *types.ListBusinessValueRequest) ([]*entity.BusinessValue, error) {
+func (r Business) ListBusinessValue(ctx kratosx.Context, req *types.ListBusinessValueRequest) ([]*entity.BusinessValue, error) {
 	var (
 		bvs []*entity.BusinessValue
 		fs  = []string{"*"}
@@ -111,12 +111,12 @@ func (r BusinessInfra) ListBusinessValue(ctx kratosx.Context, req *types.ListBus
 }
 
 // UpdateBusinessValues 更新数据
-func (r BusinessInfra) UpdateBusinessValues(ctx kratosx.Context, bvs []*entity.BusinessValue) error {
+func (r Business) UpdateBusinessValues(ctx kratosx.Context, bvs []*entity.BusinessValue) error {
 	return ctx.DB().Clauses(clause.OnConflict{UpdateAll: true}).Create(&bvs).Error
 }
 
 // AllBusinessField 获取指定服务的可用的业务字段key列表
-func (r BusinessInfra) AllBusinessField(ctx kratosx.Context, srvId uint32) ([]string, error) {
+func (r Business) AllBusinessField(ctx kratosx.Context, srvId uint32) ([]string, error) {
 	var list []string
 	return list, ctx.DB().Select("keyword").
 		Model(entity.Business{}).

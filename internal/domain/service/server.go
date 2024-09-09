@@ -9,18 +9,18 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type ServerService struct {
+type Server struct {
 	conf       *conf.Config
 	repo       repository.ServerRepository
 	permission repository.PermissionRepository
 }
 
-func NewServerService(
+func NewServer(
 	conf *conf.Config,
 	repo repository.ServerRepository,
 	permission repository.PermissionRepository,
-) *ServerService {
-	return &ServerService{
+) *Server {
+	return &Server{
 		conf:       conf,
 		repo:       repo,
 		permission: permission,
@@ -28,7 +28,7 @@ func NewServerService(
 }
 
 // ListServer 获取服务信息列表
-func (u *ServerService) ListServer(ctx kratosx.Context, req *types.ListServerRequest) ([]*entity.Server, uint32, error) {
+func (u *Server) ListServer(ctx kratosx.Context, req *types.ListServerRequest) ([]*entity.Server, uint32, error) {
 	// 获取服务权限id列表
 	all, scopes, err := u.permission.GetServer(ctx)
 	if err != nil {
@@ -47,7 +47,7 @@ func (u *ServerService) ListServer(ctx kratosx.Context, req *types.ListServerReq
 }
 
 // CreateServer 创建服务信息
-func (u *ServerService) CreateServer(ctx kratosx.Context, req *entity.Server) (uint32, error) {
+func (u *Server) CreateServer(ctx kratosx.Context, req *entity.Server) (uint32, error) {
 	id, err := u.repo.CreateServer(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -56,7 +56,7 @@ func (u *ServerService) CreateServer(ctx kratosx.Context, req *entity.Server) (u
 }
 
 // UpdateServer 更新服务信息
-func (u *ServerService) UpdateServer(ctx kratosx.Context, req *entity.Server) error {
+func (u *Server) UpdateServer(ctx kratosx.Context, req *entity.Server) error {
 	// 服务鉴权
 	if !u.permission.HasServer(ctx, req.Id) {
 		return errors.NotPermissionError()
@@ -70,7 +70,7 @@ func (u *ServerService) UpdateServer(ctx kratosx.Context, req *entity.Server) er
 }
 
 // DeleteServer 删除服务信息
-func (u *ServerService) DeleteServer(ctx kratosx.Context, id uint32) error {
+func (u *Server) DeleteServer(ctx kratosx.Context, id uint32) error {
 	// 服务鉴权
 	if !u.permission.HasServer(ctx, id) {
 		return errors.NotPermissionError()

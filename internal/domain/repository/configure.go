@@ -7,7 +7,7 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type ConfigureRepository interface {
+type Configure interface {
 	// GetConfigure 获取指定的配置
 	GetConfigure(ctx kratosx.Context, id uint32) (*entity.Configure, error)
 

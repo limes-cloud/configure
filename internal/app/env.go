@@ -19,27 +19,27 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type EnvApp struct {
+type Env struct {
 	pb.UnimplementedEnvServer
-	srv *service.EnvService
+	srv *service.Env
 }
 
-func NewEnvApp(conf *conf.Config) *EnvApp {
-	return &EnvApp{
-		srv: service.NewEnvService(conf, dbs.NewEnvInfra(), rpc.NewPermissionInfra()),
+func NewEnv(conf *conf.Config) *Env {
+	return &Env{
+		srv: service.NewEnv(conf, dbs.NewEnv(), rpc.NewPermission()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewEnvApp(c)
+		srv := NewEnv(c)
 		pb.RegisterEnvHTTPServer(hs, srv)
 		pb.RegisterEnvServer(gs, srv)
 	})
 }
 
 // ListEnv 获取环境信息列表
-func (app *EnvApp) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListEnvReply, error) {
+func (app *Env) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListEnvReply, error) {
 	list, total, err := app.srv.ListEnv(kratosx.MustContext(c), &types.ListEnvRequest{
 		Keyword: req.Keyword,
 		Name:    req.Name,
@@ -65,7 +65,7 @@ func (app *EnvApp) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListE
 }
 
 // CreateEnv 创建环境信息
-func (app *EnvApp) CreateEnv(c context.Context, req *pb.CreateEnvRequest) (*pb.CreateEnvReply, error) {
+func (app *Env) CreateEnv(c context.Context, req *pb.CreateEnvRequest) (*pb.CreateEnvReply, error) {
 	id, err := app.srv.CreateEnv(kratosx.MustContext(c), &entity.Env{
 		Keyword:     req.Keyword,
 		Name:        req.Name,
@@ -80,7 +80,7 @@ func (app *EnvApp) CreateEnv(c context.Context, req *pb.CreateEnvRequest) (*pb.C
 }
 
 // UpdateEnv 更新环境信息
-func (app *EnvApp) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb.UpdateEnvReply, error) {
+func (app *Env) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb.UpdateEnvReply, error) {
 	if err := app.srv.UpdateEnv(kratosx.MustContext(c), &entity.Env{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
@@ -94,7 +94,7 @@ func (app *EnvApp) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb.U
 }
 
 // DeleteEnv 删除环境信息
-func (app *EnvApp) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.DeleteEnvReply, error) {
+func (app *Env) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.DeleteEnvReply, error) {
 	if err := app.srv.DeleteEnv(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (app *EnvApp) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.D
 }
 
 // GetEnvToken 获取环境token
-func (app *EnvApp) GetEnvToken(c context.Context, req *pb.GetEnvTokenRequest) (*pb.GetEnvTokenReply, error) {
+func (app *Env) GetEnvToken(c context.Context, req *pb.GetEnvTokenRequest) (*pb.GetEnvTokenReply, error) {
 	token, err := app.srv.GetEnvToken(kratosx.MustContext(c), req.Id)
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ func (app *EnvApp) GetEnvToken(c context.Context, req *pb.GetEnvTokenRequest) (*
 }
 
 // ResetEnvToken 重置token密码
-func (app *EnvApp) ResetEnvToken(c context.Context, req *pb.ResetEnvTokenRequest) (*pb.ResetEnvTokenReply, error) {
+func (app *Env) ResetEnvToken(c context.Context, req *pb.ResetEnvTokenRequest) (*pb.ResetEnvTokenReply, error) {
 	in := entity.Env{
 		BaseModel: ktypes.BaseModel{Id: req.Id},
 		Token:     crypto.MD5ToUpper([]byte(uuid.NewString())),

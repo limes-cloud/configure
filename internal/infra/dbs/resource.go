@@ -14,23 +14,23 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type ResourceInfra struct {
+type Resource struct {
 }
 
 var (
-	resourceIns  *ResourceInfra
+	resourceIns  *Resource
 	resourceOnce sync.Once
 )
 
-func NewResourceInfra() *ResourceInfra {
+func NewResource() *Resource {
 	resourceOnce.Do(func() {
-		resourceIns = &ResourceInfra{}
+		resourceIns = &Resource{}
 	})
 	return resourceIns
 }
 
 // GetResourceByKeyword 获取指定数据
-func (r ResourceInfra) GetResourceByKeyword(ctx kratosx.Context, keyword string) (*entity.Resource, error) {
+func (r Resource) GetResourceByKeyword(ctx kratosx.Context, keyword string) (*entity.Resource, error) {
 	var (
 		resource = entity.Resource{}
 		fs       = []string{"*"}
@@ -39,7 +39,7 @@ func (r ResourceInfra) GetResourceByKeyword(ctx kratosx.Context, keyword string)
 }
 
 // GetResource 获取指定的数据
-func (r ResourceInfra) GetResource(ctx kratosx.Context, id uint32) (*entity.Resource, error) {
+func (r Resource) GetResource(ctx kratosx.Context, id uint32) (*entity.Resource, error) {
 	var (
 		resource = entity.Resource{}
 		fs       = []string{"*"}
@@ -48,7 +48,7 @@ func (r ResourceInfra) GetResource(ctx kratosx.Context, id uint32) (*entity.Reso
 }
 
 // ListResource 获取列表
-func (r ResourceInfra) ListResource(ctx kratosx.Context, req *types.ListResourceRequest) ([]*entity.Resource, uint32, error) {
+func (r Resource) ListResource(ctx kratosx.Context, req *types.ListResourceRequest) ([]*entity.Resource, uint32, error) {
 	var (
 		list  []*entity.Resource
 		total int64
@@ -94,12 +94,12 @@ func (r ResourceInfra) ListResource(ctx kratosx.Context, req *types.ListResource
 }
 
 // CreateResource 创建数据
-func (r ResourceInfra) CreateResource(ctx kratosx.Context, resource *entity.Resource) (uint32, error) {
+func (r Resource) CreateResource(ctx kratosx.Context, resource *entity.Resource) (uint32, error) {
 	return resource.Id, ctx.DB().Create(resource).Error
 }
 
 // UpdateResource 更新数据
-func (r ResourceInfra) UpdateResource(ctx kratosx.Context, resource *entity.Resource) error {
+func (r Resource) UpdateResource(ctx kratosx.Context, resource *entity.Resource) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("resource_id=?", resource.Id).Delete(entity.ResourceServer{}).Error; err != nil {
 			return err
@@ -109,12 +109,12 @@ func (r ResourceInfra) UpdateResource(ctx kratosx.Context, resource *entity.Reso
 }
 
 // DeleteResource 删除数据
-func (r ResourceInfra) DeleteResource(ctx kratosx.Context, id uint32) error {
+func (r Resource) DeleteResource(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(&entity.Resource{}, id).Error
 }
 
 // ListResourceValue 获取列表
-func (r ResourceInfra) ListResourceValue(ctx kratosx.Context, req *types.ListResourceValueRequest) ([]*entity.ResourceValue, error) {
+func (r Resource) ListResourceValue(ctx kratosx.Context, req *types.ListResourceValueRequest) ([]*entity.ResourceValue, error) {
 	var (
 		rvs []*entity.ResourceValue
 		fs  = []string{"*"}
@@ -144,12 +144,12 @@ func (r ResourceInfra) ListResourceValue(ctx kratosx.Context, req *types.ListRes
 }
 
 // UpdateResourceValues 更新数据
-func (r ResourceInfra) UpdateResourceValues(ctx kratosx.Context, rvs []*entity.ResourceValue) error {
+func (r Resource) UpdateResourceValues(ctx kratosx.Context, rvs []*entity.ResourceValue) error {
 	return ctx.DB().Clauses(clause.OnConflict{UpdateAll: true}).Create(&rvs).Error
 }
 
 // AllResourceField 获取指定服务的全部可用资源字段
-func (r ResourceInfra) AllResourceField(ctx kratosx.Context, sid uint32) ([]string, error) {
+func (r Resource) AllResourceField(ctx kratosx.Context, sid uint32) ([]string, error) {
 	var (
 		ids  []uint32
 		list []*entity.Resource

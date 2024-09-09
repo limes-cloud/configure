@@ -12,12 +12,12 @@ import (
 	"github.com/limes-cloud/configure/internal/conf"
 )
 
-type UserService struct {
+type User struct {
 	conf *conf.Config
 }
 
-func NewUserService(conf *conf.Config) *UserService {
-	return &UserService{
+func NewUser(conf *conf.Config) *User {
+	return &User{
 		conf: conf,
 	}
 }
@@ -28,7 +28,7 @@ type Password struct {
 }
 
 // Login 用户登录
-func (us *UserService) Login(ctx kratosx.Context, username, password string) (string, error) {
+func (us *User) Login(ctx kratosx.Context, username, password string) (string, error) {
 	// 密码解密
 	pwByte, _ := base64.StdEncoding.DecodeString(password)
 	decryptData, err := openssl.RSADecrypt(pwByte, ctx.Loader("login"))
@@ -62,7 +62,7 @@ func (us *UserService) Login(ctx kratosx.Context, username, password string) (st
 }
 
 // RefreshToken 刷新用户token
-func (us *UserService) RefreshToken(ctx kratosx.Context) (string, error) {
+func (us *User) RefreshToken(ctx kratosx.Context) (string, error) {
 	token, err := ctx.JWT().Renewal(ctx)
 	if err != nil {
 		return "", errors.RefreshTokenError(err.Error())

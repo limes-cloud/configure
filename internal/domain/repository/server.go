@@ -6,7 +6,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type ServerRepository interface {
+type Server interface {
 	// GetServerByKeyword 获取指定的服务信息
 	GetServerByKeyword(ctx kratosx.Context, keyword string) (*entity.Server, error)
 

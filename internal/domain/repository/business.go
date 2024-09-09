@@ -6,7 +6,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type BusinessRepository interface {
+type Business interface {
 	// GetBusiness 获取指定的业务配置信息
 	GetBusiness(ctx kratosx.Context, id uint32) (*entity.Business, error)
 

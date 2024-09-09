@@ -21,7 +21,7 @@ type watcher struct {
 	close chan string
 }
 
-type ConfigureService struct {
+type Configure struct {
 	conf       *conf.Config
 	repo       repository.ConfigureRepository
 	server     repository.ServerRepository
@@ -34,7 +34,7 @@ type ConfigureService struct {
 	rs         map[string][]watcher
 }
 
-func NewConfigureService(
+func NewConfigure(
 	conf *conf.Config,
 	repo repository.ConfigureRepository,
 	server repository.ServerRepository,
@@ -43,8 +43,8 @@ func NewConfigureService(
 	resource repository.ResourceRepository,
 	template repository.TemplateRepository,
 	permission repository.PermissionRepository,
-) *ConfigureService {
-	srv := &ConfigureService{
+) *Configure {
+	srv := &Configure{
 		conf:       conf,
 		repo:       repo,
 		server:     server,
@@ -65,7 +65,7 @@ func NewConfigureService(
 }
 
 // GetConfigureByEnvAndSrv 获取指定标识的配置信息
-func (u *ConfigureService) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, srvId uint32) (*entity.Configure, error) {
+func (u *Configure) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, srvId uint32) (*entity.Configure, error) {
 	if !u.permission.HasServer(ctx, envId) {
 		return nil, errors.NotPermissionError()
 	}
@@ -81,7 +81,7 @@ func (u *ConfigureService) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, s
 }
 
 // ListConfigure 获取分页配置信息
-func (u *ConfigureService) ListConfigure(ctx kratosx.Context, req *types.ListConfigureRequest) ([]*entity.Configure, uint32, error) {
+func (u *Configure) ListConfigure(ctx kratosx.Context, req *types.ListConfigureRequest) ([]*entity.Configure, uint32, error) {
 	list, total, err := u.repo.ListConfigure(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
@@ -90,7 +90,7 @@ func (u *ConfigureService) ListConfigure(ctx kratosx.Context, req *types.ListCon
 }
 
 // UpdateConfigure 更新模配置
-func (u *ConfigureService) UpdateConfigure(ctx kratosx.Context, req *entity.Configure) error {
+func (u *Configure) UpdateConfigure(ctx kratosx.Context, req *entity.Configure) error {
 	if !u.permission.HasServer(ctx, req.EnvId) {
 		return errors.NotPermissionError()
 	}
@@ -133,7 +133,7 @@ func (u *ConfigureService) UpdateConfigure(ctx kratosx.Context, req *entity.Conf
 	return nil
 }
 
-func (u *ConfigureService) RenderCurrentTemplate(ctx kratosx.Context, srvId, envId uint32) (string, string, error) {
+func (u *Configure) RenderCurrentTemplate(ctx kratosx.Context, srvId, envId uint32) (string, string, error) {
 	if !u.permission.HasServer(ctx, srvId) {
 		return "", "", errors.NotPermissionError()
 	}
@@ -172,7 +172,7 @@ func (u *ConfigureService) RenderCurrentTemplate(ctx kratosx.Context, srvId, env
 }
 
 // CompareConfigure 对比配置
-func (u *ConfigureService) CompareConfigure(ctx kratosx.Context, req *types.CompareConfigureRequest) ([]*types.CompareConfigureReply, error) {
+func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConfigureRequest) ([]*types.CompareConfigureReply, error) {
 	if !u.permission.HasServer(ctx, req.ServerId) {
 		return nil, errors.NotPermissionError()
 	}
@@ -274,11 +274,11 @@ func (u *ConfigureService) CompareConfigure(ctx kratosx.Context, req *types.Comp
 	return reply, nil
 }
 
-func (u *ConfigureService) channelKey(envId, srvId uint32) string {
+func (u *Configure) channelKey(envId, srvId uint32) string {
 	return fmt.Sprintf("%v:%v", envId, srvId)
 }
 
-func (u *ConfigureService) Watch(ctx kratosx.Context, in *types.WatcherConfigRequest, reply types.WatcherConfigReplyFunc) error {
+func (u *Configure) Watch(ctx kratosx.Context, in *types.WatcherConfigRequest, reply types.WatcherConfigReplyFunc) error {
 	server, err := u.server.GetServerByKeyword(ctx, in.Server)
 	if err != nil {
 		return errors.ServerNotFound()
@@ -308,7 +308,7 @@ func (u *ConfigureService) Watch(ctx kratosx.Context, in *types.WatcherConfigReq
 	return errors.WatchConfigureError(closer)
 }
 
-func (u *ConfigureService) registerWatch(envId, srvId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
+func (u *Configure) registerWatch(envId, srvId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
 	u.mutex.Lock()
 	defer u.mutex.Unlock()
 
@@ -321,7 +321,7 @@ func (u *ConfigureService) registerWatch(envId, srvId uint32, reply types.Watche
 	return closer
 }
 
-func (u *ConfigureService) SendWatcher(ctx kratosx.Context, envId uint32, srvId uint32) error {
+func (u *Configure) SendWatcher(ctx kratosx.Context, envId uint32, srvId uint32) error {
 	// 获取当前配置
 	cfg, err := u.repo.GetConfigureByEnvAndSrv(ctx, envId, srvId)
 	if err != nil {
@@ -348,7 +348,7 @@ func (u *ConfigureService) SendWatcher(ctx kratosx.Context, envId uint32, srvId 
 	return nil
 }
 
-// func (u *ConfigureService) SendWatcher(in *entity.Configure) {
+// func (u *Configure) SendWatcher(in *entity.Configure) {
 //	u.mutex.Lock()
 //	defer u.mutex.Unlock()
 //

@@ -11,18 +11,18 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type BusinessService struct {
+type Business struct {
 	conf       *conf.Config
 	repo       repository.BusinessRepository
 	permission repository.PermissionRepository
 }
 
-func NewBusinessService(
+func NewBusiness(
 	conf *conf.Config,
 	repo repository.BusinessRepository,
 	permission repository.PermissionRepository,
-) *BusinessService {
-	return &BusinessService{
+) *Business {
+	return &Business{
 		conf:       conf,
 		repo:       repo,
 		permission: permission,
@@ -30,7 +30,7 @@ func NewBusinessService(
 }
 
 // ListBusiness 获取业务配置信息列表
-func (u *BusinessService) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
+func (u *Business) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
 	if !u.permission.HasServer(ctx, req.ServerId) {
 		return nil, 0, errors.NotPermissionError()
 	}
@@ -43,7 +43,7 @@ func (u *BusinessService) ListBusiness(ctx kratosx.Context, req *types.ListBusin
 }
 
 // CreateBusiness 创建业务配置信息
-func (u *BusinessService) CreateBusiness(ctx kratosx.Context, req *entity.Business) (uint32, error) {
+func (u *Business) CreateBusiness(ctx kratosx.Context, req *entity.Business) (uint32, error) {
 	if !u.permission.HasServer(ctx, req.ServerId) {
 		return 0, errors.NotPermissionError()
 	}
@@ -56,7 +56,7 @@ func (u *BusinessService) CreateBusiness(ctx kratosx.Context, req *entity.Busine
 }
 
 // UpdateBusiness 更新业务配置信息
-func (u *BusinessService) UpdateBusiness(ctx kratosx.Context, req *entity.Business) error {
+func (u *Business) UpdateBusiness(ctx kratosx.Context, req *entity.Business) error {
 	if !u.permission.HasServer(ctx, req.ServerId) {
 		return errors.NotPermissionError()
 	}
@@ -68,7 +68,7 @@ func (u *BusinessService) UpdateBusiness(ctx kratosx.Context, req *entity.Busine
 }
 
 // DeleteBusiness 删除业务配置信息
-func (u *BusinessService) DeleteBusiness(ctx kratosx.Context, id uint32) error {
+func (u *Business) DeleteBusiness(ctx kratosx.Context, id uint32) error {
 	business, err := u.repo.GetBusiness(ctx, id)
 	if err != nil {
 		return errors.DeleteError(err.Error())
@@ -85,7 +85,7 @@ func (u *BusinessService) DeleteBusiness(ctx kratosx.Context, id uint32) error {
 }
 
 // ListBusinessValue 获取业务配置值信息列表
-func (u *BusinessService) ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*entity.BusinessValue, error) {
+func (u *Business) ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*entity.BusinessValue, error) {
 	business, err := u.repo.GetBusiness(ctx, bid)
 	if err != nil {
 		return nil, errors.DeleteError(err.Error())
@@ -120,7 +120,7 @@ func (u *BusinessService) ListBusinessValue(ctx kratosx.Context, bid uint32) ([]
 }
 
 // UpdateBusinessValue 更新业务配置值信息
-func (u *BusinessService) UpdateBusinessValue(ctx kratosx.Context, list []*entity.BusinessValue) error {
+func (u *Business) UpdateBusinessValue(ctx kratosx.Context, list []*entity.BusinessValue) error {
 	if len(list) == 0 {
 		return nil
 	}

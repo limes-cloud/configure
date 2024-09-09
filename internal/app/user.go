@@ -11,26 +11,26 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type UserApp struct {
+type User struct {
 	pb.UnimplementedUserServer
-	srv *service.UserService
+	srv *service.User
 }
 
-func NewUserApp(conf *conf.Config) *UserApp {
-	return &UserApp{
-		srv: service.NewUserService(conf),
+func NewUser(conf *conf.Config) *User {
+	return &User{
+		srv: service.NewUser(conf),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewUserApp(c)
+		srv := NewUser(c)
 		pb.RegisterUserHTTPServer(hs, srv)
 		pb.RegisterUserServer(gs, srv)
 	})
 }
 
-func (s *UserApp) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
+func (s *User) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginReply, error) {
 	token, err := s.srv.Login(kratosx.MustContext(ctx), in.Username, in.Password)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func (s *UserApp) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginRepl
 	return &pb.LoginReply{Token: token}, nil
 }
 
-func (s *UserApp) RefreshToken(ctx context.Context, _ *pb.RefreshTokenRequest) (*pb.RefreshTokenReply, error) {
+func (s *User) RefreshToken(ctx context.Context, _ *pb.RefreshTokenRequest) (*pb.RefreshTokenReply, error) {
 	token, err := s.srv.RefreshToken(kratosx.MustContext(ctx))
 	if err != nil {
 		return nil, err

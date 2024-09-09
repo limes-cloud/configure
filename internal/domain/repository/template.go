@@ -6,7 +6,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type TemplateRepository interface {
+type Template interface {
 	// GetTemplateByVersion 获取指定版本的模板
 	GetTemplateByVersion(ctx kratosx.Context, version string) (*entity.Template, error)
 

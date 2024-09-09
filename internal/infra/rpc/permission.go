@@ -18,17 +18,17 @@ const (
 	Server  = "cfg_server"
 )
 
-type PermissionInfra struct {
+type Permission struct {
 }
 
 var (
-	permissionIns  *PermissionInfra
+	permissionIns  *Permission
 	permissionOnce sync.Once
 )
 
-func NewPermissionInfra() *PermissionInfra {
+func NewPermission() *Permission {
 	permissionOnce.Do(func() {
-		permissionIns = &PermissionInfra{}
+		permissionIns = &Permission{}
 	})
 	return permissionIns
 }
@@ -42,7 +42,7 @@ func client(ctx kratosx.Context) (resourcev1.ResourceClient, error) {
 }
 
 // GetPermission 获取当前用户，指定key的权限
-func (infra *PermissionInfra) GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
+func (infra *Permission) GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
 	var (
 		info = &v1.AuthReply{}
 		err  error
@@ -75,7 +75,7 @@ func (infra *PermissionInfra) GetPermission(ctx kratosx.Context, keyword string)
 }
 
 // GetEnv 获取当前用户对于env的权限
-func (infra *PermissionInfra) GetEnv(ctx kratosx.Context) (bool, []uint32, error) {
+func (infra *Permission) GetEnv(ctx kratosx.Context) (bool, []uint32, error) {
 	all, ids, err := infra.GetPermission(ctx, Env)
 	if ids == nil {
 		ids = []uint32{}
@@ -84,7 +84,7 @@ func (infra *PermissionInfra) GetEnv(ctx kratosx.Context) (bool, []uint32, error
 }
 
 // HasEnv 获取当前用户是否具有指定env的权限
-func (infra *PermissionInfra) HasEnv(ctx kratosx.Context, id uint32) bool {
+func (infra *Permission) HasEnv(ctx kratosx.Context, id uint32) bool {
 	all, ids, err := infra.GetPermission(ctx, Env)
 	if err != nil {
 		return false
@@ -96,7 +96,7 @@ func (infra *PermissionInfra) HasEnv(ctx kratosx.Context, id uint32) bool {
 }
 
 // GetServer 获取当前用户是对于server的权限
-func (infra *PermissionInfra) GetServer(ctx kratosx.Context) (bool, []uint32, error) {
+func (infra *Permission) GetServer(ctx kratosx.Context) (bool, []uint32, error) {
 	all, ids, err := infra.GetPermission(ctx, Server)
 	if ids == nil {
 		ids = []uint32{}
@@ -105,7 +105,7 @@ func (infra *PermissionInfra) GetServer(ctx kratosx.Context) (bool, []uint32, er
 }
 
 // HasServer 获取当前用户是具有指定server的权限
-func (infra *PermissionInfra) HasServer(ctx kratosx.Context, id uint32) bool {
+func (infra *Permission) HasServer(ctx kratosx.Context, id uint32) bool {
 	all, ids, err := infra.GetPermission(ctx, Server)
 	if err != nil {
 		return false

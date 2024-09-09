@@ -16,18 +16,18 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/valx"
 )
 
-type ResourceService struct {
+type Resource struct {
 	conf       *conf.Config
 	repo       repository.ResourceRepository
 	permission repository.PermissionRepository
 }
 
-func NewResourceService(
+func NewResource(
 	conf *conf.Config,
 	repo repository.ResourceRepository,
 	permission repository.PermissionRepository,
-) *ResourceService {
-	return &ResourceService{
+) *Resource {
+	return &Resource{
 		conf:       conf,
 		repo:       repo,
 		permission: permission,
@@ -35,7 +35,7 @@ func NewResourceService(
 }
 
 // GetResource 获取指定的资源配置信息
-func (u *ResourceService) GetResource(ctx kratosx.Context, id uint32) (*entity.Resource, error) {
+func (u *Resource) GetResource(ctx kratosx.Context, id uint32) (*entity.Resource, error) {
 	resource, err := u.repo.GetResource(ctx, id)
 	if err != nil {
 		return nil, errors.GetError(err.Error())
@@ -44,7 +44,7 @@ func (u *ResourceService) GetResource(ctx kratosx.Context, id uint32) (*entity.R
 }
 
 // GetResourceByKeyword 获取指定的资源配置信息
-func (u *ResourceService) GetResourceByKeyword(ctx kratosx.Context, keyword string) (*entity.Resource, error) {
+func (u *Resource) GetResourceByKeyword(ctx kratosx.Context, keyword string) (*entity.Resource, error) {
 	resource, err := u.repo.GetResourceByKeyword(ctx, keyword)
 	if err != nil {
 		return nil, errors.GetError(err.Error())
@@ -53,7 +53,7 @@ func (u *ResourceService) GetResourceByKeyword(ctx kratosx.Context, keyword stri
 }
 
 // ListResource 获取资源配置信息列表
-func (u *ResourceService) ListResource(ctx kratosx.Context, req *types.ListResourceRequest) ([]*entity.Resource, uint32, error) {
+func (u *Resource) ListResource(ctx kratosx.Context, req *types.ListResourceRequest) ([]*entity.Resource, uint32, error) {
 	list, total, err := u.repo.ListResource(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
@@ -62,7 +62,7 @@ func (u *ResourceService) ListResource(ctx kratosx.Context, req *types.ListResou
 }
 
 // CreateResource 创建资源配置信息
-func (u *ResourceService) CreateResource(ctx kratosx.Context, req *entity.Resource) (uint32, error) {
+func (u *Resource) CreateResource(ctx kratosx.Context, req *entity.Resource) (uint32, error) {
 	id, err := u.repo.CreateResource(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -71,7 +71,7 @@ func (u *ResourceService) CreateResource(ctx kratosx.Context, req *entity.Resour
 }
 
 // UpdateResource 更新资源配置信息
-func (u *ResourceService) UpdateResource(ctx kratosx.Context, req *entity.Resource) error {
+func (u *Resource) UpdateResource(ctx kratosx.Context, req *entity.Resource) error {
 	if err := u.repo.UpdateResource(ctx, req); err != nil {
 		return errors.UpdateError(err.Error())
 	}
@@ -79,7 +79,7 @@ func (u *ResourceService) UpdateResource(ctx kratosx.Context, req *entity.Resour
 }
 
 // DeleteResource 删除资源配置信息
-func (u *ResourceService) DeleteResource(ctx kratosx.Context, id uint32) error {
+func (u *Resource) DeleteResource(ctx kratosx.Context, id uint32) error {
 	if err := u.repo.DeleteResource(ctx, id); err != nil {
 		return errors.DeleteError(err.Error())
 	}
@@ -87,7 +87,7 @@ func (u *ResourceService) DeleteResource(ctx kratosx.Context, id uint32) error {
 }
 
 // ListResourceValue 获取业务配置值信息列表
-func (u *ResourceService) ListResourceValue(ctx kratosx.Context, rid uint32) ([]*entity.ResourceValue, error) {
+func (u *Resource) ListResourceValue(ctx kratosx.Context, rid uint32) ([]*entity.ResourceValue, error) {
 	list, err := u.repo.ListResourceValue(ctx, &types.ListResourceValueRequest{
 		ResourceId: &rid,
 	})
@@ -113,7 +113,7 @@ func (u *ResourceService) ListResourceValue(ctx kratosx.Context, rid uint32) ([]
 }
 
 // UpdateResourceValue 更新业务配置值信息
-func (u *ResourceService) UpdateResourceValue(ctx kratosx.Context, list []*entity.ResourceValue) error {
+func (u *Resource) UpdateResourceValue(ctx kratosx.Context, list []*entity.ResourceValue) error {
 	rid := list[0].ResourceId
 
 	// 检验数据类型

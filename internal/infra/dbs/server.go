@@ -11,23 +11,23 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type ServerInfra struct {
+type Server struct {
 }
 
 var (
-	serverIns  *ServerInfra
+	serverIns  *Server
 	serverOnce sync.Once
 )
 
-func NewServerInfra() *ServerInfra {
+func NewServer() *Server {
 	serverOnce.Do(func() {
-		serverIns = &ServerInfra{}
+		serverIns = &Server{}
 	})
 	return serverIns
 }
 
 // GetServerByKeyword 获取指定数据
-func (r ServerInfra) GetServerByKeyword(ctx kratosx.Context, keyword string) (*entity.Server, error) {
+func (r Server) GetServerByKeyword(ctx kratosx.Context, keyword string) (*entity.Server, error) {
 	var (
 		server entity.Server
 		fs     = []string{"*"}
@@ -36,7 +36,7 @@ func (r ServerInfra) GetServerByKeyword(ctx kratosx.Context, keyword string) (*e
 }
 
 // GetServer 获取指定的数据
-func (r ServerInfra) GetServer(ctx kratosx.Context, id uint32) (*entity.Server, error) {
+func (r Server) GetServer(ctx kratosx.Context, id uint32) (*entity.Server, error) {
 	var (
 		server entity.Server
 		fs     = []string{"*"}
@@ -45,7 +45,7 @@ func (r ServerInfra) GetServer(ctx kratosx.Context, id uint32) (*entity.Server, 
 }
 
 // ListServer 获取列表
-func (r ServerInfra) ListServer(ctx kratosx.Context, req *types.ListServerRequest) ([]*entity.Server, uint32, error) {
+func (r Server) ListServer(ctx kratosx.Context, req *types.ListServerRequest) ([]*entity.Server, uint32, error) {
 	var (
 		list  []*entity.Server
 		total int64
@@ -86,16 +86,16 @@ func (r ServerInfra) ListServer(ctx kratosx.Context, req *types.ListServerReques
 }
 
 // CreateServer 创建数据
-func (r ServerInfra) CreateServer(ctx kratosx.Context, server *entity.Server) (uint32, error) {
+func (r Server) CreateServer(ctx kratosx.Context, server *entity.Server) (uint32, error) {
 	return server.Id, ctx.DB().Create(server).Error
 }
 
 // UpdateServer 更新数据
-func (r ServerInfra) UpdateServer(ctx kratosx.Context, server *entity.Server) error {
+func (r Server) UpdateServer(ctx kratosx.Context, server *entity.Server) error {
 	return ctx.DB().Where("id = ?", server.Id).Updates(server).Error
 }
 
 // DeleteServer 删除数据
-func (r ServerInfra) DeleteServer(ctx kratosx.Context, id uint32) error {
+func (r Server) DeleteServer(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id=?", id).Delete(&entity.Server{}).Error
 }

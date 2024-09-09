@@ -17,27 +17,31 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type BusinessApp struct {
+type Business struct {
 	pb.UnimplementedBusinessServer
-	srv *service.BusinessService
+	srv *service.Business
 }
 
-func NewBusinessApp(conf *conf.Config) *BusinessApp {
-	return &BusinessApp{
-		srv: service.NewBusinessService(conf, dbs.NewBusinessInfra(), rpc.NewPermissionInfra()),
+func NewBusiness(conf *conf.Config) *Business {
+	return &Business{
+		srv: service.NewBusiness(
+			conf,
+			dbs.NewBusiness(),
+			rpc.NewPermission(),
+		),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewBusinessApp(c)
+		srv := NewBusiness(c)
 		pb.RegisterBusinessHTTPServer(hs, srv)
 		pb.RegisterBusinessServer(gs, srv)
 	})
 }
 
 // ListBusiness 获取业务配置信息列表
-func (s *BusinessApp) ListBusiness(c context.Context, req *pb.ListBusinessRequest) (*pb.ListBusinessReply, error) {
+func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) (*pb.ListBusinessReply, error) {
 	list, total, err := s.srv.ListBusiness(kratosx.MustContext(c), &types.ListBusinessRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -66,7 +70,7 @@ func (s *BusinessApp) ListBusiness(c context.Context, req *pb.ListBusinessReques
 }
 
 // CreateBusiness 创建业务配置信息
-func (s *BusinessApp) CreateBusiness(c context.Context, req *pb.CreateBusinessRequest) (*pb.CreateBusinessReply, error) {
+func (s *Business) CreateBusiness(c context.Context, req *pb.CreateBusinessRequest) (*pb.CreateBusinessReply, error) {
 	id, err := s.srv.CreateBusiness(kratosx.MustContext(c), &entity.Business{
 		ServerId:    req.ServerId,
 		Keyword:     req.Keyword,
@@ -80,7 +84,7 @@ func (s *BusinessApp) CreateBusiness(c context.Context, req *pb.CreateBusinessRe
 }
 
 // UpdateBusiness 更新业务配置信息
-func (s *BusinessApp) UpdateBusiness(c context.Context, req *pb.UpdateBusinessRequest) (*pb.UpdateBusinessReply, error) {
+func (s *Business) UpdateBusiness(c context.Context, req *pb.UpdateBusinessRequest) (*pb.UpdateBusinessReply, error) {
 	if err := s.srv.UpdateBusiness(kratosx.MustContext(c), &entity.Business{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
@@ -93,7 +97,7 @@ func (s *BusinessApp) UpdateBusiness(c context.Context, req *pb.UpdateBusinessRe
 }
 
 // DeleteBusiness 删除业务配置信息
-func (s *BusinessApp) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRequest) (*pb.DeleteBusinessReply, error) {
+func (s *Business) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRequest) (*pb.DeleteBusinessReply, error) {
 	if err := s.srv.DeleteBusiness(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
@@ -101,7 +105,7 @@ func (s *BusinessApp) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRe
 }
 
 // ListBusinessValue 获取业务配置值信息列表
-func (s *BusinessApp) ListBusinessValue(c context.Context, req *pb.ListBusinessValueRequest) (*pb.ListBusinessValueReply, error) {
+func (s *Business) ListBusinessValue(c context.Context, req *pb.ListBusinessValueRequest) (*pb.ListBusinessValueReply, error) {
 	list, err := s.srv.ListBusinessValue(kratosx.MustContext(c), req.BusinessId)
 	if err != nil {
 		return nil, err
@@ -123,7 +127,7 @@ func (s *BusinessApp) ListBusinessValue(c context.Context, req *pb.ListBusinessV
 }
 
 // UpdateBusinessValue 更新业务配置值信息
-func (s *BusinessApp) UpdateBusinessValue(c context.Context, req *pb.UpdateBusinessValueRequest) (*pb.UpdateBusinessValueReply, error) {
+func (s *Business) UpdateBusinessValue(c context.Context, req *pb.UpdateBusinessValueRequest) (*pb.UpdateBusinessValueReply, error) {
 	var list []*entity.BusinessValue
 	for _, item := range req.List {
 		list = append(list, &entity.BusinessValue{

@@ -18,35 +18,35 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type ConfigureApp struct {
+type Configure struct {
 	pb.UnimplementedConfigureServer
-	srv *service.ConfigureService
+	srv *service.Configure
 }
 
-func NewConfigureApp(conf *conf.Config) *ConfigureApp {
-	return &ConfigureApp{
-		srv: service.NewConfigureService(
+func NewConfigure(conf *conf.Config) *Configure {
+	return &Configure{
+		srv: service.NewConfigure(
 			conf,
-			dbs.NewConfigureInfra(),
-			dbs.NewServerInfra(),
-			dbs.NewEnvInfra(),
-			dbs.NewBusinessInfra(),
-			dbs.NewResourceInfra(),
-			dbs.NewTemplateInfra(),
-			rpc.NewPermissionInfra(),
+			dbs.NewConfigure(),
+			dbs.NewServer(),
+			dbs.NewEnv(),
+			dbs.NewBusiness(),
+			dbs.NewResource(),
+			dbs.NewTemplate(),
+			rpc.NewPermission(),
 		),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewConfigureApp(c)
+		srv := NewConfigure(c)
 		pb.RegisterConfigureHTTPServer(hs, srv)
 		pb.RegisterConfigureServer(gs, srv)
 	})
 }
 
-func (s *ConfigureApp) CompareConfigure(c context.Context, in *pb.CompareConfigureRequest) (*pb.CompareConfigureReply, error) {
+func (s *Configure) CompareConfigure(c context.Context, in *pb.CompareConfigureRequest) (*pb.CompareConfigureReply, error) {
 	list, err := s.srv.CompareConfigure(kratosx.MustContext(c), &types.CompareConfigureRequest{
 		EnvId:    in.EnvId,
 		ServerId: in.ServerId,
@@ -61,7 +61,7 @@ func (s *ConfigureApp) CompareConfigure(c context.Context, in *pb.CompareConfigu
 	return &reply, nil
 }
 
-func (s *ConfigureApp) GetConfigure(ctx context.Context, in *pb.GetConfigureRequest) (*pb.GetConfigureReply, error) {
+func (s *Configure) GetConfigure(ctx context.Context, in *pb.GetConfigureRequest) (*pb.GetConfigureReply, error) {
 	res, err := s.srv.GetConfigureByEnvAndSrv(kratosx.MustContext(ctx), in.EnvId, in.ServerId)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (s *ConfigureApp) GetConfigure(ctx context.Context, in *pb.GetConfigureRequ
 	return &reply, nil
 }
 
-func (s *ConfigureApp) UpdateConfigure(ctx context.Context, in *pb.UpdateConfigureRequest) (*pb.UpdateConfigureReply, error) {
+func (s *Configure) UpdateConfigure(ctx context.Context, in *pb.UpdateConfigureRequest) (*pb.UpdateConfigureReply, error) {
 	return &pb.UpdateConfigureReply{}, s.srv.UpdateConfigure(kratosx.MustContext(ctx), &entity.Configure{
 		ServerId:    in.ServerId,
 		EnvId:       in.EnvId,
@@ -81,7 +81,7 @@ func (s *ConfigureApp) UpdateConfigure(ctx context.Context, in *pb.UpdateConfigu
 	})
 }
 
-func (s *ConfigureApp) WatchConfigure(in *pb.WatchConfigureRequest, reply pb.Configure_WatchConfigureServer) error {
+func (s *Configure) WatchConfigure(in *pb.WatchConfigureRequest, reply pb.Configure_WatchConfigureServer) error {
 	return s.srv.Watch(kratosx.MustContext(reply.Context()), &types.WatcherConfigRequest{
 		Server: in.Server,
 		Token:  in.Token,

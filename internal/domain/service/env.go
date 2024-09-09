@@ -9,18 +9,18 @@ import (
 	"github.com/limes-cloud/kratosx"
 )
 
-type EnvService struct {
+type Env struct {
 	conf       *conf.Config
 	repo       repository.EnvRepository
 	permission repository.PermissionRepository
 }
 
-func NewEnvService(
+func NewEnv(
 	conf *conf.Config,
 	repo repository.EnvRepository,
 	permission repository.PermissionRepository,
-) *EnvService {
-	return &EnvService{
+) *Env {
+	return &Env{
 		conf:       conf,
 		repo:       repo,
 		permission: permission,
@@ -28,7 +28,7 @@ func NewEnvService(
 }
 
 // ListEnv 获取环境信息列表
-func (u *EnvService) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]*entity.Env, uint32, error) {
+func (u *Env) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]*entity.Env, uint32, error) {
 	// 获取具有权限的环境id列表
 	all, scopes, err := u.permission.GetEnv(ctx)
 	if err != nil {
@@ -47,7 +47,7 @@ func (u *EnvService) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]
 }
 
 // GetEnvToken 获取环境token
-func (u *EnvService) GetEnvToken(ctx kratosx.Context, id uint32) (string, error) {
+func (u *Env) GetEnvToken(ctx kratosx.Context, id uint32) (string, error) {
 	// 环境鉴权
 	if !u.permission.HasEnv(ctx, id) {
 		return "", errors.NotPermissionError()
@@ -62,7 +62,7 @@ func (u *EnvService) GetEnvToken(ctx kratosx.Context, id uint32) (string, error)
 }
 
 // CreateEnv 创建环境信息
-func (u *EnvService) CreateEnv(ctx kratosx.Context, req *entity.Env) (uint32, error) {
+func (u *Env) CreateEnv(ctx kratosx.Context, req *entity.Env) (uint32, error) {
 	id, err := u.repo.CreateEnv(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -71,7 +71,7 @@ func (u *EnvService) CreateEnv(ctx kratosx.Context, req *entity.Env) (uint32, er
 }
 
 // UpdateEnv 更新环境信息
-func (u *EnvService) UpdateEnv(ctx kratosx.Context, req *entity.Env) error {
+func (u *Env) UpdateEnv(ctx kratosx.Context, req *entity.Env) error {
 	// 环境鉴权
 	if !u.permission.HasEnv(ctx, req.Id) {
 		return errors.NotPermissionError()
@@ -84,7 +84,7 @@ func (u *EnvService) UpdateEnv(ctx kratosx.Context, req *entity.Env) error {
 }
 
 // DeleteEnv 删除环境信息
-func (u *EnvService) DeleteEnv(ctx kratosx.Context, id uint32) error {
+func (u *Env) DeleteEnv(ctx kratosx.Context, id uint32) error {
 	// 环境鉴权
 	if !u.permission.HasEnv(ctx, id) {
 		return errors.NotPermissionError()

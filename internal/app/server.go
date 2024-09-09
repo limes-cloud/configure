@@ -17,31 +17,31 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type ServerApp struct {
+type Server struct {
 	pb.UnimplementedServerServer
-	srv *service.ServerService
+	srv *service.Server
 }
 
-func NewServerApp(conf *conf.Config) *ServerApp {
-	return &ServerApp{
-		srv: service.NewServerService(
+func NewServer(conf *conf.Config) *Server {
+	return &Server{
+		srv: service.NewServer(
 			conf,
-			dbs.NewServerInfra(),
-			rpc.NewPermissionInfra(),
+			dbs.NewServer(),
+			rpc.NewPermission(),
 		),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewServerApp(c)
+		srv := NewServer(c)
 		pb.RegisterServerHTTPServer(hs, srv)
 		pb.RegisterServerServer(gs, srv)
 	})
 }
 
 // ListServer 获取服务信息列表
-func (s *ServerApp) ListServer(c context.Context, req *pb.ListServerRequest) (*pb.ListServerReply, error) {
+func (s *Server) ListServer(c context.Context, req *pb.ListServerRequest) (*pb.ListServerReply, error) {
 	list, total, err := s.srv.ListServer(kratosx.MustContext(c), &types.ListServerRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -71,7 +71,7 @@ func (s *ServerApp) ListServer(c context.Context, req *pb.ListServerRequest) (*p
 }
 
 // CreateServer 创建服务信息
-func (s *ServerApp) CreateServer(c context.Context, req *pb.CreateServerRequest) (*pb.CreateServerReply, error) {
+func (s *Server) CreateServer(c context.Context, req *pb.CreateServerRequest) (*pb.CreateServerReply, error) {
 	id, err := s.srv.CreateServer(kratosx.MustContext(c), &entity.Server{
 		Keyword:     req.Keyword,
 		Name:        req.Name,
@@ -85,7 +85,7 @@ func (s *ServerApp) CreateServer(c context.Context, req *pb.CreateServerRequest)
 }
 
 // UpdateServer 更新服务信息
-func (s *ServerApp) UpdateServer(c context.Context, req *pb.UpdateServerRequest) (*pb.UpdateServerReply, error) {
+func (s *Server) UpdateServer(c context.Context, req *pb.UpdateServerRequest) (*pb.UpdateServerReply, error) {
 	if err := s.srv.UpdateServer(kratosx.MustContext(c), &entity.Server{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
@@ -99,7 +99,7 @@ func (s *ServerApp) UpdateServer(c context.Context, req *pb.UpdateServerRequest)
 }
 
 // DeleteServer 删除服务信息
-func (s *ServerApp) DeleteServer(c context.Context, req *pb.DeleteServerRequest) (*pb.DeleteServerReply, error) {
+func (s *Server) DeleteServer(c context.Context, req *pb.DeleteServerRequest) (*pb.DeleteServerReply, error) {
 	if err := s.srv.DeleteServer(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}

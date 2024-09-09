@@ -18,32 +18,32 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type TemplateApp struct {
+type Template struct {
 	pb.UnimplementedTemplateServer
-	srv *service.TemplateService
+	srv *service.Template
 }
 
-func NewTemplateApp(conf *conf.Config) *TemplateApp {
-	return &TemplateApp{
-		srv: service.NewTemplateService(
+func NewTemplate(conf *conf.Config) *Template {
+	return &Template{
+		srv: service.NewTemplate(
 			conf,
-			dbs.NewTemplateInfra(),
-			dbs.NewBusinessInfra(),
-			dbs.NewResourceInfra(),
-			rpc.NewPermissionInfra(),
+			dbs.NewTemplate(),
+			dbs.NewBusiness(),
+			dbs.NewResource(),
+			rpc.NewPermission(),
 		),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewTemplateApp(c)
+		srv := NewTemplate(c)
 		pb.RegisterTemplateHTTPServer(hs, srv)
 		pb.RegisterTemplateServer(gs, srv)
 	})
 }
 
-func (s *TemplateApp) CurrentTemplate(ctx context.Context, req *pb.CurrentTemplateRequest) (*pb.CurrentTemplateReply, error) {
+func (s *Template) CurrentTemplate(ctx context.Context, req *pb.CurrentTemplateRequest) (*pb.CurrentTemplateReply, error) {
 	res, err := s.srv.CurrentTemplate(kratosx.MustContext(ctx), req.ServerId)
 	if err != nil {
 		return nil, err
@@ -55,7 +55,7 @@ func (s *TemplateApp) CurrentTemplate(ctx context.Context, req *pb.CurrentTempla
 	return &reply, nil
 }
 
-func (s *TemplateApp) GetTemplate(ctx context.Context, req *pb.GetTemplateRequest) (*pb.GetTemplateReply, error) {
+func (s *Template) GetTemplate(ctx context.Context, req *pb.GetTemplateRequest) (*pb.GetTemplateReply, error) {
 	res, err := s.srv.GetTemplate(kratosx.MustContext(ctx), req.Id)
 	if err != nil {
 		return nil, err
@@ -67,7 +67,7 @@ func (s *TemplateApp) GetTemplate(ctx context.Context, req *pb.GetTemplateReques
 	return &reply, nil
 }
 
-func (s *TemplateApp) ListTemplate(ctx context.Context, req *pb.ListTemplateRequest) (*pb.ListTemplateReply, error) {
+func (s *Template) ListTemplate(ctx context.Context, req *pb.ListTemplateRequest) (*pb.ListTemplateReply, error) {
 	res, total, err := s.srv.ListTemplate(kratosx.MustContext(ctx), &types.ListTemplateRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -84,7 +84,7 @@ func (s *TemplateApp) ListTemplate(ctx context.Context, req *pb.ListTemplateRequ
 	return &reply, nil
 }
 
-func (s *TemplateApp) CreateTemplate(c context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateReply, error) {
+func (s *Template) CreateTemplate(c context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateReply, error) {
 	id, err := s.srv.CreateTemplate(kratosx.MustContext(c), &entity.Template{
 		ServerId:    req.ServerId,
 		Content:     req.Content,
@@ -94,11 +94,11 @@ func (s *TemplateApp) CreateTemplate(c context.Context, req *pb.CreateTemplateRe
 	return &pb.CreateTemplateReply{Id: id}, err
 }
 
-func (s *TemplateApp) SwitchTemplate(ctx context.Context, req *pb.SwitchTemplateRequest) (*pb.SwitchTemplateReply, error) {
+func (s *Template) SwitchTemplate(ctx context.Context, req *pb.SwitchTemplateRequest) (*pb.SwitchTemplateReply, error) {
 	return &pb.SwitchTemplateReply{}, s.srv.SwitchTemplate(kratosx.MustContext(ctx), req.ServerId, req.Id)
 }
 
-func (s *TemplateApp) CompareTemplate(ctx context.Context, req *pb.CompareTemplateRequest) (*pb.CompareTemplateReply, error) {
+func (s *Template) CompareTemplate(ctx context.Context, req *pb.CompareTemplateRequest) (*pb.CompareTemplateReply, error) {
 	list, err := s.srv.CompareTemplate(kratosx.MustContext(ctx), &types.CompareTemplateRequest{
 		Id:      req.Id,
 		Format:  req.Format,
@@ -114,7 +114,7 @@ func (s *TemplateApp) CompareTemplate(ctx context.Context, req *pb.CompareTempla
 	return &reply, nil
 }
 
-func (s *TemplateApp) PreviewTemplate(ctx context.Context, req *pb.PreviewTemplateRequest) (*pb.PreviewTemplateReply, error) {
+func (s *Template) PreviewTemplate(ctx context.Context, req *pb.PreviewTemplateRequest) (*pb.PreviewTemplateReply, error) {
 	res, err := s.srv.PreviewTemplate(kratosx.MustContext(ctx), &types.PreviewTemplateRequest{
 		EnvId:    req.EnvId,
 		ServerId: req.ServerId,
