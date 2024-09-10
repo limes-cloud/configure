@@ -13,14 +13,14 @@ import (
 
 type Business struct {
 	conf       *conf.Config
-	repo       repository.BusinessRepository
-	permission repository.PermissionRepository
+	repo       repository.Business
+	permission repository.Permission
 }
 
 func NewBusiness(
 	conf *conf.Config,
-	repo repository.BusinessRepository,
-	permission repository.PermissionRepository,
+	repo repository.Business,
+	permission repository.Permission,
 ) *Business {
 	return &Business{
 		conf:       conf,

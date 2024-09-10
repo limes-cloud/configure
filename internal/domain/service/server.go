@@ -11,14 +11,14 @@ import (
 
 type Server struct {
 	conf       *conf.Config
-	repo       repository.ServerRepository
-	permission repository.PermissionRepository
+	repo       repository.Server
+	permission repository.Permission
 }
 
 func NewServer(
 	conf *conf.Config,
-	repo repository.ServerRepository,
-	permission repository.PermissionRepository,
+	repo repository.Server,
+	permission repository.Permission,
 ) *Server {
 	return &Server{
 		conf:       conf,

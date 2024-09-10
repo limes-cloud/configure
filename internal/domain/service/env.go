@@ -11,14 +11,14 @@ import (
 
 type Env struct {
 	conf       *conf.Config
-	repo       repository.EnvRepository
-	permission repository.PermissionRepository
+	repo       repository.Env
+	permission repository.Permission
 }
 
 func NewEnv(
 	conf *conf.Config,
-	repo repository.EnvRepository,
-	permission repository.PermissionRepository,
+	repo repository.Env,
+	permission repository.Permission,
 ) *Env {
 	return &Env{
 		conf:       conf,

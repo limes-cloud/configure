@@ -23,26 +23,26 @@ type watcher struct {
 
 type Configure struct {
 	conf       *conf.Config
-	repo       repository.ConfigureRepository
-	server     repository.ServerRepository
-	env        repository.EnvRepository
-	business   repository.BusinessRepository
-	resource   repository.ResourceRepository
-	template   repository.TemplateRepository
-	permission repository.PermissionRepository
+	repo       repository.Configure
+	server     repository.Server
+	env        repository.Env
+	business   repository.Business
+	resource   repository.Resource
+	template   repository.Template
+	permission repository.Permission
 	mutex      sync.Mutex
 	rs         map[string][]watcher
 }
 
 func NewConfigure(
 	conf *conf.Config,
-	repo repository.ConfigureRepository,
-	server repository.ServerRepository,
-	env repository.EnvRepository,
-	business repository.BusinessRepository,
-	resource repository.ResourceRepository,
-	template repository.TemplateRepository,
-	permission repository.PermissionRepository,
+	repo repository.Configure,
+	server repository.Server,
+	env repository.Env,
+	business repository.Business,
+	resource repository.Resource,
+	template repository.Template,
+	permission repository.Permission,
 ) *Configure {
 	srv := &Configure{
 		conf:       conf,

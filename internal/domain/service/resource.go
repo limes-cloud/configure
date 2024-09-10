@@ -18,14 +18,14 @@ import (
 
 type Resource struct {
 	conf       *conf.Config
-	repo       repository.ResourceRepository
-	permission repository.PermissionRepository
+	repo       repository.Resource
+	permission repository.Permission
 }
 
 func NewResource(
 	conf *conf.Config,
-	repo repository.ResourceRepository,
-	permission repository.PermissionRepository,
+	repo repository.Resource,
+	permission repository.Permission,
 ) *Resource {
 	return &Resource{
 		conf:       conf,

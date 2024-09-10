@@ -20,18 +20,18 @@ import (
 
 type Template struct {
 	conf       *conf.Config
-	repo       repository.TemplateRepository
-	permission repository.PermissionRepository
-	business   repository.BusinessRepository
-	resource   repository.ResourceRepository
+	repo       repository.Template
+	permission repository.Permission
+	business   repository.Business
+	resource   repository.Resource
 }
 
 func NewTemplate(
 	conf *conf.Config,
-	repo repository.TemplateRepository,
-	business repository.BusinessRepository,
-	resource repository.ResourceRepository,
-	permission repository.PermissionRepository,
+	repo repository.Template,
+	business repository.Business,
+	resource repository.Resource,
+	permission repository.Permission,
 ) *Template {
 	return &Template{
 		conf:       conf,
