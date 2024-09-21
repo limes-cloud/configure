@@ -129,7 +129,6 @@ func (u *Configure) UpdateConfigure(ctx kratosx.Context, req *entity.Configure) 
 		return errors.BroadcastConfigureError()
 	}
 
-	// u.SendWatcher(req)
 	return nil
 }
 
