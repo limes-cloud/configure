@@ -1551,8 +1551,8 @@ github.com/lestrrat-go/option v1.0.0/go.mod h1:5ZHFbivi4xwXxhxY9XHDe2FHo6/Z7WWmt
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/lib/pq v1.10.6 h1:jbk+ZieJ0D7EVGJYpL9QTz7/YW6UHbmdnZWYyK5cdBs=
 github.com/lib/pq v1.10.6/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
-github.com/limes-cloud/kratosx v1.0.55 h1:xayir0BDjICPOaHijVMh/cHWztga7cyGwK7Iw1d6kk0=
-github.com/limes-cloud/kratosx v1.0.55/go.mod h1:b+EkbsoRm0w6261odWdPmTUyL5F5NMiA19OZpHQjaM4=
+github.com/limes-cloud/kratosx v1.0.56 h1:NzvHdQ0sYWU/dJI4BSpaG+sVQYDOJlau4IklbZl/R5I=
+github.com/limes-cloud/kratosx v1.0.56/go.mod h1:b+EkbsoRm0w6261odWdPmTUyL5F5NMiA19OZpHQjaM4=
 github.com/limes-cloud/manager v1.0.27 h1:6AN5bybGubtjkgdGo5gecO9WycXDzSkE5xUKLkgVpkM=
 github.com/limes-cloud/manager v1.0.27/go.mod h1:MUMGjv0NWErsMEK4ffj68OcYGNx9AnCVxmyblhkde04=
 github.com/linuxkit/virtsock v0.0.0-20201010232012-f8cee7dfc7a3/go.mod h1:3r6x7q95whyfWQpmGZTu3gk3v2YkMi05HEzl7Tf7YEo=
