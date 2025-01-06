@@ -3,8 +3,321 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Business API
     version: 0.0.1
-paths: {}
+paths:
+    /configure/api/v1/business:
+        put:
+            tags:
+                - Business
+            description: UpdateBusiness 更新业务配置信息
+            operationId: Business_UpdateBusiness
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateBusinessRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateBusinessReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Business
+            description: CreateBusiness 创建业务配置信息
+            operationId: Business_CreateBusiness
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateBusinessRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateBusinessReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Business
+            description: DeleteBusiness 删除业务配置信息
+            operationId: Business_DeleteBusiness
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteBusinessReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/business/values:
+        get:
+            tags:
+                - Business
+            description: ListBusinessValue 获取业务配置值信息列表
+            operationId: Business_ListBusinessValue
+            parameters:
+                - name: businessId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListBusinessValueReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Business
+            description: UpdateBusinessValue 更新业务配置值信息
+            operationId: Business_UpdateBusinessValue
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateBusinessValueRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateBusinessValueReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/businesses:
+        get:
+            tags:
+                - Business
+            description: ListBusiness 获取业务配置信息列表
+            operationId: Business_ListBusiness
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: serverId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListBusinessReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
-    schemas: {}
+    schemas:
+        CreateBusinessReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateBusinessRequest:
+            type: object
+            properties:
+                serverId:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                type:
+                    type: string
+                description:
+                    type: string
+        DeleteBusinessReply:
+            type: object
+            properties: {}
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListBusinessReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListBusinessReply_Business'
+        ListBusinessReply_Business:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                serverId:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                type:
+                    type: string
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        ListBusinessValueReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListBusinessValueReply_BusinessValue'
+        ListBusinessValueReply_BusinessValue:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                envId:
+                    type: integer
+                    format: uint32
+                businessId:
+                    type: integer
+                    format: uint32
+                value:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateBusinessReply:
+            type: object
+            properties: {}
+        UpdateBusinessRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                type:
+                    type: string
+                description:
+                    type: string
+        UpdateBusinessValueReply:
+            type: object
+            properties: {}
+        UpdateBusinessValueRequest:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UpdateBusinessValueRequest_Value'
+                businessId:
+                    type: integer
+                    format: uint32
+        UpdateBusinessValueRequest_Value:
+            type: object
+            properties:
+                envId:
+                    type: integer
+                    format: uint32
+                value:
+                    type: string
+tags:
+    - name: Business

@@ -3,8 +3,407 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Resource API
     version: 0.0.1
-paths: {}
+paths:
+    /configure/api/v1/resource:
+        get:
+            tags:
+                - Resource
+            description: GetResource 获取指定的资源配置信息
+            operationId: Resource_GetResource
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Resource
+            description: UpdateResource 更新资源配置信息
+            operationId: Resource_UpdateResource
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateResourceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Resource
+            description: CreateResource 创建资源配置信息
+            operationId: Resource_CreateResource
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateResourceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Resource
+            description: DeleteResource 删除资源配置信息
+            operationId: Resource_DeleteResource
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/resource/values:
+        get:
+            tags:
+                - Resource
+            description: ListResourceValue 获取业务配置值信息列表
+            operationId: Resource_ListResourceValue
+            parameters:
+                - name: resourceId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListResourceValueReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Resource
+            description: UpdateResourceValue 更新业务配置值信息
+            operationId: Resource_UpdateResourceValue
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateResourceValueRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateResourceValueReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /configure/api/v1/resources:
+        get:
+            tags:
+                - Resource
+            description: ListResource 获取资源配置信息列表
+            operationId: Resource_ListResource
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: tag
+                  in: query
+                  schema:
+                    type: string
+                - name: private
+                  in: query
+                  schema:
+                    type: boolean
+                - name: serverId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListResourceReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
-    schemas: {}
+    schemas:
+        CreateResourceReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateResourceRequest:
+            type: object
+            properties:
+                keyword:
+                    type: string
+                fields:
+                    type: string
+                tag:
+                    type: string
+                private:
+                    type: boolean
+                serverIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                description:
+                    type: string
+        DeleteResourceReply:
+            type: object
+            properties: {}
+        GetResourceReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                fields:
+                    type: string
+                tag:
+                    type: string
+                private:
+                    type: boolean
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                servers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GetResourceReply_Server'
+        GetResourceReply_Server:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListResourceReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListResourceReply_Resource'
+        ListResourceReply_Resource:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                fields:
+                    type: string
+                tag:
+                    type: string
+                private:
+                    type: boolean
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        ListResourceValueReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListResourceValueReply_ResourceValue'
+        ListResourceValueReply_ResourceValue:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                envId:
+                    type: integer
+                    format: uint32
+                resourceId:
+                    type: integer
+                    format: uint32
+                value:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateResourceReply:
+            type: object
+            properties: {}
+        UpdateResourceRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                fields:
+                    type: string
+                tag:
+                    type: string
+                private:
+                    type: boolean
+                serverIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                description:
+                    type: string
+        UpdateResourceValueReply:
+            type: object
+            properties: {}
+        UpdateResourceValueRequest:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UpdateResourceValueRequest_Value'
+                resourceId:
+                    type: integer
+                    format: uint32
+        UpdateResourceValueRequest_Value:
+            type: object
+            properties:
+                envId:
+                    type: integer
+                    format: uint32
+                value:
+                    type: string
+tags:
+    - name: Resource
