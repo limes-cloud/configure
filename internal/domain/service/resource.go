@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/limes-cloud/configure/internal/types"
-
-	"github.com/limes-cloud/configure/internal/domain/entity"
-
 	json "github.com/json-iterator/go"
-	"github.com/limes-cloud/configure/api/configure/errors"
-	"github.com/limes-cloud/configure/internal/conf"
-	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
+
+	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/internal/domain/entity"
+	"github.com/limes-cloud/configure/internal/domain/repository"
+	"github.com/limes-cloud/configure/internal/types"
 )
 
 type Resource struct {
@@ -109,7 +108,7 @@ func (u *Resource) ListResourceValue(ctx kratosx.Context, rid uint32) ([]*entity
 		}
 	}
 
-	return list, nil
+	return result, nil
 }
 
 // UpdateResourceValue 更新业务配置值信息

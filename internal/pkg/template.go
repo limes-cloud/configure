@@ -85,14 +85,14 @@ func (t *templateParser) parseResourceValue(val any) TemplateValue {
 	if val == nil {
 		return TemplateValue{Value: "null", Exclude: true}
 	}
-	switch val.(type) {
+	switch v := val.(type) {
 	case string:
-		return TemplateValue{Value: val.(string), Exclude: false}
+		return TemplateValue{Value: v, Exclude: false}
 	case map[string]any, []any:
-		str, _ := json.Marshal(val)
+		str, _ := json.Marshal(v)
 		return TemplateValue{Value: string(str), Exclude: true}
 	default:
-		return TemplateValue{Value: fmt.Sprint(val), Exclude: true}
+		return TemplateValue{Value: fmt.Sprint(v), Exclude: true}
 	}
 }
 

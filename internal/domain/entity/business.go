@@ -4,8 +4,9 @@ import (
 	"strconv"
 
 	json "github.com/json-iterator/go"
-	"github.com/limes-cloud/configure/api/configure/errors"
 	"github.com/limes-cloud/kratosx/types"
+
+	"github.com/limes-cloud/configure/api/configure/errors"
 )
 
 type Business struct {
@@ -25,32 +26,33 @@ type BusinessValue struct {
 }
 
 func (bv *BusinessValue) MarshalValue(tp string) (string, error) {
-	var (
-		isAllow  = true
-		value    = bv.Value
-		newValue = value
-	)
+	var value = bv.Value
 	switch tp {
 	case "int":
-		_, err := strconv.Atoi(value)
-		isAllow = err == nil
+		if _, err := strconv.Atoi(value); err != nil {
+			return "", errors.BusinessValueTypeError()
+		}
+		return value, nil
 	case "float":
-		_, err := strconv.ParseFloat(value, 64)
-		isAllow = err == nil
+		if _, err := strconv.ParseFloat(value, 64); err != nil {
+			return "", errors.BusinessValueTypeError()
+		}
+		return value, nil
 	case "string":
-		isAllow = true
+		return value, nil
 	case "bool":
-		isAllow = value == "true" || value == "false"
+		if value != "true" && value != "false" {
+			return "", errors.BusinessValueTypeError()
+		}
+		return value, nil
 	case "object":
 		var m any
-		isAllow = json.Unmarshal([]byte(value), &m) == nil
+		if err := json.Unmarshal([]byte(value), &m); err != nil {
+			return "", errors.BusinessValueTypeError()
+		}
 		content, _ := json.Marshal(m)
-		newValue = string(content)
+		return string(content), nil
 	default:
-		isAllow = false
-	}
-	if !isAllow {
 		return "", errors.BusinessValueTypeError()
 	}
-	return newValue, nil
 }
