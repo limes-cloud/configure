@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
@@ -31,7 +32,7 @@ type Configure struct {
 	template   repository.Template
 	permission repository.Permission
 	mutex      sync.Mutex
-	rs         map[string][]watcher
+	rs         map[string][]*watcher
 }
 
 func NewConfigure(
@@ -53,7 +54,7 @@ func NewConfigure(
 		business:   business,
 		resource:   resource,
 		template:   template,
-		rs:         map[string][]watcher{},
+		rs:         map[string][]*watcher{},
 	}
 
 	// 监听配置变更广播通知
@@ -303,20 +304,44 @@ func (u *Configure) Watch(ctx kratosx.Context, in *types.WatcherConfigRequest, r
 	}
 
 	// 注册回调监听
-	closer := <-u.registerWatch(env.Id, server.Id, reply)
+	closer := <-u.registerWatch(ctx, env.Id, server.Id, reply)
 	return errors.WatchConfigureError(closer)
 }
 
-func (u *Configure) registerWatch(envId, srvId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
+// CompactPtrSlice 将删除切片中所有nil指针元素并返回一个新的切片。
+func (u *Configure) removeNilWatcher(arr []*watcher) []*watcher {
+	// 创建一个新的切片，用于存储非nil指针
+	var result []*watcher
+	for _, ptr := range arr {
+		if ptr != nil {
+			result = append(result, ptr)
+		}
+	}
+	return result
+}
+
+func (u *Configure) registerWatch(ctx context.Context, envId, srvId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
 	u.mutex.Lock()
 	defer u.mutex.Unlock()
 
 	key := u.channelKey(envId, srvId)
 	closer := make(chan string, 1)
-	u.rs[key] = append(u.rs[key], watcher{
+	u.rs[key] = append(u.rs[key], &watcher{
 		reply: reply,
 		close: closer,
 	})
+	index := len(u.rs[key]) - 1
+	go func() {
+		<-ctx.Done()
+		closer <- ctx.Err().Error()
+
+		u.mutex.Lock()
+		defer u.mutex.Unlock()
+
+		u.rs[key][index] = nil
+		u.rs[key] = u.removeNilWatcher(u.rs[key])
+	}()
+
 	return closer
 }
 
@@ -346,23 +371,3 @@ func (u *Configure) SendWatcher(ctx kratosx.Context, envId uint32, srvId uint32)
 	}
 	return nil
 }
-
-// func (u *Configure) SendWatcher(in *entity.Configure) {
-//	u.mutex.Lock()
-//	defer u.mutex.Unlock()
-//
-//	key := u.channelKey(in.EnvId, in.ServerId)
-//	for ind := 0; ind < len(u.rs[key]); ind++ {
-//		item := u.rs[key][ind]
-//		// 发送新的配置模板
-//		if err := item.reply(&types.WatcherConfigureReply{
-//			Content: in.Content,
-//			Format:  in.Format,
-//		}); err != nil {
-//			// 发送失败，则关闭链接通道
-//			item.close <- err.Error()
-//			u.rs[key] = append(u.rs[key][:ind], u.rs[key][ind+1:]...)
-//			ind--
-//		}
-//	}
-// }
