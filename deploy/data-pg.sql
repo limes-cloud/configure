@@ -10,7 +10,7 @@ CREATE TABLE "public"."business" (
                                      "created_at" int8,
                                      "updated_at" int8,
                                      "server_id" int8 NOT NULL,
-                                     "keyword" char(32) COLLATE "pg_catalog"."default" NOT NULL,
+                                     "keyword" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
                                      "type" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
                                      "description" varchar(128) COLLATE "pg_catalog"."default" NOT NULL
 )
@@ -27,17 +27,17 @@ COMMENT ON TABLE "public"."business" IS '业务变量';
 -- ----------------------------
 -- Records of business
 -- ----------------------------
-INSERT INTO "public"."business" VALUES (1, 1712995716, 1712995716, 2, 'AuthSkipRoles                   ', 'object', '跳过权限检测的角色列表');
-INSERT INTO "public"."business" VALUES (2, 1712995716, 1712995716, 2, 'DefaultUserPassword             ', 'string', '默认账号密码');
-INSERT INTO "public"."business" VALUES (4, 1712995716, 1712995716, 2, 'LoginPrivatePath                ', 'string', 'rsa解密私钥路径');
-INSERT INTO "public"."business" VALUES (5, 1712995716, 1712995716, 2, 'Setting                         ', 'object', '系统设置');
-INSERT INTO "public"."business" VALUES (6, 1712995716, 1719465188, 3, 'DefaultAcceptTypes              ', 'object', '允许上传的文件后缀');
-INSERT INTO "public"."business" VALUES (8, 1712995716, 1719465209, 3, 'ChunkSize                       ', 'int', '单个切片最大大小（M）');
-INSERT INTO "public"."business" VALUES (9, 1712995716, 1719465230, 3, 'DefaultMaxSize                  ', 'int', '文件最大大小（M）');
-INSERT INTO "public"."business" VALUES (15, 1719462652, 1719462652, 2, 'ChangePasswordType              ', 'string', '修改密码方式');
-INSERT INTO "public"."business" VALUES (16, 1723029091, 1723029091, 9, 'botSetting                      ', 'object', 'bot设置');
-INSERT INTO "public"."business" VALUES (17, 1723029177, 1723029177, 9, 'botId                           ', 'string', '机器人id');
-INSERT INTO "public"."business" VALUES (18, 1723029204, 1723029204, 9, 'botKey                          ', 'string', '机器人密钥');
+INSERT INTO "public"."business" VALUES (1, 1712995716, 1712995716, 2, 'AuthSkipRoles', 'object', '跳过权限检测的角色列表');
+INSERT INTO "public"."business" VALUES (2, 1712995716, 1712995716, 2, 'DefaultUserPassword', 'string', '默认账号密码');
+INSERT INTO "public"."business" VALUES (4, 1712995716, 1712995716, 2, 'LoginPrivatePath', 'string', 'rsa解密私钥路径');
+INSERT INTO "public"."business" VALUES (5, 1712995716, 1712995716, 2, 'Setting', 'object', '系统设置');
+INSERT INTO "public"."business" VALUES (6, 1712995716, 1719465188, 3, 'DefaultAcceptTypes', 'object', '允许上传的文件后缀');
+INSERT INTO "public"."business" VALUES (8, 1712995716, 1719465209, 3, 'ChunkSize', 'int', '单个切片最大大小（M）');
+INSERT INTO "public"."business" VALUES (9, 1712995716, 1719465230, 3, 'DefaultMaxSize', 'int', '文件最大大小（M）');
+INSERT INTO "public"."business" VALUES (15, 1719462652, 1719462652, 2, 'ChangePasswordType', 'string', '修改密码方式');
+INSERT INTO "public"."business" VALUES (16, 1723029091, 1723029091, 9, 'botSetting', 'object', 'bot设置');
+INSERT INTO "public"."business" VALUES (17, 1723029177, 1723029177, 9, 'botId', 'string', '机器人id');
+INSERT INTO "public"."business" VALUES (18, 1723029204, 1723029204, 9, 'botKey', 'string', '机器人密钥');
 
 -- ----------------------------
 -- Table structure for business_value
@@ -1918,9 +1918,9 @@ COMMENT ON TABLE "public"."env" IS '环境信息';
 -- ----------------------------
 -- Records of env
 -- ----------------------------
-INSERT INTO "public"."env" VALUES (1, 1712995716, 1719369848, 'TEST                            ', '测试环境', '用于本地测试', '1025D32F6CA7A2A320FE091B22C5DF3C', true);
-INSERT INTO "public"."env" VALUES (2, 1712995716, 1750762479, 'PRE                             ', '预发布环境', '用于上线前测试', '862BBE3D5BE34A780305DA84A8DD5147', false);
-INSERT INTO "public"."env" VALUES (3, 1712995716, 1750762481, 'PROD                            ', '生产环境', '用于线上真实环境', '5B655B7D4A51BF79C974C9F27C27D992', false);
+INSERT INTO "public"."env" VALUES (1, 1712995716, 1719369848, 'TEST', '测试环境', '用于本地测试', '1025D32F6CA7A2A320FE091B22C5DF3C', true);
+INSERT INTO "public"."env" VALUES (2, 1712995716, 1750762479, 'PRE', '预发布环境', '用于上线前测试', '862BBE3D5BE34A780305DA84A8DD5147', false);
+INSERT INTO "public"."env" VALUES (3, 1712995716, 1750762481, 'PROD', '生产环境', '用于线上真实环境', '5B655B7D4A51BF79C974C9F27C27D992', false);
 
 -- ----------------------------
 -- Table structure for gorm_init
@@ -1928,7 +1928,7 @@ INSERT INTO "public"."env" VALUES (3, 1712995716, 1750762481, 'PROD             
 DROP TABLE IF EXISTS "public"."gorm_init";
 CREATE TABLE "public"."gorm_init" (
                                       "id" int8 NOT NULL,
-                                      "init" SMALLINT NOT NULL DEFAULT 0
+                                      "init" boolean NOT NULL DEFAULT 0
 )
 ;
 
@@ -1936,7 +1936,7 @@ CREATE TABLE "public"."gorm_init" (
 -- ----------------------------
 -- Records of gorm_init
 -- ----------------------------
-INSERT INTO "public"."gorm_init" VALUES (1, 1);
+INSERT INTO "public"."gorm_init" VALUES (1, true);
 
 -- ----------------------------
 -- Table structure for resource
@@ -1946,7 +1946,7 @@ CREATE TABLE "public"."resource" (
                                      "id" int8 NOT NULL,
                                      "created_at" int8,
                                      "updated_at" int8,
-                                     "keyword" char(32) COLLATE "pg_catalog"."default" NOT NULL,
+                                     "keyword" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
                                      "description" varchar(128) COLLATE "pg_catalog"."default" NOT NULL,
                                      "fields" varchar(256) COLLATE "pg_catalog"."default" NOT NULL,
                                      "tag" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
@@ -1966,25 +1966,25 @@ COMMENT ON TABLE "public"."resource" IS '资源变量';
 -- ----------------------------
 -- Records of resource
 -- ----------------------------
-INSERT INTO "public"."resource" VALUES (1, 1712995716, 1712995716, 'Env                             ', '环境标识信息', 'Keyword', 'env', false);
-INSERT INTO "public"."resource" VALUES (2, 1712995716, 1712995716, 'AdminJwt                        ', '后台管理服务jwt配置信息', 'Secret,Expire,Renewal,Whitelist', 'jwt', false);
-INSERT INTO "public"."resource" VALUES (3, 1712995716, 1712995716, 'ClientJwt                       ', '客户端服务jwt配置信息', 'Secret,Expire,Renewal,Whitelist', 'jwt', false);
-INSERT INTO "public"."resource" VALUES (4, 1712995716, 1712995716, 'Redis                           ', 'redis中间件配置信息', 'Host,Username,Password,Port', 'redis', false);
-INSERT INTO "public"."resource" VALUES (5, 1712995716, 1712995716, 'Email                           ', '邮箱服务配置信息', 'Username,Company,Password,Host,Port', 'email', false);
-INSERT INTO "public"."resource" VALUES (6, 1712995716, 1712995716, 'GatewayServer                   ', '通用网关服务配置信息', 'HttpPort,Host,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (7, 1712995716, 1712995716, 'ManagerServer                   ', '管理中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (8, 1712995716, 1712995716, 'ManagerDatabase                 ', '管理中心数据库配置', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', false);
-INSERT INTO "public"."resource" VALUES (9, 1712995716, 1712995716, 'ResourceServer                  ', '资源中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (10, 1712995716, 1712995716, 'ResourceDatabase                ', '资源中心数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', false);
-INSERT INTO "public"."resource" VALUES (11, 1712995716, 1712995716, 'CronServer                      ', '定时任务服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (12, 1712995716, 1712995716, 'CronDatabase                    ', '定时任务数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', false);
-INSERT INTO "public"."resource" VALUES (13, 1712995716, 1712995716, 'ConfigureServer                 ', '配置中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (14, 1712995716, 1728064624, 'ApplicationServer               ', '应用中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (15, 1712995716, 1728064632, 'ApplicationDatabase             ', '应用中心数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', true);
-INSERT INTO "public"."resource" VALUES (16, 1712995716, 1712995716, 'PartyAffairsServer              ', '信号灯服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
-INSERT INTO "public"."resource" VALUES (17, 1712995716, 1719371833, 'PartyAffairsDatabase            ', '信号灯数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', true);
-INSERT INTO "public"."resource" VALUES (19, 1723028903, 1723028903, 'PovertyDatabase                 ', '资助系统数据库信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', true);
-INSERT INTO "public"."resource" VALUES (20, 1723028953, 1723028953, 'PovertyServer                   ', '资助系统服务信息', 'Host,Port,Timeout', 'server', true);
+INSERT INTO "public"."resource" VALUES (1, 1712995716, 1712995716, 'Env', '环境标识信息', 'Keyword', 'env', false);
+INSERT INTO "public"."resource" VALUES (2, 1712995716, 1712995716, 'AdminJwt', '后台管理服务jwt配置信息', 'Secret,Expire,Renewal,Whitelist', 'jwt', false);
+INSERT INTO "public"."resource" VALUES (3, 1712995716, 1712995716, 'ClientJwt', '客户端服务jwt配置信息', 'Secret,Expire,Renewal,Whitelist', 'jwt', false);
+INSERT INTO "public"."resource" VALUES (4, 1712995716, 1712995716, 'Redis', 'redis中间件配置信息', 'Host,Username,Password,Port', 'redis', false);
+INSERT INTO "public"."resource" VALUES (5, 1712995716, 1712995716, 'Email', '邮箱服务配置信息', 'Username,Company,Password,Host,Port', 'email', false);
+INSERT INTO "public"."resource" VALUES (6, 1712995716, 1712995716, 'GatewayServer', '通用网关服务配置信息', 'HttpPort,Host,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (7, 1712995716, 1712995716, 'ManagerServer', '管理中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (8, 1712995716, 1712995716, 'ManagerDatabase', '管理中心数据库配置', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', false);
+INSERT INTO "public"."resource" VALUES (9, 1712995716, 1712995716, 'ResourceServer', '资源中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (10, 1712995716, 1712995716, 'ResourceDatabase', '资源中心数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', false);
+INSERT INTO "public"."resource" VALUES (11, 1712995716, 1712995716, 'CronServer', '定时任务服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (12, 1712995716, 1712995716, 'CronDatabase', '定时任务数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', false);
+INSERT INTO "public"."resource" VALUES (13, 1712995716, 1712995716, 'ConfigureServer', '配置中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (14, 1712995716, 1728064624, 'ApplicationServer', '应用中心服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (15, 1712995716, 1728064632, 'ApplicationDatabase', '应用中心数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', true);
+INSERT INTO "public"."resource" VALUES (16, 1712995716, 1712995716, 'PartyAffairsServer', '信号灯服务配置信息', 'Host,HttpPort,GrpcPort,Timeout', 'server', false);
+INSERT INTO "public"."resource" VALUES (17, 1712995716, 1719371833, 'PartyAffairsDatabase', '信号灯数据库配置信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', true);
+INSERT INTO "public"."resource" VALUES (19, 1723028903, 1723028903, 'PovertyDatabase', '资助系统数据库信息', 'Username,Password,Type,Port,Database,Option,Host', 'mysql', true);
+INSERT INTO "public"."resource" VALUES (20, 1723028953, 1723028953, 'PovertyServer', '资助系统服务信息', 'Host,Port,Timeout', 'server', true);
 
 -- ----------------------------
 -- Table structure for resource_server
@@ -2103,7 +2103,7 @@ CREATE TABLE "public"."server" (
                                    "id" int8 NOT NULL,
                                    "created_at" int8,
                                    "updated_at" int8,
-                                   "keyword" char(32) COLLATE "pg_catalog"."default" NOT NULL,
+                                   "keyword" varchar(32) COLLATE "pg_catalog"."default" NOT NULL,
                                    "name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
                                    "description" varchar(128) COLLATE "pg_catalog"."default" NOT NULL,
                                    "status" boolean
@@ -2120,13 +2120,13 @@ COMMENT ON TABLE "public"."server" IS '服务信息';
 -- ----------------------------
 -- Records of server
 -- ----------------------------
-INSERT INTO "public"."server" VALUES (1, 1712995716, 1719246376, 'Gateway                         ', '通用网关', '主要负责前端到后端的转发', true);
-INSERT INTO "public"."server" VALUES (2, 1712995716, 1750762065, 'Manager                         ', '管理中心', '主要负责系统的基础管理', true);
-INSERT INTO "public"."server" VALUES (3, 1712995716, 1719283436, 'Resource                        ', '资源中心', '主要负责静态资源的管理', true);
-INSERT INTO "public"."server" VALUES (4, 1712995716, 1719634247, 'Cron                            ', '定时任务', '主要负责定时任务的管理', true);
-INSERT INTO "public"."server" VALUES (5, 1712995716, 1728064298, 'Application                     ', '应用中心', '主要负责业务应用的管理', true);
-INSERT INTO "public"."server" VALUES (6, 1712995716, 1750772337, 'PartyAffairs                    ', '信号灯系统', '指尖上的党务系统', true);
-INSERT INTO "public"."server" VALUES (9, 1723027582, 1750772356, 'Poverty                         ', '资助系统', '资助系统', true);
+INSERT INTO "public"."server" VALUES (1, 1712995716, 1719246376, 'Gateway', '通用网关', '主要负责前端到后端的转发', true);
+INSERT INTO "public"."server" VALUES (2, 1712995716, 1750762065, 'Manager', '管理中心', '主要负责系统的基础管理', true);
+INSERT INTO "public"."server" VALUES (3, 1712995716, 1719283436, 'Resource', '资源中心', '主要负责静态资源的管理', true);
+INSERT INTO "public"."server" VALUES (4, 1712995716, 1719634247, 'Cron', '定时任务', '主要负责定时任务的管理', true);
+INSERT INTO "public"."server" VALUES (5, 1712995716, 1728064298, 'Application', '应用中心', '主要负责业务应用的管理', true);
+INSERT INTO "public"."server" VALUES (6, 1712995716, 1750772337, 'PartyAffairs', '信号灯系统', '指尖上的党务系统', true);
+INSERT INTO "public"."server" VALUES (9, 1723027582, 1750772356, 'Poverty', '资助系统', '资助系统', true);
 
 -- ----------------------------
 -- Table structure for template
@@ -3824,7 +3824,7 @@ business:
   changePasswordType: ${ChangePasswordType}
   defaultUserPassword: ${DefaultUserPassword}
   setting: ${Setting}
-', 'D69ED17B11BA6B9C08A906818FD83937', false, 'yaml', '初始化模板', '[{"type":"update","key":"client","old":"- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.GrpcPort}\n  server: Resource\n  type: direct\n","cur":"- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.GrpcPort}\n  server: Resource\n  type: direct\n"}]');
+', 'D69ED17B11BA6B9C08A906818FD83937', true, 'yaml', '初始化模板', '[{"type":"update","key":"client","old":"- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.GrpcPort}\n  server: Resource\n  type: direct\n","cur":"- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.GrpcPort}\n  server: Resource\n  type: direct\n"}]');
 INSERT INTO "public"."template" VALUES (18, 1719557318, 1728064733, 1, 'addr: 0.0.0.0:${GatewayServer.HttpPort}
 name: gateway
 version: v1
@@ -4353,7 +4353,7 @@ pool: #并非池配置
   nonblocking: true #设置为true时maxBlockingTasks将失效，不限制并发任务
 business:
   key: value
-', '2494002DB6A751C727E337352C1084CA', false, 'yaml', '初始化模板', '[{"type":"add","key":"redis","old":"","cur":"cache:\n    enable: true\n    host: ${Redis.Host}:${Redis.Port}\n    password: ${Redis.Password}\n    username: ${Redis.Username}\n"},{"type":"update","key":"log","old":"caller: true\nfile:\n    compress: false\n    maxAge: 1\n    maxBackup: 5\n    maxSize: 1\n    name: ./tmp/runtime/output.log\nlevel: 0\noutput:\n    - stdout\n    - file\n","cur":"caller: true\nfile:\n    compress: true\n    maxAge: 1\n    maxBackup: 5\n    maxSize: 1\n    name: ./tmp/runtime/output.log\nlevel: 0\noutput:\n    - stdout\n    - file\n"}]');
+', '2494002DB6A751C727E337352C1084CA', true, 'yaml', '初始化模板', '[{"type":"add","key":"redis","old":"","cur":"cache:\n    enable: true\n    host: ${Redis.Host}:${Redis.Port}\n    password: ${Redis.Password}\n    username: ${Redis.Username}\n"},{"type":"update","key":"log","old":"caller: true\nfile:\n    compress: false\n    maxAge: 1\n    maxBackup: 5\n    maxSize: 1\n    name: ./tmp/runtime/output.log\nlevel: 0\noutput:\n    - stdout\n    - file\n","cur":"caller: true\nfile:\n    compress: true\n    maxAge: 1\n    maxBackup: 5\n    maxSize: 1\n    name: ./tmp/runtime/output.log\nlevel: 0\noutput:\n    - stdout\n    - file\n"}]');
 INSERT INTO "public"."template" VALUES (24, 1720283172, 1728071372, 6, '
 env: ${Env.Keyword}
 server:
@@ -5256,7 +5256,7 @@ endpoints:
       - name: auth
         options:
           url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth
-          method: POST', '3020B1B4C417B67FE2480669A6087A34', false, 'yaml', '新增应用中心', '[{"type":"update","key":"endpoints","old":"- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  path: /manager/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /manager/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /configure/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ConfigureServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n        whiteList:\n            - method: GET\n              path: /resource/api/v1/static/*\n            - method: GET\n              path: /resource/api/v1/download/*\n  path: /resource/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /resource/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /usercenter/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${UserCenterServer.Timeout}\n- backends:\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n  path: /usercenter/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${UserCenterServer.Timeout}\n- backends:\n    - target: ${CronServer.Host}:${CronServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /cron/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${CronServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /partyaffairs/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /partyaffairs/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /poverty/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /poverty/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n","cur":"- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  path: /manager/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /manager/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /configure/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ConfigureServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n        whiteList:\n            - method: GET\n              path: /resource/api/v1/static/*\n            - method: GET\n              path: /resource/api/v1/download/*\n  path: /resource/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /resource/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${ApplicationServer.Host}:${ApplicationServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /application/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ApplicationServer.Timeout}\n- backends:\n    - target: ${ApplicationServer.Host}:${ApplicationServer.HttpPort}\n  path: /application/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ApplicationServer.Timeout}\n- backends:\n    - target: ${CronServer.Host}:${CronServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /cron/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${CronServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /partyaffairs/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /partyaffairs/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /poverty/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /poverty/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n"}]');
+          method: POST', '3020B1B4C417B67FE2480669A6087A34', true, 'yaml', '新增应用中心', '[{"type":"update","key":"endpoints","old":"- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  path: /manager/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /manager/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /configure/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ConfigureServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n        whiteList:\n            - method: GET\n              path: /resource/api/v1/static/*\n            - method: GET\n              path: /resource/api/v1/download/*\n  path: /resource/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /resource/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /usercenter/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${UserCenterServer.Timeout}\n- backends:\n    - target: ${UserCenterServer.Host}:${UserCenterServer.HttpPort}\n  path: /usercenter/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${UserCenterServer.Timeout}\n- backends:\n    - target: ${CronServer.Host}:${CronServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /cron/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${CronServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /partyaffairs/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /partyaffairs/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /poverty/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/usercenter/client/v1/auth\n  path: /poverty/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n","cur":"- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  path: /manager/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ManagerServer.Host}:${ManagerServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /manager/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ManagerServer.Timeout}\n- backends:\n    - target: ${ConfigureServer.Host}:${ConfigureServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /configure/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ConfigureServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n        whiteList:\n            - method: GET\n              path: /resource/api/v1/static/*\n            - method: GET\n              path: /resource/api/v1/download/*\n  path: /resource/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${ResourceServer.Host}:${ResourceServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /resource/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ResourceServer.Timeout}\n- backends:\n    - target: ${ApplicationServer.Host}:${ApplicationServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /application/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ApplicationServer.Timeout}\n- backends:\n    - target: ${ApplicationServer.Host}:${ApplicationServer.HttpPort}\n  path: /application/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${ApplicationServer.Timeout}\n- backends:\n    - target: ${CronServer.Host}:${CronServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /cron/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${CronServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /partyaffairs/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PartyAffairsServer.Host}:${PartyAffairsServer.HttpPort}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /partyaffairs/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PartyAffairsServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/manager/api/v1/auth\n  path: /poverty/api/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n- backends:\n    - target: ${PovertyServer.Host}:${PovertyServer.Port}\n  middlewares:\n    - name: auth\n      options:\n        method: POST\n        url: http://localhost:${GatewayServer.HttpPort}/application/client/v1/auth\n  path: /poverty/client/*\n  protocol: HTTP\n  responseFormat: true\n  timeout: ${PovertyServer.Timeout}\n"}]');
 INSERT INTO "public"."template" VALUES (32, 1728064794, 1728064794, 5, '
 env: ${Env.Keyword}
 server:
@@ -5712,10 +5712,13 @@ ALTER TABLE "public"."resource_server" ADD CONSTRAINT "resource_server_pkey" PRI
 -- ----------------------------
 -- Indexes structure for table resource_value
 -- ----------------------------
-CREATE UNIQUE INDEX "er" ON "public"."resource_value" USING btree (
-                                                                   "env_id" "pg_catalog"."int8_ops" ASC NULLS LAST,
-                                                                   "resource_id" "pg_catalog"."int8_ops" ASC NULLS LAST
-    );
+
+ALTER TABLE resource_value
+    ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (START WITH 140);
+
+-- 唯一约束（名称和列相同）
+ALTER TABLE resource_value ADD CONSTRAINT er UNIQUE (env_id, resource_id);
+
 CREATE INDEX "fk_resource_resource_value" ON "public"."resource_value" USING btree (
                                                                                     "resource_id" "pg_catalog"."int8_ops" ASC NULLS LAST
     );
@@ -5798,3 +5801,5 @@ ALTER TABLE "public"."resource_value" ADD CONSTRAINT "fk_resource_value_env" FOR
 -- Foreign Keys structure for table template
 -- ----------------------------
 ALTER TABLE "public"."template" ADD CONSTRAINT "fk_template_server" FOREIGN KEY ("server_id") REFERENCES "public"."server" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
