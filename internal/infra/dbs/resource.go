@@ -143,9 +143,12 @@ func (r Resource) ListResourceValue(ctx kratosx.Context, req *types.ListResource
 	return rvs, db.Find(&rvs).Error
 }
 
-// UpdateResourceValues 更新数据
+// UpdateResourceValues 更新数据,采用upsert（存在则更新，不存在则插入）操作
 func (r Resource) UpdateResourceValues(ctx kratosx.Context, rvs []*entity.ResourceValue) error {
-	return ctx.DB().Clauses(clause.OnConflict{UpdateAll: true}).Create(&rvs).Error
+	return ctx.DB().Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "env_id"}, {Name: "resource_id"}},  // 指定业务唯一键
+		DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at"}), // 只更新这两个字段
+	}).Create(&rvs).Error
 }
 
 // AllResourceField 获取指定服务的全部可用资源字段
