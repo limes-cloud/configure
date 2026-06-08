@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
 

@@ -6,28 +6,24 @@ import (
 
 	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/kratosx/pkg/value"
 
-	"github.com/limes-cloud/configure/api/configure/errors"
-	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/configure/internal/types"
 )
 
 type Resource struct {
-	conf       *conf.Config
 	repo       repository.Resource
 	permission repository.Permission
 }
 
 func NewResource(
-	conf *conf.Config,
 	repo repository.Resource,
 	permission repository.Permission,
 ) *Resource {
 	return &Resource{
-		conf:       conf,
 		repo:       repo,
 		permission: permission,
 	}
@@ -100,10 +96,9 @@ func (u *Resource) ListResourceValue(ctx kratosx.Context, rid uint32) ([]*entity
 	}
 	var (
 		result []*entity.ResourceValue
-		ir     = valx.New[uint32](scopes)
 	)
 	for _, item := range list {
-		if all || ir.Has(item.EnvId) {
+		if all || value.InList(scopes, item.EnvId) {
 			result = append(result, item)
 		}
 	}
@@ -127,16 +122,14 @@ func (u *Resource) UpdateResourceValue(ctx kratosx.Context, list []*entity.Resou
 	if err != nil {
 		return err
 	}
-	ir := valx.New[uint32](scopes)
-
 	for ind, item := range list {
 		if item.ResourceId != rid {
 			continue
 		}
 
-		value := item.Value
+		valStr := item.Value
 		m := make(map[string]any)
-		if err := json.Unmarshal([]byte(value), &m); err != nil || len(m) == 0 {
+		if err := json.Unmarshal([]byte(valStr), &m); err != nil || len(m) == 0 {
 			return errors.ResourceValueTypeError("字段类型必须是对象")
 		}
 		for _, key := range fields {
@@ -146,7 +139,7 @@ func (u *Resource) UpdateResourceValue(ctx kratosx.Context, list []*entity.Resou
 		}
 		list[ind].Value, _ = json.MarshalToString(m)
 
-		if all || ir.Has(item.EnvId) {
+		if all || value.InList(scopes, item.EnvId) {
 			result = append(result, list[ind])
 		}
 	}

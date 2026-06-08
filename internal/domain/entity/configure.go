@@ -1,9 +1,9 @@
 package entity
 
-import "github.com/limes-cloud/kratosx/types"
+import "github.com/limes-cloud/kratosx/model"
 
 type Configure struct {
-	types.BaseModel
+	model.BaseModel
 	ServerId    uint32  `json:"serverId" gorm:"server_id"`
 	EnvId       uint32  `json:"envId" gorm:"env_id"`
 	Content     string  `json:"content" gorm:"content"`

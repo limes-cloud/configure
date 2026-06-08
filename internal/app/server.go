@@ -6,10 +6,9 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
-	ktypes "github.com/limes-cloud/kratosx/types"
+	kmodel "github.com/limes-cloud/kratosx/model"
 
-	pb "github.com/limes-cloud/configure/api/configure/server/v1"
-	"github.com/limes-cloud/configure/internal/conf"
+	pb "github.com/limes-cloud/configure/api/server"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/service"
 	"github.com/limes-cloud/configure/internal/infra/dbs"
@@ -22,10 +21,9 @@ type Server struct {
 	srv *service.Server
 }
 
-func NewServer(conf *conf.Config) *Server {
+func NewServer() *Server {
 	return &Server{
 		srv: service.NewServer(
-			conf,
 			dbs.NewServer(),
 			rpc.NewPermission(),
 		),
@@ -33,15 +31,15 @@ func NewServer(conf *conf.Config) *Server {
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewServer(c)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewServer()
 		pb.RegisterServerHTTPServer(hs, srv)
 		pb.RegisterServerServer(gs, srv)
 	})
 }
 
 // ListServer 获取服务信息列表
-func (s *Server) ListServer(c context.Context, req *pb.ListServerRequest) (*pb.ListServerReply, error) {
+func (s *Server) ListServer(c context.Context, req *pb.ListServerRequest) (*pb.ListServerResponse, error) {
 	list, total, err := s.srv.ListServer(kratosx.MustContext(c), &types.ListServerRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -55,9 +53,9 @@ func (s *Server) ListServer(c context.Context, req *pb.ListServerRequest) (*pb.L
 		return nil, err
 	}
 
-	reply := pb.ListServerReply{Total: total}
+	reply := pb.ListServerResponse{Total: total}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListServerReply_Server{
+		reply.List = append(reply.List, &pb.ListServerResponse_Server{
 			Id:          item.Id,
 			Keyword:     item.Keyword,
 			Name:        item.Name,
@@ -71,7 +69,7 @@ func (s *Server) ListServer(c context.Context, req *pb.ListServerRequest) (*pb.L
 }
 
 // CreateServer 创建服务信息
-func (s *Server) CreateServer(c context.Context, req *pb.CreateServerRequest) (*pb.CreateServerReply, error) {
+func (s *Server) CreateServer(c context.Context, req *pb.CreateServerRequest) (*pb.CreateServerResponse, error) {
 	id, err := s.srv.CreateServer(kratosx.MustContext(c), &entity.Server{
 		Keyword:     req.Keyword,
 		Name:        req.Name,
@@ -81,13 +79,13 @@ func (s *Server) CreateServer(c context.Context, req *pb.CreateServerRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateServerReply{Id: id}, nil
+	return &pb.CreateServerResponse{Id: id}, nil
 }
 
 // UpdateServer 更新服务信息
-func (s *Server) UpdateServer(c context.Context, req *pb.UpdateServerRequest) (*pb.UpdateServerReply, error) {
+func (s *Server) UpdateServer(c context.Context, req *pb.UpdateServerRequest) (*pb.UpdateServerResponse, error) {
 	if err := s.srv.UpdateServer(kratosx.MustContext(c), &entity.Server{
-		BaseModel:   ktypes.BaseModel{Id: req.Id},
+		BaseModel:   kmodel.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
 		Name:        req.Name,
 		Description: req.Description,
@@ -95,13 +93,13 @@ func (s *Server) UpdateServer(c context.Context, req *pb.UpdateServerRequest) (*
 	}); err != nil {
 		return nil, err
 	}
-	return &pb.UpdateServerReply{}, nil
+	return &pb.UpdateServerResponse{}, nil
 }
 
 // DeleteServer 删除服务信息
-func (s *Server) DeleteServer(c context.Context, req *pb.DeleteServerRequest) (*pb.DeleteServerReply, error) {
+func (s *Server) DeleteServer(c context.Context, req *pb.DeleteServerRequest) (*pb.DeleteServerResponse, error) {
 	if err := s.srv.DeleteServer(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &pb.DeleteServerReply{}, nil
+	return &pb.DeleteServerResponse{}, nil
 }

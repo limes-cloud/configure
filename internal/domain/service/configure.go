@@ -9,8 +9,7 @@ import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 
-	"github.com/limes-cloud/configure/api/configure/errors"
-	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/configure/internal/pkg"
@@ -23,7 +22,6 @@ type watcher struct {
 }
 
 type Configure struct {
-	conf       *conf.Config
 	repo       repository.Configure
 	server     repository.Server
 	env        repository.Env
@@ -36,7 +34,6 @@ type Configure struct {
 }
 
 func NewConfigure(
-	conf *conf.Config,
 	repo repository.Configure,
 	server repository.Server,
 	env repository.Env,
@@ -46,7 +43,6 @@ func NewConfigure(
 	permission repository.Permission,
 ) *Configure {
 	srv := &Configure{
-		conf:       conf,
 		repo:       repo,
 		server:     server,
 		env:        env,

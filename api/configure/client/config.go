@@ -3,20 +3,23 @@ package client
 import (
 	"context"
 	"os"
+	"sync"
 
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 
-	pb "github.com/limes-cloud/configure/api/configure/configure/v1"
+	pb "github.com/limes-cloud/configure/api/configure"
 )
 
 type source struct {
 	host    string
 	server  string
 	token   string
-	context context.Context
 	request pb.ConfigureClient
-	client  pb.Configure_WatchConfigureClient
+
+	mu     sync.Mutex
+	client pb.Configure_WatchConfigureClient
+	cancel context.CancelFunc
 }
 
 func New(host, name, token string) config.Source {
@@ -24,13 +27,11 @@ func New(host, name, token string) config.Source {
 	if err != nil {
 		panic("configure connect error:" + err.Error())
 	}
-
 	return &source{
 		request: pb.NewConfigureClient(conn),
 		host:    host,
 		server:  name,
 		token:   token,
-		context: context.Background(),
 	}
 }
 
@@ -42,40 +43,49 @@ func NewFromEnv() config.Source {
 	if err != nil {
 		panic("configure connect error:" + err.Error())
 	}
-
 	return &source{
 		request: pb.NewConfigureClient(conn),
 		host:    host,
 		server:  name,
 		token:   token,
-		context: context.Background(),
 	}
 }
 
 // Load return the config values
 func (s *source) Load() ([]*config.KeyValue, error) {
-	client, err := s.request.WatchConfigure(s.context, &pb.WatchConfigureRequest{
+	s.mu.Lock()
+	// 取消旧 stream
+	if s.cancel != nil {
+		s.cancel()
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	s.cancel = cancel
+	s.mu.Unlock()
+
+	client, err := s.request.WatchConfigure(ctx, &pb.WatchConfigureRequest{
 		Server: s.server,
 		Token:  s.token,
 	})
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
 	cf, err := client.Recv()
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
+	s.mu.Lock()
 	s.client = client
+	s.mu.Unlock()
 
-	kv := &config.KeyValue{
+	return []*config.KeyValue{{
 		Key:    s.host,
 		Value:  []byte(cf.Content),
 		Format: cf.Format,
-	}
-
-	return []*config.KeyValue{kv}, nil
+	}}, nil
 }
 
 // Watch return the watcher

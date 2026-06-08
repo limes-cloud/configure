@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package configure.api.resource;
+
+import "validate/validate.proto";
+
+option go_package = "configure/api/resource;resource";
+option java_multiple_files = true;
+option java_package = "configure.api.resource";
+
+message GetResourceRequest {
+  oneof params {
+    uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+    string keyword = 2 [(validate.rules).string = {min_len: 1}];
+  }
+}
+
+message GetResourceResponse {
+  message Server {
+    uint32 id = 1;
+    string name = 2;
+  }
+
+  uint32 id = 1;
+  string keyword = 2;
+  string fields = 3;
+  string tag = 4;
+  optional bool private = 5;
+  optional string description = 6;
+  uint32 createdAt = 7;
+  uint32 updatedAt = 8;
+  repeated Server servers = 9;
+}
+
+message ListResourceRequest {
+  uint32 page = 1 [(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gt: 0
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {in: ["asc", "desc"]}];
+  optional string orderBy = 4 [(validate.rules).string = {in: ["id"]}];
+  optional string keyword = 5;
+  optional string tag = 6;
+  optional bool private = 7;
+  optional uint32 serverId = 8;
+}
+
+message ListResourceResponse {
+  message Resource {
+    uint32 id = 1;
+    string keyword = 2;
+    string fields = 3;
+    string tag = 4;
+    optional bool private = 5;
+    optional string description = 6;
+    uint32 createdAt = 7;
+    uint32 updatedAt = 8;
+  }
+
+  uint32 total = 1;
+  repeated Resource list = 2;
+}
+
+message CreateResourceRequest {
+  string keyword = 1 [(validate.rules).string = {min_len: 1}];
+  string fields = 2 [(validate.rules).string = {min_len: 1}];
+  string tag = 3 [(validate.rules).string = {min_len: 1}];
+  optional bool private = 4;
+  repeated uint32 serverIds = 5;
+  optional string description = 6;
+}
+
+message CreateResourceResponse {
+  uint32 id = 1;
+}
+
+message UpdateResourceRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  string keyword = 2 [(validate.rules).string = {min_len: 1}];
+  string fields = 3 [(validate.rules).string = {min_len: 1}];
+  string tag = 4 [(validate.rules).string = {min_len: 1}];
+  optional bool private = 5;
+  repeated uint32 serverIds = 6;
+  optional string description = 7;
+}
+
+message UpdateResourceResponse {}
+
+message DeleteResourceRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteResourceResponse {}
+
+message ListResourceValueRequest {
+  uint32 resourceId = 1 [(validate.rules).uint32 = {gt: 0}];
+}
+
+message ListResourceValueResponse {
+  message ResourceValue {
+    uint32 id = 1;
+    uint32 envId = 2;
+    uint32 resourceId = 3;
+    string value = 4;
+    uint32 createdAt = 5;
+    uint32 updatedAt = 6;
+  }
+
+  uint32 total = 1;
+  repeated ResourceValue list = 2;
+}
+
+message UpdateResourceValueRequest {
+  message Value {
+    uint32 envId = 1 [(validate.rules).uint32 = {gt: 0}];
+    string value = 2 [(validate.rules).string = {min_len: 1}];
+  }
+
+  repeated Value list = 1 [(validate.rules).repeated = {min_items: 1}];
+  uint32 resourceId = 2 [(validate.rules).uint32 = {gt: 0}];
+}
+
+message UpdateResourceValueResponse {}

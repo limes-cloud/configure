@@ -10,8 +10,7 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 	"gorm.io/gorm"
 
-	"github.com/limes-cloud/configure/api/configure/errors"
-	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/configure/internal/pkg"
@@ -19,7 +18,6 @@ import (
 )
 
 type Template struct {
-	conf       *conf.Config
 	repo       repository.Template
 	permission repository.Permission
 	business   repository.Business
@@ -27,14 +25,12 @@ type Template struct {
 }
 
 func NewTemplate(
-	conf *conf.Config,
 	repo repository.Template,
 	business repository.Business,
 	resource repository.Resource,
 	permission repository.Permission,
 ) *Template {
 	return &Template{
-		conf:       conf,
 		repo:       repo,
 		business:   business,
 		resource:   resource,

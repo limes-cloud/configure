@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/limes-cloud/kratosx/types"
+import "github.com/limes-cloud/kratosx/model"
 
 type Resource struct {
 	Keyword         string            `json:"keyword" gorm:"column:keyword"`
@@ -10,7 +10,7 @@ type Resource struct {
 	Description     *string           `json:"description" gorm:"column:description"`
 	Servers         []*Server         `json:"servers" gorm:"many2many:resource_server"`
 	ResourceServers []*ResourceServer `json:"resourceServers"`
-	types.BaseModel
+	model.BaseModel
 }
 
 type ResourceServer struct {
@@ -23,5 +23,5 @@ type ResourceValue struct {
 	ResourceId uint32    `json:"resourceId" gorm:"column:resource_id"`
 	Value      string    `json:"value" gorm:"column:value"`
 	Resource   *Resource `json:"resource"`
-	types.BaseModel
+	model.BaseModel
 }

@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/limes-cloud/kratosx/types"
+import "github.com/limes-cloud/kratosx/model"
 
 type Env struct {
 	Token       string  `json:"token" gorm:"column:token"`
@@ -8,5 +8,5 @@ type Env struct {
 	Name        string  `json:"name" gorm:"column:name"`
 	Status      *bool   `json:"status" gorm:"column:status"`
 	Description *string `json:"description" gorm:"column:description"`
-	types.BaseModel
+	model.BaseModel
 }

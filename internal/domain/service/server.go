@@ -1,8 +1,7 @@
 package service
 
 import (
-	"github.com/limes-cloud/configure/api/configure/errors"
-	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/configure/internal/types"
@@ -10,18 +9,15 @@ import (
 )
 
 type Server struct {
-	conf       *conf.Config
 	repo       repository.Server
 	permission repository.Permission
 }
 
 func NewServer(
-	conf *conf.Config,
 	repo repository.Server,
 	permission repository.Permission,
 ) *Server {
 	return &Server{
-		conf:       conf,
 		repo:       repo,
 		permission: permission,
 	}

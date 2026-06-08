@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package configure.api.env;
+
+import "api/env/proto/env.proto";
+import "google/api/annotations.proto";
+
+option go_package = "configure/api/env;env";
+option java_multiple_files = true;
+option java_package = "configure.api.env";
+
+service Env {
+  // ListEnv 获取环境信息列表
+  rpc ListEnv(ListEnvRequest) returns (ListEnvResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/envs"};
+  }
+
+  // CreateEnv 创建环境信息
+  rpc CreateEnv(CreateEnvRequest) returns (CreateEnvResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/env"
+      body: "*"
+    };
+  }
+
+  // UpdateEnv 更新环境信息
+  rpc UpdateEnv(UpdateEnvRequest) returns (UpdateEnvResponse) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/env"
+      body: "*"
+    };
+  }
+
+  // DeleteEnv 删除环境信息
+  rpc DeleteEnv(DeleteEnvRequest) returns (DeleteEnvResponse) {
+    option (google.api.http) = {delete: "/configure/api/v1/env"};
+  }
+
+  // GetEnvToken 获取环境token
+  rpc GetEnvToken(GetEnvTokenRequest) returns (GetEnvTokenResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/env/token"};
+  }
+
+  // ResetEnvToken 重置环境token
+  rpc ResetEnvToken(ResetEnvTokenRequest) returns (ResetEnvTokenResponse) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/env/token"
+      body: "*"
+    };
+  }
+}

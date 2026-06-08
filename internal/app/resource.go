@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	ktypes "github.com/limes-cloud/kratosx/types"
+	kmodel "github.com/limes-cloud/kratosx/model"
 
 	"github.com/limes-cloud/configure/internal/types"
 
@@ -11,14 +11,13 @@ import (
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/configure/api/configure/errors"
-	pb "github.com/limes-cloud/configure/api/configure/resource/v1"
-	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/api/errors"
+	pb "github.com/limes-cloud/configure/api/resource"
 	"github.com/limes-cloud/configure/internal/domain/service"
 	"github.com/limes-cloud/configure/internal/infra/dbs"
 	"github.com/limes-cloud/configure/internal/infra/rpc"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/kratosx/pkg/value"
 )
 
 type Resource struct {
@@ -26,22 +25,22 @@ type Resource struct {
 	srv *service.Resource
 }
 
-func NewResource(conf *conf.Config) *Resource {
+func NewResource() *Resource {
 	return &Resource{
-		srv: service.NewResource(conf, dbs.NewResource(), rpc.NewPermission()),
+		srv: service.NewResource(dbs.NewResource(), rpc.NewPermission()),
 	}
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewResource(c)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewResource()
 		pb.RegisterResourceHTTPServer(hs, srv)
 		pb.RegisterResourceServer(gs, srv)
 	})
 }
 
 // GetResource 获取指定的资源配置信息
-func (s *Resource) GetResource(c context.Context, req *pb.GetResourceRequest) (*pb.GetResourceReply, error) {
+func (s *Resource) GetResource(c context.Context, req *pb.GetResourceRequest) (*pb.GetResourceResponse, error) {
 	var (
 		res *entity.Resource
 		err error
@@ -58,8 +57,8 @@ func (s *Resource) GetResource(c context.Context, req *pb.GetResourceRequest) (*
 		return nil, err
 	}
 
-	reply := pb.GetResourceReply{}
-	if err := valx.Transform(res, &reply); err != nil {
+	reply := pb.GetResourceResponse{}
+	if err := value.Transform(res, &reply); err != nil {
 		kratosx.MustContext(c).Logger().Warnw("msg", "reply transform err", "err", err.Error())
 		return nil, errors.TransformError()
 	}
@@ -67,7 +66,7 @@ func (s *Resource) GetResource(c context.Context, req *pb.GetResourceRequest) (*
 }
 
 // ListResource 获取资源配置信息列表
-func (s *Resource) ListResource(c context.Context, req *pb.ListResourceRequest) (*pb.ListResourceReply, error) {
+func (s *Resource) ListResource(c context.Context, req *pb.ListResourceRequest) (*pb.ListResourceResponse, error) {
 	list, total, err := s.srv.ListResource(kratosx.MustContext(c), &types.ListResourceRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -82,9 +81,9 @@ func (s *Resource) ListResource(c context.Context, req *pb.ListResourceRequest) 
 		return nil, err
 	}
 
-	reply := pb.ListResourceReply{Total: total}
+	reply := pb.ListResourceResponse{Total: total}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListResourceReply_Resource{
+		reply.List = append(reply.List, &pb.ListResourceResponse_Resource{
 			Id:          item.Id,
 			Keyword:     item.Keyword,
 			Fields:      item.Fields,
@@ -99,7 +98,7 @@ func (s *Resource) ListResource(c context.Context, req *pb.ListResourceRequest) 
 }
 
 // CreateResource 创建资源配置信息
-func (s *Resource) CreateResource(c context.Context, req *pb.CreateResourceRequest) (*pb.CreateResourceReply, error) {
+func (s *Resource) CreateResource(c context.Context, req *pb.CreateResourceRequest) (*pb.CreateResourceResponse, error) {
 	var res = entity.Resource{
 		Keyword:     req.Keyword,
 		Fields:      req.Fields,
@@ -116,13 +115,13 @@ func (s *Resource) CreateResource(c context.Context, req *pb.CreateResourceReque
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateResourceReply{Id: id}, nil
+	return &pb.CreateResourceResponse{Id: id}, nil
 }
 
 // UpdateResource 更新资源配置信息
-func (s *Resource) UpdateResource(c context.Context, req *pb.UpdateResourceRequest) (*pb.UpdateResourceReply, error) {
+func (s *Resource) UpdateResource(c context.Context, req *pb.UpdateResourceRequest) (*pb.UpdateResourceResponse, error) {
 	var res = entity.Resource{
-		BaseModel:   ktypes.BaseModel{Id: req.Id},
+		BaseModel:   kmodel.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
 		Fields:      req.Fields,
 		Tag:         req.Tag,
@@ -138,28 +137,28 @@ func (s *Resource) UpdateResource(c context.Context, req *pb.UpdateResourceReque
 	if err := s.srv.UpdateResource(kratosx.MustContext(c), &res); err != nil {
 		return nil, err
 	}
-	return &pb.UpdateResourceReply{}, nil
+	return &pb.UpdateResourceResponse{}, nil
 }
 
 // DeleteResource 删除资源配置信息
-func (s *Resource) DeleteResource(c context.Context, req *pb.DeleteResourceRequest) (*pb.DeleteResourceReply, error) {
+func (s *Resource) DeleteResource(c context.Context, req *pb.DeleteResourceRequest) (*pb.DeleteResourceResponse, error) {
 	err := s.srv.DeleteResource(kratosx.MustContext(c), req.Id)
 	if err != nil {
 		return nil, err
 	}
-	return &pb.DeleteResourceReply{}, nil
+	return &pb.DeleteResourceResponse{}, nil
 }
 
 // ListResourceValue 获取业务配置值信息列表
-func (s *Resource) ListResourceValue(c context.Context, req *pb.ListResourceValueRequest) (*pb.ListResourceValueReply, error) {
+func (s *Resource) ListResourceValue(c context.Context, req *pb.ListResourceValueRequest) (*pb.ListResourceValueResponse, error) {
 	list, err := s.srv.ListResourceValue(kratosx.MustContext(c), req.ResourceId)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListResourceValueReply{Total: uint32(len(list))}
+	reply := pb.ListResourceValueResponse{Total: uint32(len(list))}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListResourceValueReply_ResourceValue{
+		reply.List = append(reply.List, &pb.ListResourceValueResponse_ResourceValue{
 			Id:         item.Id,
 			EnvId:      item.EnvId,
 			ResourceId: item.ResourceId,
@@ -173,7 +172,7 @@ func (s *Resource) ListResourceValue(c context.Context, req *pb.ListResourceValu
 }
 
 // UpdateResourceValue 更新业务配置值信息
-func (s *Resource) UpdateResourceValue(c context.Context, req *pb.UpdateResourceValueRequest) (*pb.UpdateResourceValueReply, error) {
+func (s *Resource) UpdateResourceValue(c context.Context, req *pb.UpdateResourceValueRequest) (*pb.UpdateResourceValueResponse, error) {
 	var list []*entity.ResourceValue
 	for _, item := range req.List {
 		list = append(list, &entity.ResourceValue{
@@ -187,5 +186,5 @@ func (s *Resource) UpdateResourceValue(c context.Context, req *pb.UpdateResource
 		return nil, err
 	}
 
-	return &pb.UpdateResourceValueReply{}, nil
+	return &pb.UpdateResourceValueResponse{}, nil
 }

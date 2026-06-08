@@ -63,18 +63,3 @@ redis:
     host: 127.0.0.1:6379
     username: ''
     password: ''
-loader:
-  login: static/cert/login.pem
-jwt:
-  secret: limes-cloud-test
-  expire: 2h
-  renewal: 600s
-  whitelist:
-    POST:/configure/api/v1/login: true
-    POST:/configure/api/v1/token/refresh: true
-business:
-  webui:
-    addr: ":6080"
-  author:
-    adminUser: 1280291001@qq.com
-    adminPassword: xrxy0852

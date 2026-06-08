@@ -4,12 +4,12 @@ import (
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
-	"github.com/limes-cloud/manager/api/manager/auth"
-	v1 "github.com/limes-cloud/manager/api/manager/auth/v1"
+	"github.com/limes-cloud/kratosx/pkg/value"
+	"github.com/limes-cloud/manager/api/authorize"
+	managererrors "github.com/limes-cloud/manager/api/errors"
 	resourcev1 "github.com/limes-cloud/manager/api/manager/resource/v1"
 
-	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/api/errors"
 )
 
 const (
@@ -43,20 +43,13 @@ func client(ctx kratosx.Context) (resourcev1.ResourceClient, error) {
 
 // GetPermission 获取当前用户，指定key的权限
 func (infra *Permission) GetPermission(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
-	var (
-		info = &v1.AuthReply{}
-		err  error
-	)
-	if ctx.Token() != "" {
-		err = ctx.JWT().Parse(ctx, info)
-	} else {
-		info, err = auth.GetAuthInfo(ctx)
+	info := authorize.Get(ctx)
+	if info == nil {
+		return false, nil, managererrors.NotLoginError()
 	}
 
-	if err != nil {
-		return false, nil, err
-	}
-	if info.UserId == 1 || info.RoleId == 1 {
+	// userId==1 为超级管理员，拥有全部权限
+	if info.UserId == 1 {
 		return true, nil, nil
 	}
 
@@ -92,7 +85,7 @@ func (infra *Permission) HasEnv(ctx kratosx.Context, id uint32) bool {
 	if all {
 		return true
 	}
-	return valx.InList(ids, id)
+	return value.InList(ids, id)
 }
 
 // GetServer 获取当前用户是对于server的权限
@@ -113,5 +106,5 @@ func (infra *Permission) HasServer(ctx kratosx.Context, id uint32) bool {
 	if all {
 		return true
 	}
-	return valx.InList(ids, id)
+	return value.InList(ids, id)
 }

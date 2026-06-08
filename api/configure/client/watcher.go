@@ -18,32 +18,60 @@ func newWatcher(s *source) (*watcher, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	w := &watcher{
 		source: s,
-		ch:     make(chan []*config.KeyValue),
+		ch:     make(chan []*config.KeyValue, 1),
 		ctx:    ctx,
 		cancel: cancel,
 	}
 
 	go func() {
 		for {
-			cf, err := s.client.Recv()
+			select {
+			case <-w.ctx.Done():
+				return
+			default:
+			}
+
+			s.mu.Lock()
+			stream := s.client
+			s.mu.Unlock()
+
+			if stream == nil {
+				time.Sleep(time.Second)
+				continue
+			}
+
+			cf, err := stream.Recv()
 			if err != nil {
-				// 接收失败，则进行主动重连
+				// stream 断开，触发重连
 				for {
+					select {
+					case <-w.ctx.Done():
+						return
+					default:
+					}
 					kvs, er := s.Load()
 					if er != nil {
 						time.Sleep(5 * time.Second)
 						continue
 					}
-					w.ch <- kvs
+					select {
+					case w.ch <- kvs:
+					case <-w.ctx.Done():
+						return
+					}
 					break
 				}
-			} else {
-				kv := &config.KeyValue{
-					Key:    s.host,
-					Value:  []byte(cf.Content),
-					Format: cf.Format,
-				}
-				w.ch <- []*config.KeyValue{kv}
+				continue
+			}
+
+			select {
+			case w.ch <- []*config.KeyValue{{
+				Key:    s.host,
+				Value:  []byte(cf.Content),
+				Format: cf.Format,
+			}}:
+			case <-w.ctx.Done():
+				return
 			}
 		}
 	}()

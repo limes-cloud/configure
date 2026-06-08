@@ -5,12 +5,11 @@ import (
 
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/types"
-	ktypes "github.com/limes-cloud/kratosx/types"
+	kmodel "github.com/limes-cloud/kratosx/model"
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	pb "github.com/limes-cloud/configure/api/configure/business/v1"
-	"github.com/limes-cloud/configure/internal/conf"
+	pb "github.com/limes-cloud/configure/api/business"
 	"github.com/limes-cloud/configure/internal/domain/service"
 	"github.com/limes-cloud/configure/internal/infra/dbs"
 	"github.com/limes-cloud/configure/internal/infra/rpc"
@@ -22,10 +21,9 @@ type Business struct {
 	srv *service.Business
 }
 
-func NewBusiness(conf *conf.Config) *Business {
+func NewBusiness() *Business {
 	return &Business{
 		srv: service.NewBusiness(
-			conf,
 			dbs.NewBusiness(),
 			rpc.NewPermission(),
 		),
@@ -33,15 +31,15 @@ func NewBusiness(conf *conf.Config) *Business {
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewBusiness(c)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewBusiness()
 		pb.RegisterBusinessHTTPServer(hs, srv)
 		pb.RegisterBusinessServer(gs, srv)
 	})
 }
 
 // ListBusiness 获取业务配置信息列表
-func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) (*pb.ListBusinessReply, error) {
+func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) (*pb.ListBusinessResponse, error) {
 	list, total, err := s.srv.ListBusiness(kratosx.MustContext(c), &types.ListBusinessRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
@@ -54,9 +52,9 @@ func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) 
 		return nil, err
 	}
 
-	reply := pb.ListBusinessReply{Total: total}
+	reply := pb.ListBusinessResponse{Total: total}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListBusinessReply_Business{
+		reply.List = append(reply.List, &pb.ListBusinessResponse_Business{
 			Id:          item.Id,
 			ServerId:    item.ServerId,
 			Keyword:     item.Keyword,
@@ -70,7 +68,7 @@ func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) 
 }
 
 // CreateBusiness 创建业务配置信息
-func (s *Business) CreateBusiness(c context.Context, req *pb.CreateBusinessRequest) (*pb.CreateBusinessReply, error) {
+func (s *Business) CreateBusiness(c context.Context, req *pb.CreateBusinessRequest) (*pb.CreateBusinessResponse, error) {
 	id, err := s.srv.CreateBusiness(kratosx.MustContext(c), &entity.Business{
 		ServerId:    req.ServerId,
 		Keyword:     req.Keyword,
@@ -80,41 +78,41 @@ func (s *Business) CreateBusiness(c context.Context, req *pb.CreateBusinessReque
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateBusinessReply{Id: id}, nil
+	return &pb.CreateBusinessResponse{Id: id}, nil
 }
 
 // UpdateBusiness 更新业务配置信息
-func (s *Business) UpdateBusiness(c context.Context, req *pb.UpdateBusinessRequest) (*pb.UpdateBusinessReply, error) {
+func (s *Business) UpdateBusiness(c context.Context, req *pb.UpdateBusinessRequest) (*pb.UpdateBusinessResponse, error) {
 	if err := s.srv.UpdateBusiness(kratosx.MustContext(c), &entity.Business{
-		BaseModel:   ktypes.BaseModel{Id: req.Id},
+		BaseModel:   kmodel.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
 		Type:        req.Type,
 		Description: req.Description,
 	}); err != nil {
 		return nil, err
 	}
-	return &pb.UpdateBusinessReply{}, nil
+	return &pb.UpdateBusinessResponse{}, nil
 }
 
 // DeleteBusiness 删除业务配置信息
-func (s *Business) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRequest) (*pb.DeleteBusinessReply, error) {
+func (s *Business) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRequest) (*pb.DeleteBusinessResponse, error) {
 	if err := s.srv.DeleteBusiness(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &pb.DeleteBusinessReply{}, nil
+	return &pb.DeleteBusinessResponse{}, nil
 }
 
 // ListBusinessValue 获取业务配置值信息列表
-func (s *Business) ListBusinessValue(c context.Context, req *pb.ListBusinessValueRequest) (*pb.ListBusinessValueReply, error) {
+func (s *Business) ListBusinessValue(c context.Context, req *pb.ListBusinessValueRequest) (*pb.ListBusinessValueResponse, error) {
 	list, err := s.srv.ListBusinessValue(kratosx.MustContext(c), req.BusinessId)
 	if err != nil {
 		return nil, err
 	}
-	reply := pb.ListBusinessValueReply{
+	reply := pb.ListBusinessValueResponse{
 		Total: uint32(len(list)),
 	}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListBusinessValueReply_BusinessValue{
+		reply.List = append(reply.List, &pb.ListBusinessValueResponse_BusinessValue{
 			Id:         item.Id,
 			EnvId:      item.EnvId,
 			BusinessId: item.BusinessId,
@@ -127,7 +125,7 @@ func (s *Business) ListBusinessValue(c context.Context, req *pb.ListBusinessValu
 }
 
 // UpdateBusinessValue 更新业务配置值信息
-func (s *Business) UpdateBusinessValue(c context.Context, req *pb.UpdateBusinessValueRequest) (*pb.UpdateBusinessValueReply, error) {
+func (s *Business) UpdateBusinessValue(c context.Context, req *pb.UpdateBusinessValueRequest) (*pb.UpdateBusinessValueResponse, error) {
 	var list []*entity.BusinessValue
 	for _, item := range req.List {
 		list = append(list, &entity.BusinessValue{
@@ -140,5 +138,5 @@ func (s *Business) UpdateBusinessValue(c context.Context, req *pb.UpdateBusiness
 	if err := s.srv.UpdateBusinessValue(kratosx.MustContext(c), list); err != nil {
 		return nil, err
 	}
-	return &pb.UpdateBusinessValueReply{}, nil
+	return &pb.UpdateBusinessValueResponse{}, nil
 }

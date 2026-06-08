@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package configure.api.business;
+
+import "api/business/proto/business.proto";
+import "google/api/annotations.proto";
+
+option go_package = "configure/api/business;business";
+option java_multiple_files = true;
+option java_package = "configure.api.business";
+
+service Business {
+  // ListBusiness 获取业务配置信息列表
+  rpc ListBusiness(ListBusinessRequest) returns (ListBusinessResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/businesses"};
+  }
+
+  // CreateBusiness 创建业务配置信息
+  rpc CreateBusiness(CreateBusinessRequest) returns (CreateBusinessResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/business"
+      body: "*"
+    };
+  }
+
+  // UpdateBusiness 更新业务配置信息
+  rpc UpdateBusiness(UpdateBusinessRequest) returns (UpdateBusinessResponse) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/business"
+      body: "*"
+    };
+  }
+
+  // DeleteBusiness 删除业务配置信息
+  rpc DeleteBusiness(DeleteBusinessRequest) returns (DeleteBusinessResponse) {
+    option (google.api.http) = {delete: "/configure/api/v1/business"};
+  }
+
+  // ListBusinessValue 获取业务配置值信息列表
+  rpc ListBusinessValue(ListBusinessValueRequest) returns (ListBusinessValueResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/business/values"};
+  }
+
+  // UpdateBusinessValue 更新业务配置值信息
+  rpc UpdateBusinessValue(UpdateBusinessValueRequest) returns (UpdateBusinessValueResponse) {
+    option (google.api.http) = {
+      put: "/configure/api/v1/business/values"
+      body: "*"
+    };
+  }
+}

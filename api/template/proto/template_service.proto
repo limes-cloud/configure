@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package configure.api.template;
+
+import "api/template/proto/template.proto";
+import "google/api/annotations.proto";
+
+option go_package = "configure/api/template;template";
+option java_multiple_files = true;
+option java_package = "configure.api.template";
+
+service Template {
+  // ListTemplate 获取模板列表
+  rpc ListTemplate(ListTemplateRequest) returns (ListTemplateResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/templates"};
+  }
+
+  // GetTemplate 获取指定模板
+  rpc GetTemplate(GetTemplateRequest) returns (GetTemplateResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/template"};
+  }
+
+  // CurrentTemplate 获取当前使用的模板
+  rpc CurrentTemplate(CurrentTemplateRequest) returns (CurrentTemplateResponse) {
+    option (google.api.http) = {get: "/configure/api/v1/template/current"};
+  }
+
+  // CreateTemplate 创建模板
+  rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/template"
+      body: "*"
+    };
+  }
+
+  // SwitchTemplate 切换使用的模板
+  rpc SwitchTemplate(SwitchTemplateRequest) returns (SwitchTemplateResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/template/switch"
+      body: "*"
+    };
+  }
+
+  // CompareTemplate 对比模板内容
+  rpc CompareTemplate(CompareTemplateRequest) returns (CompareTemplateResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/template/compare"
+      body: "*"
+    };
+  }
+
+  // PreviewTemplate 预览模板渲染结果
+  rpc PreviewTemplate(PreviewTemplateRequest) returns (PreviewTemplateResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/v1/template/preview"
+      body: "*"
+    };
+  }
+}

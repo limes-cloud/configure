@@ -4,9 +4,9 @@ import (
 	"strconv"
 
 	json "github.com/json-iterator/go"
-	"github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/kratosx/model"
 
-	"github.com/limes-cloud/configure/api/configure/errors"
+	"github.com/limes-cloud/configure/api/errors"
 )
 
 type Business struct {
@@ -14,7 +14,7 @@ type Business struct {
 	Keyword     string  `json:"keyword" gorm:"column:keyword"`
 	Type        string  `json:"type" gorm:"column:type"`
 	Description *string `json:"description" gorm:"column:description"`
-	types.BaseModel
+	model.BaseModel
 }
 
 type BusinessValue struct {
@@ -22,7 +22,7 @@ type BusinessValue struct {
 	BusinessId uint32    `json:"businessId" gorm:"column:business_id"`
 	Value      string    `json:"value" gorm:"column:value"`
 	Business   *Business `json:"business"`
-	types.BaseModel
+	model.BaseModel
 }
 
 func (bv *BusinessValue) MarshalValue(tp string) (string, error) {

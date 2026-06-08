@@ -2,28 +2,24 @@ package service
 
 import (
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/kratosx/pkg/value"
 
-	"github.com/limes-cloud/configure/api/configure/errors"
-	"github.com/limes-cloud/configure/internal/conf"
+	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/configure/internal/types"
 )
 
 type Business struct {
-	conf       *conf.Config
 	repo       repository.Business
 	permission repository.Permission
 }
 
 func NewBusiness(
-	conf *conf.Config,
 	repo repository.Business,
 	permission repository.Permission,
 ) *Business {
 	return &Business{
-		conf:       conf,
 		repo:       repo,
 		permission: permission,
 	}
@@ -107,9 +103,8 @@ func (u *Business) ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*entity
 	}
 	if !all {
 		var result []*entity.BusinessValue
-		ir := valx.New[uint32](scopes)
 		for _, item := range list {
-			if ir.Has(item.EnvId) {
+			if value.InList(scopes, item.EnvId) {
 				result = append(result, item)
 			}
 		}
@@ -141,7 +136,6 @@ func (u *Business) UpdateBusinessValue(ctx kratosx.Context, list []*entity.Busin
 		return err
 	}
 
-	ir := valx.New(scopes)
 	for ind, item := range list {
 		// 去除掉不一致的数据
 		if item.BusinessId != bid {
@@ -149,14 +143,14 @@ func (u *Business) UpdateBusinessValue(ctx kratosx.Context, list []*entity.Busin
 		}
 
 		// 检验类型&序列化值
-		value, err := item.MarshalValue(business.Type)
+		v, err := item.MarshalValue(business.Type)
 		if err != nil {
 			return err
 		}
-		list[ind].Value = value
+		list[ind].Value = v
 
 		// 检验是否拥有权限
-		if all || ir.Has(item.EnvId) {
+		if all || value.InList(scopes, item.EnvId) {
 			result = append(result, list[ind])
 		}
 	}

@@ -14,8 +14,7 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
-type Resource struct {
-}
+type Resource struct{}
 
 var (
 	resourceIns  *Resource
