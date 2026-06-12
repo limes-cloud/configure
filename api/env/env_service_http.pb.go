@@ -43,12 +43,12 @@ type EnvHTTPServer interface {
 
 func RegisterEnvHTTPServer(s *http.Server, srv EnvHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/envs", _Env_ListEnv0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/env", _Env_CreateEnv0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/env", _Env_UpdateEnv0_HTTP_Handler(srv))
-	r.DELETE("/configure/api/v1/env", _Env_DeleteEnv0_HTTP_Handler(srv))
-	r.GET("/configure/api/v1/env/token", _Env_GetEnvToken0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/env/token", _Env_ResetEnvToken0_HTTP_Handler(srv))
+	r.GET("/configure/api/envs", _Env_ListEnv0_HTTP_Handler(srv))
+	r.POST("/configure/api/env", _Env_CreateEnv0_HTTP_Handler(srv))
+	r.PUT("/configure/api/env", _Env_UpdateEnv0_HTTP_Handler(srv))
+	r.DELETE("/configure/api/env", _Env_DeleteEnv0_HTTP_Handler(srv))
+	r.GET("/configure/api/env/token", _Env_GetEnvToken0_HTTP_Handler(srv))
+	r.PUT("/configure/api/env/token", _Env_ResetEnvToken0_HTTP_Handler(srv))
 }
 
 func _Env_ListEnv0_HTTP_Handler(srv EnvHTTPServer) func(ctx http.Context) error {
@@ -193,7 +193,7 @@ func NewEnvHTTPClient(client *http.Client) EnvHTTPClient {
 
 func (c *EnvHTTPClientImpl) CreateEnv(ctx context.Context, in *CreateEnvRequest, opts ...http.CallOption) (*CreateEnvResponse, error) {
 	var out CreateEnvResponse
-	pattern := "/configure/api/v1/env"
+	pattern := "/configure/api/env"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEnvCreateEnv))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -206,7 +206,7 @@ func (c *EnvHTTPClientImpl) CreateEnv(ctx context.Context, in *CreateEnvRequest,
 
 func (c *EnvHTTPClientImpl) DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...http.CallOption) (*DeleteEnvResponse, error) {
 	var out DeleteEnvResponse
-	pattern := "/configure/api/v1/env"
+	pattern := "/configure/api/env"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEnvDeleteEnv))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -219,7 +219,7 @@ func (c *EnvHTTPClientImpl) DeleteEnv(ctx context.Context, in *DeleteEnvRequest,
 
 func (c *EnvHTTPClientImpl) GetEnvToken(ctx context.Context, in *GetEnvTokenRequest, opts ...http.CallOption) (*GetEnvTokenResponse, error) {
 	var out GetEnvTokenResponse
-	pattern := "/configure/api/v1/env/token"
+	pattern := "/configure/api/env/token"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEnvGetEnvToken))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -232,7 +232,7 @@ func (c *EnvHTTPClientImpl) GetEnvToken(ctx context.Context, in *GetEnvTokenRequ
 
 func (c *EnvHTTPClientImpl) ListEnv(ctx context.Context, in *ListEnvRequest, opts ...http.CallOption) (*ListEnvResponse, error) {
 	var out ListEnvResponse
-	pattern := "/configure/api/v1/envs"
+	pattern := "/configure/api/envs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEnvListEnv))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -245,7 +245,7 @@ func (c *EnvHTTPClientImpl) ListEnv(ctx context.Context, in *ListEnvRequest, opt
 
 func (c *EnvHTTPClientImpl) ResetEnvToken(ctx context.Context, in *ResetEnvTokenRequest, opts ...http.CallOption) (*ResetEnvTokenResponse, error) {
 	var out ResetEnvTokenResponse
-	pattern := "/configure/api/v1/env/token"
+	pattern := "/configure/api/env/token"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEnvResetEnvToken))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -258,7 +258,7 @@ func (c *EnvHTTPClientImpl) ResetEnvToken(ctx context.Context, in *ResetEnvToken
 
 func (c *EnvHTTPClientImpl) UpdateEnv(ctx context.Context, in *UpdateEnvRequest, opts ...http.CallOption) (*UpdateEnvResponse, error) {
 	var out UpdateEnvResponse
-	pattern := "/configure/api/v1/env"
+	pattern := "/configure/api/env"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEnvUpdateEnv))
 	opts = append(opts, http.PathTemplate(pattern))

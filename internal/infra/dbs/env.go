@@ -3,7 +3,7 @@ package dbs
 import (
 	"sync"
 
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/types"
@@ -25,7 +25,7 @@ func NewEnv() *Env {
 }
 
 // GetEnvByToken 获取指定数据
-func (r Env) GetEnvByToken(ctx kratosx.Context, token string) (*entity.Env, error) {
+func (r Env) GetEnvByToken(ctx core.Context, token string) (*entity.Env, error) {
 	var (
 		env = entity.Env{}
 		fs  = []string{"*"}
@@ -34,7 +34,7 @@ func (r Env) GetEnvByToken(ctx kratosx.Context, token string) (*entity.Env, erro
 }
 
 // GetEnvByKeyword 获取指定数据
-func (r Env) GetEnvByKeyword(ctx kratosx.Context, keyword string) (*entity.Env, error) {
+func (r Env) GetEnvByKeyword(ctx core.Context, keyword string) (*entity.Env, error) {
 	var (
 		env = entity.Env{}
 		fs  = []string{"*"}
@@ -43,7 +43,7 @@ func (r Env) GetEnvByKeyword(ctx kratosx.Context, keyword string) (*entity.Env, 
 }
 
 // GetEnv 获取指定的数据
-func (r Env) GetEnv(ctx kratosx.Context, id uint32) (*entity.Env, error) {
+func (r Env) GetEnv(ctx core.Context, id uint32) (*entity.Env, error) {
 	var (
 		env = entity.Env{}
 		fs  = []string{"*"}
@@ -52,7 +52,7 @@ func (r Env) GetEnv(ctx kratosx.Context, id uint32) (*entity.Env, error) {
 }
 
 // ListEnv 获取列表
-func (r Env) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]*entity.Env, uint32, error) {
+func (r Env) ListEnv(ctx core.Context, req *types.ListEnvRequest) ([]*entity.Env, uint32, error) {
 	var (
 		envs  []*entity.Env
 		total int64
@@ -82,16 +82,16 @@ func (r Env) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]*entity.
 }
 
 // CreateEnv 创建环境数据
-func (r Env) CreateEnv(ctx kratosx.Context, env *entity.Env) (uint32, error) {
+func (r Env) CreateEnv(ctx core.Context, env *entity.Env) (uint32, error) {
 	return env.Id, ctx.DB().Create(env).Error
 }
 
 // UpdateEnv 更新环境数据
-func (r Env) UpdateEnv(ctx kratosx.Context, env *entity.Env) error {
+func (r Env) UpdateEnv(ctx core.Context, env *entity.Env) error {
 	return ctx.DB().Where("id = ?", env.Id).Updates(env).Error
 }
 
 // DeleteEnv 删除环境数据
-func (r Env) DeleteEnv(ctx kratosx.Context, id uint32) error {
+func (r Env) DeleteEnv(ctx core.Context, id uint32) error {
 	return ctx.DB().Where("id=?", id).Delete(&entity.Env{}).Error
 }

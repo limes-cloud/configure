@@ -2,39 +2,22 @@ package service
 
 import (
 	"github.com/limes-cloud/configure/api/errors"
+	"github.com/limes-cloud/configure/internal/core"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/repository"
 	"github.com/limes-cloud/configure/internal/types"
-	"github.com/limes-cloud/kratosx"
 )
 
 type Env struct {
-	repo       repository.Env
-	permission repository.Permission
+	repo repository.Env
 }
 
-func NewEnv(
-	repo repository.Env,
-	permission repository.Permission,
-) *Env {
-	return &Env{
-		repo:       repo,
-		permission: permission,
-	}
+func NewEnv(repo repository.Env) *Env {
+	return &Env{repo: repo}
 }
 
 // ListEnv 获取环境信息列表
-func (u *Env) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]*entity.Env, uint32, error) {
-	// 获取具有权限的环境id列表
-	all, scopes, err := u.permission.GetEnv(ctx)
-	if err != nil {
-		return nil, 0, err
-	}
-	if !all {
-		req.Ids = scopes
-	}
-
-	// 获取环境列表
+func (u *Env) ListEnv(ctx core.Context, req *types.ListEnvRequest) ([]*entity.Env, uint32, error) {
 	list, total, err := u.repo.ListEnv(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
@@ -43,22 +26,16 @@ func (u *Env) ListEnv(ctx kratosx.Context, req *types.ListEnvRequest) ([]*entity
 }
 
 // GetEnvToken 获取环境token
-func (u *Env) GetEnvToken(ctx kratosx.Context, id uint32) (string, error) {
-	// 环境鉴权
-	if !u.permission.HasEnv(ctx, id) {
-		return "", errors.NotPermissionError()
-	}
-
-	// 获取指定环境
+func (u *Env) GetEnvToken(ctx core.Context, id uint32) (string, error) {
 	env, err := u.repo.GetEnv(ctx, id)
 	if err != nil {
-		return "", errors.CreateError(err.Error())
+		return "", errors.GetError(err.Error())
 	}
 	return env.Token, nil
 }
 
 // CreateEnv 创建环境信息
-func (u *Env) CreateEnv(ctx kratosx.Context, req *entity.Env) (uint32, error) {
+func (u *Env) CreateEnv(ctx core.Context, req *entity.Env) (uint32, error) {
 	id, err := u.repo.CreateEnv(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -67,12 +44,7 @@ func (u *Env) CreateEnv(ctx kratosx.Context, req *entity.Env) (uint32, error) {
 }
 
 // UpdateEnv 更新环境信息
-func (u *Env) UpdateEnv(ctx kratosx.Context, req *entity.Env) error {
-	// 环境鉴权
-	if !u.permission.HasEnv(ctx, req.Id) {
-		return errors.NotPermissionError()
-	}
-	// 更新环境
+func (u *Env) UpdateEnv(ctx core.Context, req *entity.Env) error {
 	if err := u.repo.UpdateEnv(ctx, req); err != nil {
 		return errors.UpdateError(err.Error())
 	}
@@ -80,12 +52,7 @@ func (u *Env) UpdateEnv(ctx kratosx.Context, req *entity.Env) error {
 }
 
 // DeleteEnv 删除环境信息
-func (u *Env) DeleteEnv(ctx kratosx.Context, id uint32) error {
-	// 环境鉴权
-	if !u.permission.HasEnv(ctx, id) {
-		return errors.NotPermissionError()
-	}
-	// 删除环境
+func (u *Env) DeleteEnv(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteEnv(ctx, id); err != nil {
 		return errors.DeleteError(err.Error())
 	}

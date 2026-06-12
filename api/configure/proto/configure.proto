@@ -9,13 +9,16 @@ option java_multiple_files = true;
 option java_package = "configure.api.configure";
 
 message GetConfigureRequest {
-  uint32 serverId = 1 [(validate.rules).uint32 = {gt: 0}];
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
   uint32 envId = 2 [(validate.rules).uint32 = {gt: 0}];
 }
 
 message GetConfigureResponse {
   uint32 id = 1;
-  uint32 serverId = 2;
+  string app = 2;
   uint32 envId = 3;
   string content = 4;
   string description = 5;
@@ -25,7 +28,10 @@ message GetConfigureResponse {
 }
 
 message UpdateConfigureRequest {
-  uint32 serverId = 1 [(validate.rules).uint32 = {gt: 0}];
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
   uint32 envId = 2 [(validate.rules).uint32 = {gt: 0}];
   string description = 3 [(validate.rules).string = {
     min_len: 1
@@ -36,7 +42,10 @@ message UpdateConfigureRequest {
 message UpdateConfigureResponse {}
 
 message CompareConfigureRequest {
-  uint32 serverId = 1 [(validate.rules).uint32 = {gt: 0}];
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
   uint32 envId = 2 [(validate.rules).uint32 = {gt: 0}];
 }
 
@@ -52,7 +61,7 @@ message CompareConfigureResponse {
 }
 
 message WatchConfigureRequest {
-  string server = 1 [(validate.rules).string = {min_len: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1}];
   string token = 2 [(validate.rules).string = {min_len: 1}];
 }
 

@@ -34,9 +34,9 @@ type ConfigureHTTPServer interface {
 
 func RegisterConfigureHTTPServer(s *http.Server, srv ConfigureHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/configure", _Configure_GetConfigure0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/configure", _Configure_UpdateConfigure0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/configure/compare", _Configure_CompareConfigure0_HTTP_Handler(srv))
+	r.GET("/configure/api/configure", _Configure_GetConfigure0_HTTP_Handler(srv))
+	r.PUT("/configure/api/configure", _Configure_UpdateConfigure0_HTTP_Handler(srv))
+	r.POST("/configure/api/configure/compare", _Configure_CompareConfigure0_HTTP_Handler(srv))
 }
 
 func _Configure_GetConfigure0_HTTP_Handler(srv ConfigureHTTPServer) func(ctx http.Context) error {
@@ -118,7 +118,7 @@ func NewConfigureHTTPClient(client *http.Client) ConfigureHTTPClient {
 
 func (c *ConfigureHTTPClientImpl) CompareConfigure(ctx context.Context, in *CompareConfigureRequest, opts ...http.CallOption) (*CompareConfigureResponse, error) {
 	var out CompareConfigureResponse
-	pattern := "/configure/api/v1/configure/compare"
+	pattern := "/configure/api/configure/compare"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationConfigureCompareConfigure))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -131,7 +131,7 @@ func (c *ConfigureHTTPClientImpl) CompareConfigure(ctx context.Context, in *Comp
 
 func (c *ConfigureHTTPClientImpl) GetConfigure(ctx context.Context, in *GetConfigureRequest, opts ...http.CallOption) (*GetConfigureResponse, error) {
 	var out GetConfigureResponse
-	pattern := "/configure/api/v1/configure"
+	pattern := "/configure/api/configure"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationConfigureGetConfigure))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -144,7 +144,7 @@ func (c *ConfigureHTTPClientImpl) GetConfigure(ctx context.Context, in *GetConfi
 
 func (c *ConfigureHTTPClientImpl) UpdateConfigure(ctx context.Context, in *UpdateConfigureRequest, opts ...http.CallOption) (*UpdateConfigureResponse, error) {
 	var out UpdateConfigureResponse
-	pattern := "/configure/api/v1/configure"
+	pattern := "/configure/api/configure"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationConfigureUpdateConfigure))
 	opts = append(opts, http.PathTemplate(pattern))

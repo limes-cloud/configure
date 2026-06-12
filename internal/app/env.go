@@ -6,15 +6,14 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/google/uuid"
-	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/crypto"
+	"github.com/limes-cloud/configure/internal/core"
 	kmodel "github.com/limes-cloud/kratosx/model"
+	"github.com/limes-cloud/kratosx/pkg/crypto"
 
 	pb "github.com/limes-cloud/configure/api/env"
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/service"
 	"github.com/limes-cloud/configure/internal/infra/dbs"
-	"github.com/limes-cloud/configure/internal/infra/rpc"
 	"github.com/limes-cloud/configure/internal/types"
 )
 
@@ -25,7 +24,7 @@ type Env struct {
 
 func NewEnv() *Env {
 	return &Env{
-		srv: service.NewEnv(dbs.NewEnv(), rpc.NewPermission()),
+		srv: service.NewEnv(dbs.NewEnv()),
 	}
 }
 
@@ -39,7 +38,7 @@ func init() {
 
 // ListEnv 获取环境信息列表
 func (app *Env) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListEnvResponse, error) {
-	list, total, err := app.srv.ListEnv(kratosx.MustContext(c), &types.ListEnvRequest{
+	list, total, err := app.srv.ListEnv(core.MustContext(c), &types.ListEnvRequest{
 		Keyword: req.Keyword,
 		Name:    req.Name,
 		Status:  req.Status,
@@ -65,7 +64,7 @@ func (app *Env) ListEnv(c context.Context, req *pb.ListEnvRequest) (*pb.ListEnvR
 
 // CreateEnv 创建环境信息
 func (app *Env) CreateEnv(c context.Context, req *pb.CreateEnvRequest) (*pb.CreateEnvResponse, error) {
-	id, err := app.srv.CreateEnv(kratosx.MustContext(c), &entity.Env{
+	id, err := app.srv.CreateEnv(core.MustContext(c), &entity.Env{
 		Keyword:     req.Keyword,
 		Name:        req.Name,
 		Status:      req.Status,
@@ -80,7 +79,7 @@ func (app *Env) CreateEnv(c context.Context, req *pb.CreateEnvRequest) (*pb.Crea
 
 // UpdateEnv 更新环境信息
 func (app *Env) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb.UpdateEnvResponse, error) {
-	if err := app.srv.UpdateEnv(kratosx.MustContext(c), &entity.Env{
+	if err := app.srv.UpdateEnv(core.MustContext(c), &entity.Env{
 		BaseModel:   kmodel.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
 		Name:        req.Name,
@@ -94,7 +93,7 @@ func (app *Env) UpdateEnv(c context.Context, req *pb.UpdateEnvRequest) (*pb.Upda
 
 // DeleteEnv 删除环境信息
 func (app *Env) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.DeleteEnvResponse, error) {
-	if err := app.srv.DeleteEnv(kratosx.MustContext(c), req.Id); err != nil {
+	if err := app.srv.DeleteEnv(core.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteEnvResponse{}, nil
@@ -102,7 +101,7 @@ func (app *Env) DeleteEnv(c context.Context, req *pb.DeleteEnvRequest) (*pb.Dele
 
 // GetEnvToken 获取环境token
 func (app *Env) GetEnvToken(c context.Context, req *pb.GetEnvTokenRequest) (*pb.GetEnvTokenResponse, error) {
-	token, err := app.srv.GetEnvToken(kratosx.MustContext(c), req.Id)
+	token, err := app.srv.GetEnvToken(core.MustContext(c), req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -115,5 +114,5 @@ func (app *Env) ResetEnvToken(c context.Context, req *pb.ResetEnvTokenRequest) (
 		BaseModel: kmodel.BaseModel{Id: req.Id},
 		Token:     crypto.MD5ToUpper([]byte(uuid.NewString())),
 	}
-	return &pb.ResetEnvTokenResponse{Token: in.Token}, app.srv.UpdateEnv(kratosx.MustContext(c), &in)
+	return &pb.ResetEnvTokenResponse{Token: in.Token}, app.srv.UpdateEnv(core.MustContext(c), &in)
 }

@@ -79,10 +79,10 @@ func (m *ListBusinessRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := ListBusinessRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -373,10 +373,10 @@ func (m *CreateBusinessRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := CreateBusinessRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -1586,7 +1586,7 @@ func (m *ListBusinessResponse_Business) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for ServerId
+	// no validation rules for App
 
 	// no validation rules for Keyword
 

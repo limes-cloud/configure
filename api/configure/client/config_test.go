@@ -8,7 +8,7 @@ import (
 )
 
 func TestSource_Watch(t *testing.T) {
-	source := New("localhost:6082", "Resource", "1025D32F6CA7A2A320FE091B22C5DF3C")
+	source := New("localhost:6082", "resource", "1025D32F6CA7A2A320FE091B22C5DF3C")
 	conf := config.New(source)
 	if err := conf.Load(); err != nil {
 		t.Error(err.Error())

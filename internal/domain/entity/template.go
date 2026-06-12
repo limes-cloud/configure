@@ -4,7 +4,8 @@ import "github.com/limes-cloud/kratosx/model"
 
 type Template struct {
 	model.BaseModel
-	ServerId    uint32 `json:"serverId" gorm:"column:server_id"`
+	App         string `json:"app" gorm:"column:app"`
+	Namespace   string `json:"namespace" gorm:"column:namespace"`
 	Content     string `json:"content" gorm:"column:content"`
 	Version     string `json:"version" gorm:"column:version"`
 	IsUse       bool   `json:"isUse" gorm:"column:is_use"`

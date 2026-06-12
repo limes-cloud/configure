@@ -1,8 +1,7 @@
 package service
 
 import (
-	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/value"
+	"github.com/limes-cloud/configure/internal/core"
 
 	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
@@ -11,26 +10,15 @@ import (
 )
 
 type Business struct {
-	repo       repository.Business
-	permission repository.Permission
+	repo repository.Business
 }
 
-func NewBusiness(
-	repo repository.Business,
-	permission repository.Permission,
-) *Business {
-	return &Business{
-		repo:       repo,
-		permission: permission,
-	}
+func NewBusiness(repo repository.Business) *Business {
+	return &Business{repo: repo}
 }
 
 // ListBusiness 获取业务配置信息列表
-func (u *Business) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
-	if !u.permission.HasServer(ctx, req.ServerId) {
-		return nil, 0, errors.NotPermissionError()
-	}
-
+func (u *Business) ListBusiness(ctx core.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
 	list, total, err := u.repo.ListBusiness(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
@@ -39,11 +27,7 @@ func (u *Business) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequ
 }
 
 // CreateBusiness 创建业务配置信息
-func (u *Business) CreateBusiness(ctx kratosx.Context, req *entity.Business) (uint32, error) {
-	if !u.permission.HasServer(ctx, req.ServerId) {
-		return 0, errors.NotPermissionError()
-	}
-
+func (u *Business) CreateBusiness(ctx core.Context, req *entity.Business) (uint32, error) {
 	id, err := u.repo.CreateBusiness(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -52,11 +36,7 @@ func (u *Business) CreateBusiness(ctx kratosx.Context, req *entity.Business) (ui
 }
 
 // UpdateBusiness 更新业务配置信息
-func (u *Business) UpdateBusiness(ctx kratosx.Context, req *entity.Business) error {
-	if !u.permission.HasServer(ctx, req.ServerId) {
-		return errors.NotPermissionError()
-	}
-
+func (u *Business) UpdateBusiness(ctx core.Context, req *entity.Business) error {
 	if err := u.repo.UpdateBusiness(ctx, req); err != nil {
 		return errors.UpdateError(err.Error())
 	}
@@ -64,16 +44,7 @@ func (u *Business) UpdateBusiness(ctx kratosx.Context, req *entity.Business) err
 }
 
 // DeleteBusiness 删除业务配置信息
-func (u *Business) DeleteBusiness(ctx kratosx.Context, id uint32) error {
-	business, err := u.repo.GetBusiness(ctx, id)
-	if err != nil {
-		return errors.DeleteError(err.Error())
-	}
-
-	if !u.permission.HasServer(ctx, business.ServerId) {
-		return errors.NotPermissionError()
-	}
-
+func (u *Business) DeleteBusiness(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteBusiness(ctx, id); err != nil {
 		return errors.DeleteError(err.Error())
 	}
@@ -81,41 +52,18 @@ func (u *Business) DeleteBusiness(ctx kratosx.Context, id uint32) error {
 }
 
 // ListBusinessValue 获取业务配置值信息列表
-func (u *Business) ListBusinessValue(ctx kratosx.Context, bid uint32) ([]*entity.BusinessValue, error) {
-	business, err := u.repo.GetBusiness(ctx, bid)
-	if err != nil {
-		return nil, errors.DeleteError(err.Error())
-	}
-
-	if !u.permission.HasServer(ctx, business.ServerId) {
-		return nil, errors.NotPermissionError()
-	}
-
+func (u *Business) ListBusinessValue(ctx core.Context, bid uint32) ([]*entity.BusinessValue, error) {
 	list, err := u.repo.ListBusinessValue(ctx, &types.ListBusinessValueRequest{
 		BusinessId: &bid,
 	})
 	if err != nil {
 		return nil, errors.ListError(err.Error())
 	}
-	all, scopes, err := u.permission.GetEnv(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if !all {
-		var result []*entity.BusinessValue
-		for _, item := range list {
-			if value.InList(scopes, item.EnvId) {
-				result = append(result, item)
-			}
-		}
-		list = result
-	}
-
 	return list, nil
 }
 
 // UpdateBusinessValue 更新业务配置值信息
-func (u *Business) UpdateBusinessValue(ctx kratosx.Context, list []*entity.BusinessValue) error {
+func (u *Business) UpdateBusinessValue(ctx core.Context, list []*entity.BusinessValue) error {
 	if len(list) == 0 {
 		return nil
 	}
@@ -126,36 +74,19 @@ func (u *Business) UpdateBusinessValue(ctx kratosx.Context, list []*entity.Busin
 		return errors.UpdateError(err.Error())
 	}
 
-	if !u.permission.HasServer(ctx, business.ServerId) {
-		return errors.NotPermissionError()
-	}
-
 	var result []*entity.BusinessValue
-	all, scopes, err := u.permission.GetEnv(ctx)
-	if err != nil {
-		return err
-	}
-
 	for ind, item := range list {
-		// 去除掉不一致的数据
 		if item.BusinessId != bid {
 			continue
 		}
-
-		// 检验类型&序列化值
 		v, err := item.MarshalValue(business.Type)
 		if err != nil {
 			return err
 		}
 		list[ind].Value = v
-
-		// 检验是否拥有权限
-		if all || value.InList(scopes, item.EnvId) {
-			result = append(result, list[ind])
-		}
+		result = append(result, list[ind])
 	}
 
-	// 更新数据
 	if err := u.repo.UpdateBusinessValues(ctx, result); err != nil {
 		return errors.UpdateError(err.Error())
 	}

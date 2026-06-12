@@ -29,11 +29,11 @@ enum ErrorReason {
   ResourceValueTypeError = 15 [(errors.message) = "资源配置值类型错误"];
   RenderTemplateError = 16 [(errors.message) = "渲染模板错误"];
   TemplateVersionExistError = 17 [(errors.message) = "模板已存在此版本"];
-  ServerNotExistTemplateError = 18 [(errors.message) = "当前服务还未提交过模板"];
+  ServerNotExistTemplateError = 18 [(errors.message) = "当前应用还未提交过模板"];
   ConfigureVersionExistError = 19 [(errors.message) = "配置已存在此版本"];
   WatchConfigureError = 20 [(errors.message) = "监听版本更新失败"];
   TokenAuthError = 21 [(errors.message) = "token验证失败"];
-  ServerNotFound = 22 [(errors.message) = "服务不存在"];
+  ServerNotFound = 22 [(errors.message) = "应用不存在"];
   SystemError = 23 [(errors.message) = "系统错误"];
   ManagerServerError = 24 [(errors.message) = "管理中心服务异常"];
   NotPermissionError = 25 [(errors.message) = "无资源权限"];

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 	"google.golang.org/protobuf/proto"
 	"gorm.io/gorm/clause"
 
@@ -28,7 +28,7 @@ func NewBusiness() *Business {
 }
 
 // GetBusiness 获取指定的数据
-func (r Business) GetBusiness(ctx kratosx.Context, id uint32) (*entity.Business, error) {
+func (r Business) GetBusiness(ctx core.Context, id uint32) (*entity.Business, error) {
 	var (
 		business = entity.Business{}
 		fs       = []string{"*"}
@@ -37,14 +37,14 @@ func (r Business) GetBusiness(ctx kratosx.Context, id uint32) (*entity.Business,
 }
 
 // ListBusiness 获取列表
-func (r Business) ListBusiness(ctx kratosx.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
+func (r Business) ListBusiness(ctx core.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
 	var (
 		bs    []*entity.Business
 		total int64
 		fs    = []string{"*"}
 	)
 
-	db := ctx.DB().Model(entity.Business{}).Select(fs).Where("server_id = ?", req.ServerId)
+	db := ctx.DB().Model(entity.Business{}).Select(fs).Where("app = ?", req.App)
 
 	if req.Keyword != nil {
 		db = db.Where("keyword = ?", *req.Keyword)
@@ -70,22 +70,22 @@ func (r Business) ListBusiness(ctx kratosx.Context, req *types.ListBusinessReque
 }
 
 // CreateBusiness 创建数据
-func (r Business) CreateBusiness(ctx kratosx.Context, business *entity.Business) (uint32, error) {
+func (r Business) CreateBusiness(ctx core.Context, business *entity.Business) (uint32, error) {
 	return business.Id, ctx.DB().Create(business).Error
 }
 
 // UpdateBusiness 更新数据
-func (r Business) UpdateBusiness(ctx kratosx.Context, business *entity.Business) error {
+func (r Business) UpdateBusiness(ctx core.Context, business *entity.Business) error {
 	return ctx.DB().Where("id = ?", business.Id).Updates(business).Error
 }
 
 // DeleteBusiness 删除数据
-func (r Business) DeleteBusiness(ctx kratosx.Context, id uint32) error {
+func (r Business) DeleteBusiness(ctx core.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.Business{}).Error
 }
 
 // ListBusinessValue 获取指定业务字段的值列表
-func (r Business) ListBusinessValue(ctx kratosx.Context, req *types.ListBusinessValueRequest) ([]*entity.BusinessValue, error) {
+func (r Business) ListBusinessValue(ctx core.Context, req *types.ListBusinessValueRequest) ([]*entity.BusinessValue, error) {
 	var (
 		bvs []*entity.BusinessValue
 		fs  = []string{"*"}
@@ -95,11 +95,11 @@ func (r Business) ListBusinessValue(ctx kratosx.Context, req *types.ListBusiness
 	if req.BusinessId != nil {
 		db = db.Where("business_id=?", *req.BusinessId)
 	}
-	if req.ServerId != nil {
-		// 获取指定服务的全部业务字段
+	if req.App != nil {
+		// 获取指定应用的全部业务字段
 		var ids []uint32
 		if err := ctx.DB().Select("id").Model(entity.Business{}).
-			Where("server_id=?", *req.ServerId).Scan(&ids).Error; err != nil {
+			Where("app=?", *req.App).Scan(&ids).Error; err != nil {
 			return nil, err
 		}
 		db = db.Where("business_id in ?", ids)
@@ -111,15 +111,15 @@ func (r Business) ListBusinessValue(ctx kratosx.Context, req *types.ListBusiness
 }
 
 // UpdateBusinessValues 更新数据
-func (r Business) UpdateBusinessValues(ctx kratosx.Context, bvs []*entity.BusinessValue) error {
+func (r Business) UpdateBusinessValues(ctx core.Context, bvs []*entity.BusinessValue) error {
 	return ctx.DB().Clauses(clause.OnConflict{UpdateAll: true}).Create(&bvs).Error
 }
 
-// AllBusinessField 获取指定服务的可用的业务字段key列表
-func (r Business) AllBusinessField(ctx kratosx.Context, srvId uint32) ([]string, error) {
+// AllBusinessField 获取指定应用的可用的业务字段key列表
+func (r Business) AllBusinessField(ctx core.Context, app string) ([]string, error) {
 	var list []string
 	return list, ctx.DB().Select("keyword").
 		Model(entity.Business{}).
-		Where("server_id=?", srvId).
+		Where("app=?", app).
 		Find(&list).Error
 }

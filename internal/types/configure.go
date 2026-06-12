@@ -3,13 +3,13 @@ package types
 type ListConfigureRequest struct {
 	Page     uint32 `json:"page"`
 	PageSize uint32 `json:"pageSize"`
-	ServerId uint32 `json:"serverId"`
+	App      string `json:"app"`
 	EnvId    uint32 `json:"envId"`
 }
 
 type CompareConfigureRequest struct {
-	ServerId uint32 `json:"serverId"`
-	EnvId    uint32 `json:"envId"`
+	App   string `json:"app"`
+	EnvId uint32 `json:"envId"`
 }
 
 type CompareConfigureReply struct {
@@ -20,8 +20,8 @@ type CompareConfigureReply struct {
 }
 
 type WatcherConfigRequest struct {
-	Token  string
-	Server string
+	Token string
+	App   string
 }
 
 type WatcherConfigureReply struct {

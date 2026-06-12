@@ -3,17 +3,18 @@ package app
 import (
 	"context"
 
+	kmodel "github.com/limes-cloud/kratosx/model"
+
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/types"
-	kmodel "github.com/limes-cloud/kratosx/model"
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+
 	pb "github.com/limes-cloud/configure/api/business"
+	"github.com/limes-cloud/configure/internal/core"
 	"github.com/limes-cloud/configure/internal/domain/service"
 	"github.com/limes-cloud/configure/internal/infra/dbs"
-	"github.com/limes-cloud/configure/internal/infra/rpc"
-	"github.com/limes-cloud/kratosx"
 )
 
 type Business struct {
@@ -23,10 +24,7 @@ type Business struct {
 
 func NewBusiness() *Business {
 	return &Business{
-		srv: service.NewBusiness(
-			dbs.NewBusiness(),
-			rpc.NewPermission(),
-		),
+		srv: service.NewBusiness(dbs.NewBusiness()),
 	}
 }
 
@@ -40,12 +38,12 @@ func init() {
 
 // ListBusiness 获取业务配置信息列表
 func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) (*pb.ListBusinessResponse, error) {
-	list, total, err := s.srv.ListBusiness(kratosx.MustContext(c), &types.ListBusinessRequest{
+	list, total, err := s.srv.ListBusiness(core.MustContext(c), &types.ListBusinessRequest{
 		Page:     req.Page,
 		PageSize: req.PageSize,
 		Order:    req.Order,
 		OrderBy:  req.OrderBy,
-		ServerId: req.ServerId,
+		App:      req.App,
 		Keyword:  req.Keyword,
 	})
 	if err != nil {
@@ -56,7 +54,7 @@ func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) 
 	for _, item := range list {
 		reply.List = append(reply.List, &pb.ListBusinessResponse_Business{
 			Id:          item.Id,
-			ServerId:    item.ServerId,
+			App:         item.App,
 			Keyword:     item.Keyword,
 			Type:        item.Type,
 			Description: item.Description,
@@ -69,8 +67,8 @@ func (s *Business) ListBusiness(c context.Context, req *pb.ListBusinessRequest) 
 
 // CreateBusiness 创建业务配置信息
 func (s *Business) CreateBusiness(c context.Context, req *pb.CreateBusinessRequest) (*pb.CreateBusinessResponse, error) {
-	id, err := s.srv.CreateBusiness(kratosx.MustContext(c), &entity.Business{
-		ServerId:    req.ServerId,
+	id, err := s.srv.CreateBusiness(core.MustContext(c), &entity.Business{
+		App:         req.App,
 		Keyword:     req.Keyword,
 		Type:        req.Type,
 		Description: req.Description,
@@ -83,7 +81,7 @@ func (s *Business) CreateBusiness(c context.Context, req *pb.CreateBusinessReque
 
 // UpdateBusiness 更新业务配置信息
 func (s *Business) UpdateBusiness(c context.Context, req *pb.UpdateBusinessRequest) (*pb.UpdateBusinessResponse, error) {
-	if err := s.srv.UpdateBusiness(kratosx.MustContext(c), &entity.Business{
+	if err := s.srv.UpdateBusiness(core.MustContext(c), &entity.Business{
 		BaseModel:   kmodel.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
 		Type:        req.Type,
@@ -96,7 +94,7 @@ func (s *Business) UpdateBusiness(c context.Context, req *pb.UpdateBusinessReque
 
 // DeleteBusiness 删除业务配置信息
 func (s *Business) DeleteBusiness(c context.Context, req *pb.DeleteBusinessRequest) (*pb.DeleteBusinessResponse, error) {
-	if err := s.srv.DeleteBusiness(kratosx.MustContext(c), req.Id); err != nil {
+	if err := s.srv.DeleteBusiness(core.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
 	return &pb.DeleteBusinessResponse{}, nil
@@ -104,7 +102,7 @@ func (s *Business) DeleteBusiness(c context.Context, req *pb.DeleteBusinessReque
 
 // ListBusinessValue 获取业务配置值信息列表
 func (s *Business) ListBusinessValue(c context.Context, req *pb.ListBusinessValueRequest) (*pb.ListBusinessValueResponse, error) {
-	list, err := s.srv.ListBusinessValue(kratosx.MustContext(c), req.BusinessId)
+	list, err := s.srv.ListBusinessValue(core.MustContext(c), req.BusinessId)
 	if err != nil {
 		return nil, err
 	}
@@ -135,7 +133,7 @@ func (s *Business) UpdateBusinessValue(c context.Context, req *pb.UpdateBusiness
 		})
 	}
 
-	if err := s.srv.UpdateBusinessValue(kratosx.MustContext(c), list); err != nil {
+	if err := s.srv.UpdateBusinessValue(core.MustContext(c), list); err != nil {
 		return nil, err
 	}
 	return &pb.UpdateBusinessValueResponse{}, nil

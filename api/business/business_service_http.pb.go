@@ -43,12 +43,12 @@ type BusinessHTTPServer interface {
 
 func RegisterBusinessHTTPServer(s *http.Server, srv BusinessHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/businesses", _Business_ListBusiness0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/business", _Business_CreateBusiness0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/business", _Business_UpdateBusiness0_HTTP_Handler(srv))
-	r.DELETE("/configure/api/v1/business", _Business_DeleteBusiness0_HTTP_Handler(srv))
-	r.GET("/configure/api/v1/business/values", _Business_ListBusinessValue0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/business/values", _Business_UpdateBusinessValue0_HTTP_Handler(srv))
+	r.GET("/configure/api/businesses", _Business_ListBusiness0_HTTP_Handler(srv))
+	r.POST("/configure/api/business", _Business_CreateBusiness0_HTTP_Handler(srv))
+	r.PUT("/configure/api/business", _Business_UpdateBusiness0_HTTP_Handler(srv))
+	r.DELETE("/configure/api/business", _Business_DeleteBusiness0_HTTP_Handler(srv))
+	r.GET("/configure/api/business/values", _Business_ListBusinessValue0_HTTP_Handler(srv))
+	r.PUT("/configure/api/business/values", _Business_UpdateBusinessValue0_HTTP_Handler(srv))
 }
 
 func _Business_ListBusiness0_HTTP_Handler(srv BusinessHTTPServer) func(ctx http.Context) error {
@@ -193,7 +193,7 @@ func NewBusinessHTTPClient(client *http.Client) BusinessHTTPClient {
 
 func (c *BusinessHTTPClientImpl) CreateBusiness(ctx context.Context, in *CreateBusinessRequest, opts ...http.CallOption) (*CreateBusinessResponse, error) {
 	var out CreateBusinessResponse
-	pattern := "/configure/api/v1/business"
+	pattern := "/configure/api/business"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBusinessCreateBusiness))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -206,7 +206,7 @@ func (c *BusinessHTTPClientImpl) CreateBusiness(ctx context.Context, in *CreateB
 
 func (c *BusinessHTTPClientImpl) DeleteBusiness(ctx context.Context, in *DeleteBusinessRequest, opts ...http.CallOption) (*DeleteBusinessResponse, error) {
 	var out DeleteBusinessResponse
-	pattern := "/configure/api/v1/business"
+	pattern := "/configure/api/business"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBusinessDeleteBusiness))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -219,7 +219,7 @@ func (c *BusinessHTTPClientImpl) DeleteBusiness(ctx context.Context, in *DeleteB
 
 func (c *BusinessHTTPClientImpl) ListBusiness(ctx context.Context, in *ListBusinessRequest, opts ...http.CallOption) (*ListBusinessResponse, error) {
 	var out ListBusinessResponse
-	pattern := "/configure/api/v1/businesses"
+	pattern := "/configure/api/businesses"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBusinessListBusiness))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -232,7 +232,7 @@ func (c *BusinessHTTPClientImpl) ListBusiness(ctx context.Context, in *ListBusin
 
 func (c *BusinessHTTPClientImpl) ListBusinessValue(ctx context.Context, in *ListBusinessValueRequest, opts ...http.CallOption) (*ListBusinessValueResponse, error) {
 	var out ListBusinessValueResponse
-	pattern := "/configure/api/v1/business/values"
+	pattern := "/configure/api/business/values"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationBusinessListBusinessValue))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -245,7 +245,7 @@ func (c *BusinessHTTPClientImpl) ListBusinessValue(ctx context.Context, in *List
 
 func (c *BusinessHTTPClientImpl) UpdateBusiness(ctx context.Context, in *UpdateBusinessRequest, opts ...http.CallOption) (*UpdateBusinessResponse, error) {
 	var out UpdateBusinessResponse
-	pattern := "/configure/api/v1/business"
+	pattern := "/configure/api/business"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBusinessUpdateBusiness))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -258,7 +258,7 @@ func (c *BusinessHTTPClientImpl) UpdateBusiness(ctx context.Context, in *UpdateB
 
 func (c *BusinessHTTPClientImpl) UpdateBusinessValue(ctx context.Context, in *UpdateBusinessValueRequest, opts ...http.CallOption) (*UpdateBusinessValueResponse, error) {
 	var out UpdateBusinessValueResponse
-	pattern := "/configure/api/v1/business/values"
+	pattern := "/configure/api/business/values"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationBusinessUpdateBusinessValue))
 	opts = append(opts, http.PathTemplate(pattern))

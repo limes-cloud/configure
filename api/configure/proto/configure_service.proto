@@ -12,13 +12,13 @@ option java_package = "configure.api.configure";
 service Configure {
   // GetConfigure 获取配置
   rpc GetConfigure(GetConfigureRequest) returns (GetConfigureResponse) {
-    option (google.api.http) = {get: "/configure/api/v1/configure"};
+    option (google.api.http) = {get: "/configure/api/configure"};
   }
 
   // UpdateConfigure 更新配置
   rpc UpdateConfigure(UpdateConfigureRequest) returns (UpdateConfigureResponse) {
     option (google.api.http) = {
-      put: "/configure/api/v1/configure"
+      put: "/configure/api/configure"
       body: "*"
     };
   }
@@ -26,7 +26,7 @@ service Configure {
   // CompareConfigure 对比配置与模板差异
   rpc CompareConfigure(CompareConfigureRequest) returns (CompareConfigureResponse) {
     option (google.api.http) = {
-      post: "/configure/api/v1/configure/compare"
+      post: "/configure/api/configure/compare"
       body: "*"
     };
   }

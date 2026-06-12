@@ -5,7 +5,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 	"google.golang.org/protobuf/proto"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -29,25 +29,25 @@ func NewResource() *Resource {
 }
 
 // GetResourceByKeyword 获取指定数据
-func (r Resource) GetResourceByKeyword(ctx kratosx.Context, keyword string) (*entity.Resource, error) {
+func (r Resource) GetResourceByKeyword(ctx core.Context, keyword string) (*entity.Resource, error) {
 	var (
 		resource = entity.Resource{}
 		fs       = []string{"*"}
 	)
-	return &resource, ctx.DB().Select(fs).Preload("Servers").First(&resource, "keyword=?", keyword).Error
+	return &resource, ctx.DB().Select(fs).Preload("ResourceApps").First(&resource, "keyword=?", keyword).Error
 }
 
 // GetResource 获取指定的数据
-func (r Resource) GetResource(ctx kratosx.Context, id uint32) (*entity.Resource, error) {
+func (r Resource) GetResource(ctx core.Context, id uint32) (*entity.Resource, error) {
 	var (
 		resource = entity.Resource{}
 		fs       = []string{"*"}
 	)
-	return &resource, ctx.DB().Select(fs).Preload("Servers").First(&resource, id).Error
+	return &resource, ctx.DB().Select(fs).Preload("ResourceApps").First(&resource, id).Error
 }
 
 // ListResource 获取列表
-func (r Resource) ListResource(ctx kratosx.Context, req *types.ListResourceRequest) ([]*entity.Resource, uint32, error) {
+func (r Resource) ListResource(ctx core.Context, req *types.ListResourceRequest) ([]*entity.Resource, uint32, error) {
 	var (
 		list  []*entity.Resource
 		total int64
@@ -65,9 +65,9 @@ func (r Resource) ListResource(ctx kratosx.Context, req *types.ListResourceReque
 	if req.Private != nil {
 		db = db.Where("private = ?", *req.Private)
 	}
-	if req.ServerId != nil {
+	if req.App != nil {
 		var ids []uint32
-		if err := ctx.DB().Select("resource_id").Model(entity.ResourceServer{}).Where("server_id=?", *req.ServerId).Scan(&ids).Error; err != nil {
+		if err := ctx.DB().Select("resource_id").Model(entity.ResourceApp{}).Where("app=?", *req.App).Scan(&ids).Error; err != nil {
 			return nil, 0, err
 		}
 		db = db.Where("id in ? or private=false", ids)
@@ -93,14 +93,14 @@ func (r Resource) ListResource(ctx kratosx.Context, req *types.ListResourceReque
 }
 
 // CreateResource 创建数据
-func (r Resource) CreateResource(ctx kratosx.Context, resource *entity.Resource) (uint32, error) {
+func (r Resource) CreateResource(ctx core.Context, resource *entity.Resource) (uint32, error) {
 	return resource.Id, ctx.DB().Create(resource).Error
 }
 
 // UpdateResource 更新数据
-func (r Resource) UpdateResource(ctx kratosx.Context, resource *entity.Resource) error {
+func (r Resource) UpdateResource(ctx core.Context, resource *entity.Resource) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Where("resource_id=?", resource.Id).Delete(entity.ResourceServer{}).Error; err != nil {
+		if err := tx.Where("resource_id=?", resource.Id).Delete(entity.ResourceApp{}).Error; err != nil {
 			return err
 		}
 		return tx.Updates(resource).Error
@@ -108,12 +108,12 @@ func (r Resource) UpdateResource(ctx kratosx.Context, resource *entity.Resource)
 }
 
 // DeleteResource 删除数据
-func (r Resource) DeleteResource(ctx kratosx.Context, id uint32) error {
+func (r Resource) DeleteResource(ctx core.Context, id uint32) error {
 	return ctx.DB().Delete(&entity.Resource{}, id).Error
 }
 
 // ListResourceValue 获取列表
-func (r Resource) ListResourceValue(ctx kratosx.Context, req *types.ListResourceValueRequest) ([]*entity.ResourceValue, error) {
+func (r Resource) ListResourceValue(ctx core.Context, req *types.ListResourceValueRequest) ([]*entity.ResourceValue, error) {
 	var (
 		rvs []*entity.ResourceValue
 		fs  = []string{"*"}
@@ -126,9 +126,9 @@ func (r Resource) ListResourceValue(ctx kratosx.Context, req *types.ListResource
 	if req.EnvId != nil {
 		db = db.Where("env_id=?", *req.EnvId)
 	}
-	if req.ServerId != nil {
+	if req.App != nil {
 		var ids []uint32
-		if err := ctx.DB().Select("resource_id").Model(entity.ResourceServer{}).Where("server_id=?", *req.ServerId).Scan(&ids).Error; err != nil {
+		if err := ctx.DB().Select("resource_id").Model(entity.ResourceApp{}).Where("app=?", *req.App).Scan(&ids).Error; err != nil {
 			return nil, err
 		}
 		var ids1 []uint32
@@ -143,22 +143,22 @@ func (r Resource) ListResourceValue(ctx kratosx.Context, req *types.ListResource
 }
 
 // UpdateResourceValues 更新数据,采用upsert（存在则更新，不存在则插入）操作
-func (r Resource) UpdateResourceValues(ctx kratosx.Context, rvs []*entity.ResourceValue) error {
+func (r Resource) UpdateResourceValues(ctx core.Context, rvs []*entity.ResourceValue) error {
 	return ctx.DB().Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "env_id"}, {Name: "resource_id"}},  // 指定业务唯一键
 		DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at"}), // 只更新这两个字段
 	}).Create(&rvs).Error
 }
 
-// AllResourceField 获取指定服务的全部可用资源字段
-func (r Resource) AllResourceField(ctx kratosx.Context, sid uint32) ([]string, error) {
+// AllResourceField 获取指定应用的全部可用资源字段
+func (r Resource) AllResourceField(ctx core.Context, app string) ([]string, error) {
 	var (
 		ids  []uint32
 		list []*entity.Resource
 	)
 	if err := ctx.DB().Select("resource_id").
-		Model(entity.ResourceServer{}).
-		Where("server_id=?", sid).
+		Model(entity.ResourceApp{}).
+		Where("app=?", app).
 		Scan(&ids).Error; err != nil {
 		return nil, err
 	}

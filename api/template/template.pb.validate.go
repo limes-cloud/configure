@@ -79,10 +79,10 @@ func (m *ListTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := ListTemplateRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -445,7 +445,7 @@ func (m *GetTemplateResponse) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for ServerId
+	// no validation rules for App
 
 	// no validation rules for Description
 
@@ -563,10 +563,10 @@ func (m *CurrentTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := CurrentTemplateRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -678,7 +678,7 @@ func (m *CurrentTemplateResponse) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for ServerId
+	// no validation rules for App
 
 	// no validation rules for Description
 
@@ -796,10 +796,10 @@ func (m *CreateTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := CreateTemplateRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -1073,10 +1073,10 @@ func (m *SwitchTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := SwitchTemplateRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -1586,10 +1586,10 @@ func (m *PreviewTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := PreviewTemplateRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -1843,7 +1843,7 @@ func (m *ListTemplateResponse_Template) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for ServerId
+	// no validation rules for App
 
 	// no validation rules for Description
 

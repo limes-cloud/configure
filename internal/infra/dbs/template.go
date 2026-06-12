@@ -3,7 +3,7 @@ package dbs
 import (
 	"sync"
 
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 	"gorm.io/gorm"
 
 	"github.com/limes-cloud/configure/internal/domain/entity"
@@ -26,7 +26,7 @@ func NewTemplate() *Template {
 }
 
 // GetTemplateByVersion 获取指定版本的模板
-func (r Template) GetTemplateByVersion(ctx kratosx.Context, version string) (*entity.Template, error) {
+func (r Template) GetTemplateByVersion(ctx core.Context, version string) (*entity.Template, error) {
 	var (
 		template = entity.Template{}
 		fs       = []string{"*"}
@@ -35,7 +35,7 @@ func (r Template) GetTemplateByVersion(ctx kratosx.Context, version string) (*en
 }
 
 // GetTemplate 获取指定的数据
-func (r Template) GetTemplate(ctx kratosx.Context, id uint32) (*entity.Template, error) {
+func (r Template) GetTemplate(ctx core.Context, id uint32) (*entity.Template, error) {
 	var (
 		template = entity.Template{}
 		fs       = []string{"*"}
@@ -44,33 +44,46 @@ func (r Template) GetTemplate(ctx kratosx.Context, id uint32) (*entity.Template,
 }
 
 // CurrentTemplate 获取当前正在使用的模板
-func (r Template) CurrentTemplate(ctx kratosx.Context, sid uint32) (*entity.Template, error) {
+func (r Template) CurrentTemplate(ctx core.Context, app string, namespace string) (*entity.Template, error) {
 	var (
 		template = entity.Template{}
 		fs       = []string{"*"}
 	)
-	return &template, ctx.DB().Select(fs).First(&template, "is_use=true and server_id=?", sid).Error
+	return &template, ctx.DB().Select(fs).First(&template, "is_use=true and app=? and namespace=?", app, namespace).Error
+}
+
+// ListCurrentTemplate 获取应用下当前正在使用的模板
+func (r Template) ListCurrentTemplate(ctx core.Context, app string) ([]*entity.Template, error) {
+	var list []*entity.Template
+	return list, ctx.DB().
+		Select("*").
+		Where("is_use=true and app=?", app).
+		Order("namespace asc,id asc").
+		Find(&list).Error
 }
 
 // UseTemplate 使用模板
-func (r Template) UseTemplate(ctx kratosx.Context, srvId, tpId uint32) error {
+func (r Template) UseTemplate(ctx core.Context, app string, namespace string, tpId uint32) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if err := tx.Model(entity.Template{}).Where("server_id=? and id=?", srvId, tpId).Update("is_use", true).Error; err != nil {
+		if err := tx.Model(entity.Template{}).Where("app=? and namespace=? and id=?", app, namespace, tpId).Update("is_use", true).Error; err != nil {
 			return err
 		}
-		return tx.Model(entity.Template{}).Where("server_id=? and id!=?", srvId, tpId).Update("is_use", false).Error
+		return tx.Model(entity.Template{}).Where("app=? and namespace=? and id!=?", app, namespace, tpId).Update("is_use", false).Error
 	})
 }
 
 // ListTemplate 获取列表
-func (r Template) ListTemplate(ctx kratosx.Context, req *types.ListTemplateRequest) ([]*entity.Template, uint32, error) {
+func (r Template) ListTemplate(ctx core.Context, req *types.ListTemplateRequest) ([]*entity.Template, uint32, error) {
 	var (
 		list  []*entity.Template
 		total int64
-		fs    = []string{"id", "is_use", "version", "compare", "description", "created_at", "updated_at"}
+		fs    = []string{"id", "app", "namespace", "is_use", "version", "compare", "description", "format", "created_at", "updated_at"}
 	)
 
-	db := ctx.DB().Model(entity.Template{}).Select(fs).Where("server_id=?", req.ServerId)
+	db := ctx.DB().Model(entity.Template{}).Select(fs).Where("app=?", req.App)
+	if req.Namespace != nil && *req.Namespace != "" {
+		db = db.Where("namespace=?", *req.Namespace)
+	}
 
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
@@ -82,17 +95,17 @@ func (r Template) ListTemplate(ctx kratosx.Context, req *types.ListTemplateReque
 }
 
 // CreateTemplate 创建数据
-func (r Template) CreateTemplate(ctx kratosx.Context, template *entity.Template) (uint32, error) {
+func (r Template) CreateTemplate(ctx core.Context, template *entity.Template) (uint32, error) {
 	return template.Id, ctx.DB().Create(template).Error
 }
 
 // UpdateTemplate 更新数据
-func (r Template) UpdateTemplate(ctx kratosx.Context, template *entity.Template) error {
+func (r Template) UpdateTemplate(ctx core.Context, template *entity.Template) error {
 	return ctx.DB().Where("id = ?", template.Id).Updates(template).Error
 }
 
 // DeleteTemplate 删除数据
-func (r Template) DeleteTemplate(ctx kratosx.Context, id uint32) error {
+func (r Template) DeleteTemplate(ctx core.Context, id uint32) error {
 	db := ctx.DB().Where("id=?", id).Delete(&entity.Template{})
 	return db.Error
 }

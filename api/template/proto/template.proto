@@ -14,19 +14,24 @@ message ListTemplateRequest {
     gt: 0
     lte: 50
   }];
-  uint32 serverId = 3 [(validate.rules).uint32 = {gt: 0}];
+  string app = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  optional string namespace = 4 [(validate.rules).string = {max_len: 32}];
 }
 
 message ListTemplateResponse {
   message Template {
     uint32 id = 1;
-    uint32 serverId = 2;
-    string description = 3;
-    string version = 4;
-    string format = 5;
-    bool isUse = 6;
-    string compare = 7;
-    uint32 createdAt = 8;
+    string app = 2;
+    string namespace = 3;
+    string description = 4;
+    string version = 5;
+    string format = 6;
+    bool isUse = 7;
+    string compare = 8;
+    uint32 createdAt = 9;
   }
 
   uint32 total = 1;
@@ -39,43 +44,56 @@ message GetTemplateRequest {
 
 message GetTemplateResponse {
   uint32 id = 1;
-  uint32 serverId = 2;
-  string description = 3;
-  string version = 4;
-  string format = 5;
-  bool isUse = 6;
-  string compare = 7;
-  string content = 8;
-  uint32 createdAt = 9;
+  string app = 2;
+  string namespace = 3;
+  string description = 4;
+  string version = 5;
+  string format = 6;
+  bool isUse = 7;
+  string compare = 8;
+  string content = 9;
+  uint32 createdAt = 10;
 }
 
 message CurrentTemplateRequest {
-  uint32 serverId = 1 [(validate.rules).uint32 = {gt: 0}];
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  optional string namespace = 2 [(validate.rules).string = {max_len: 32}];
 }
 
 message CurrentTemplateResponse {
   uint32 id = 1;
-  uint32 serverId = 2;
-  string description = 3;
-  string version = 4;
-  string format = 5;
-  bool isUse = 6;
-  string compare = 7;
-  string content = 8;
-  uint32 createdAt = 9;
+  string app = 2;
+  string namespace = 3;
+  string description = 4;
+  string version = 5;
+  string format = 6;
+  bool isUse = 7;
+  string compare = 8;
+  string content = 9;
+  uint32 createdAt = 10;
 }
 
 message CreateTemplateRequest {
-  uint32 serverId = 1 [(validate.rules).uint32 = {gt: 0}];
-  string content = 2 [(validate.rules).string = {min_len: 3}];
-  string description = 3 [(validate.rules).string = {
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  optional string namespace = 2 [(validate.rules).string = {max_len: 32}];
+  string content = 3 [(validate.rules).string = {min_len: 3}];
+  string description = 4 [(validate.rules).string = {
     min_len: 1
     max_len: 64
   }];
-  string format = 4 [(validate.rules).string = {
+  string format = 5 [(validate.rules).string = {
     min_len: 1
     max_len: 64
-    in: ["json", "yaml"]
+    in: [
+      "json",
+      "yaml"
+    ]
   }];
 }
 
@@ -85,7 +103,11 @@ message CreateTemplateResponse {
 
 message SwitchTemplateRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
-  uint32 serverId = 2 [(validate.rules).uint32 = {gt: 0}];
+  string app = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  optional string namespace = 3 [(validate.rules).string = {max_len: 32}];
 }
 
 message SwitchTemplateResponse {}
@@ -94,7 +116,10 @@ message CompareTemplateRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
   string format = 2 [(validate.rules).string = {
     min_len: 1
-    in: ["json", "yaml"]
+    in: [
+      "json",
+      "yaml"
+    ]
   }];
   string content = 3 [(validate.rules).string = {min_len: 1}];
 }
@@ -112,12 +137,19 @@ message CompareTemplateResponse {
 
 message PreviewTemplateRequest {
   uint32 envId = 1 [(validate.rules).uint32 = {gt: 0}];
-  uint32 serverId = 2 [(validate.rules).uint32 = {gt: 0}];
-  string format = 3 [(validate.rules).string = {
+  string app = 2 [(validate.rules).string = {
     min_len: 1
-    in: ["json", "yaml"]
+    max_len: 32
   }];
-  string content = 4 [(validate.rules).string = {min_len: 7}];
+  optional string namespace = 3 [(validate.rules).string = {max_len: 32}];
+  string format = 4 [(validate.rules).string = {
+    min_len: 1
+    in: [
+      "json",
+      "yaml"
+    ]
+  }];
+  string content = 5 [(validate.rules).string = {min_len: 7}];
 }
 
 message PreviewTemplateResponse {

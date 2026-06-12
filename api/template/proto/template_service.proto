@@ -12,23 +12,23 @@ option java_package = "configure.api.template";
 service Template {
   // ListTemplate 获取模板列表
   rpc ListTemplate(ListTemplateRequest) returns (ListTemplateResponse) {
-    option (google.api.http) = {get: "/configure/api/v1/templates"};
+    option (google.api.http) = {get: "/configure/api/templates"};
   }
 
   // GetTemplate 获取指定模板
   rpc GetTemplate(GetTemplateRequest) returns (GetTemplateResponse) {
-    option (google.api.http) = {get: "/configure/api/v1/template"};
+    option (google.api.http) = {get: "/configure/api/template"};
   }
 
   // CurrentTemplate 获取当前使用的模板
   rpc CurrentTemplate(CurrentTemplateRequest) returns (CurrentTemplateResponse) {
-    option (google.api.http) = {get: "/configure/api/v1/template/current"};
+    option (google.api.http) = {get: "/configure/api/template/current"};
   }
 
   // CreateTemplate 创建模板
   rpc CreateTemplate(CreateTemplateRequest) returns (CreateTemplateResponse) {
     option (google.api.http) = {
-      post: "/configure/api/v1/template"
+      post: "/configure/api/template"
       body: "*"
     };
   }
@@ -36,7 +36,7 @@ service Template {
   // SwitchTemplate 切换使用的模板
   rpc SwitchTemplate(SwitchTemplateRequest) returns (SwitchTemplateResponse) {
     option (google.api.http) = {
-      post: "/configure/api/v1/template/switch"
+      post: "/configure/api/template/switch"
       body: "*"
     };
   }
@@ -44,7 +44,7 @@ service Template {
   // CompareTemplate 对比模板内容
   rpc CompareTemplate(CompareTemplateRequest) returns (CompareTemplateResponse) {
     option (google.api.http) = {
-      post: "/configure/api/v1/template/compare"
+      post: "/configure/api/template/compare"
       body: "*"
     };
   }
@@ -52,7 +52,7 @@ service Template {
   // PreviewTemplate 预览模板渲染结果
   rpc PreviewTemplate(PreviewTemplateRequest) returns (PreviewTemplateResponse) {
     option (google.api.http) = {
-      post: "/configure/api/v1/template/preview"
+      post: "/configure/api/template/preview"
       body: "*"
     };
   }

@@ -10,7 +10,7 @@ import (
 )
 
 type Business struct {
-	ServerId    uint32  `json:"serverId" gorm:"column:server_id"`
+	App         string  `json:"app" gorm:"column:app"`
 	Keyword     string  `json:"keyword" gorm:"column:keyword"`
 	Type        string  `json:"type" gorm:"column:type"`
 	Description *string `json:"description" gorm:"column:description"`

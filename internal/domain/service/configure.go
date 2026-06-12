@@ -3,10 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/go-kratos/kratos/v2/encoding"
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 
 	"github.com/limes-cloud/configure/api/errors"
@@ -22,55 +23,41 @@ type watcher struct {
 }
 
 type Configure struct {
-	repo       repository.Configure
-	server     repository.Server
-	env        repository.Env
-	business   repository.Business
-	resource   repository.Resource
-	template   repository.Template
-	permission repository.Permission
-	mutex      sync.Mutex
-	rs         map[string][]*watcher
+	repo     repository.Configure
+	env      repository.Env
+	business repository.Business
+	resource repository.Resource
+	template repository.Template
+	mutex    sync.Mutex
+	rs       map[string][]*watcher
 }
 
 func NewConfigure(
 	repo repository.Configure,
-	server repository.Server,
 	env repository.Env,
 	business repository.Business,
 	resource repository.Resource,
 	template repository.Template,
-	permission repository.Permission,
 ) *Configure {
 	srv := &Configure{
-		repo:       repo,
-		server:     server,
-		env:        env,
-		permission: permission,
-		business:   business,
-		resource:   resource,
-		template:   template,
-		rs:         map[string][]*watcher{},
+		repo:     repo,
+		env:      env,
+		business: business,
+		resource: resource,
+		template: template,
+		rs:       map[string][]*watcher{},
 	}
 
-	// 监听配置变更广播通知
-	go repo.SubscribeConfigure(func(ctx kratosx.Context, envId uint32, srvId uint32) error {
-		return srv.SendWatcher(ctx, envId, srvId)
+	go repo.SubscribeConfigure(func(ctx core.Context, envId uint32, app string) error {
+		return srv.SendWatcher(ctx, envId, app)
 	})
 
 	return srv
 }
 
-// GetConfigureByEnvAndSrv 获取指定标识的配置信息
-func (u *Configure) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, srvId uint32) (*entity.Configure, error) {
-	if !u.permission.HasServer(ctx, envId) {
-		return nil, errors.NotPermissionError()
-	}
-	if !u.permission.HasEnv(ctx, srvId) {
-		return nil, errors.NotPermissionError()
-	}
-
-	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, envId, srvId)
+// GetConfigureByEnvAndApp 获取指定标识的配置信息
+func (u *Configure) GetConfigureByEnvAndApp(ctx core.Context, envId uint32, app string) (*entity.Configure, error) {
+	configure, err := u.repo.GetConfigureByEnvAndApp(ctx, envId, app)
 	if err != nil {
 		return nil, errors.GetError()
 	}
@@ -78,7 +65,7 @@ func (u *Configure) GetConfigureByEnvAndSrv(ctx kratosx.Context, envId, srvId ui
 }
 
 // ListConfigure 获取分页配置信息
-func (u *Configure) ListConfigure(ctx kratosx.Context, req *types.ListConfigureRequest) ([]*entity.Configure, uint32, error) {
+func (u *Configure) ListConfigure(ctx core.Context, req *types.ListConfigureRequest) ([]*entity.Configure, uint32, error) {
 	list, total, err := u.repo.ListConfigure(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
@@ -86,27 +73,18 @@ func (u *Configure) ListConfigure(ctx kratosx.Context, req *types.ListConfigureR
 	return list, total, nil
 }
 
-// UpdateConfigure 更新模配置
-func (u *Configure) UpdateConfigure(ctx kratosx.Context, req *entity.Configure) error {
-	if !u.permission.HasServer(ctx, req.EnvId) {
-		return errors.NotPermissionError()
-	}
-	if !u.permission.HasEnv(ctx, req.ServerId) {
-		return errors.NotPermissionError()
-	}
-
-	format, content, err := u.RenderCurrentTemplate(ctx, req.ServerId, req.EnvId)
+// UpdateConfigure 更新配置
+func (u *Configure) UpdateConfigure(ctx core.Context, req *entity.Configure) error {
+	format, content, err := u.RenderCurrentTemplate(ctx, req.App, req.EnvId)
 	if err != nil {
 		return errors.RenderTemplateError(err.Error())
 	}
 
-	// 生成数据
 	req.Version = crypto.MD5([]byte(content))
 	req.Format = format
 	req.Content = content
 
-	// 查询往期配置
-	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, req.EnvId, req.ServerId)
+	configure, err := u.repo.GetConfigureByEnvAndApp(ctx, req.EnvId, req.App)
 	if err == nil {
 		if req.Version == configure.Version {
 			return errors.ConfigureVersionExistError()
@@ -121,65 +99,89 @@ func (u *Configure) UpdateConfigure(ctx kratosx.Context, req *entity.Configure) 
 		}
 	}
 
-	// 广播配置变更
-	if err := u.repo.BroadcastConfigure(ctx, req.EnvId, req.ServerId); err != nil {
+	if err := u.repo.BroadcastConfigure(ctx, req.EnvId, req.App); err != nil {
 		return errors.BroadcastConfigureError()
 	}
 
 	return nil
 }
 
-func (u *Configure) RenderCurrentTemplate(ctx kratosx.Context, srvId, envId uint32) (string, string, error) {
-	if !u.permission.HasServer(ctx, srvId) {
-		return "", "", errors.NotPermissionError()
-	}
-	if !u.permission.HasEnv(ctx, envId) {
-		return "", "", errors.NotPermissionError()
-	}
-
-	template, err := u.template.CurrentTemplate(ctx, srvId)
+func (u *Configure) RenderCurrentTemplate(ctx core.Context, app string, envId uint32) (string, string, error) {
+	templates, err := u.template.ListCurrentTemplate(ctx, app)
 	if err != nil {
 		return "", "", err
 	}
+	if len(templates) == 0 {
+		return "", "", errors.ServerNotExistTemplateError()
+	}
 
 	bvs, err := u.business.ListBusinessValue(ctx, &types.ListBusinessValueRequest{
-		ServerId: &srvId,
-		EnvId:    &envId,
+		App:   &app,
+		EnvId: &envId,
 	})
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get business value error", "err", err.Error())
 		return "", "", errors.DatabaseError()
 	}
 	rvs, err := u.resource.ListResourceValue(ctx, &types.ListResourceValueRequest{
-		ServerId: &srvId,
-		EnvId:    &envId,
+		App:   &app,
+		EnvId: &envId,
 	})
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get resource value error", "err", err.Error())
 		return "", "", errors.DatabaseError()
 	}
+
 	tpr := pkg.NewTemplateParser()
-	content, err := tpr.RenderTemplate(bvs, rvs, template.Format, template.Content)
+	format := templates[0].Format
+	merged := map[string]any{}
+	for _, template := range templates {
+		content, err := tpr.RenderTemplate(bvs, rvs, template.Format, template.Content)
+		if err != nil {
+			return "", "", errors.RenderTemplateError(err.Error())
+		}
+		codec := encoding.GetCodec(template.Format)
+		if codec == nil {
+			return "", "", errors.RenderTemplateError("unsupported template format")
+		}
+		current := map[string]any{}
+		if err := codec.Unmarshal([]byte(content), &current); err != nil {
+			return "", "", errors.RenderTemplateError(err.Error())
+		}
+		mergeConfigureMap(merged, current)
+		if strings.EqualFold(template.Namespace, "conf") {
+			format = template.Format
+		}
+	}
+
+	codec := encoding.GetCodec(format)
+	if codec == nil {
+		return "", "", errors.RenderTemplateError("unsupported template format")
+	}
+	content, err := codec.Marshal(merged)
 	if err != nil {
 		return "", "", errors.RenderTemplateError(err.Error())
 	}
 
-	return template.Format, content, nil
+	return format, string(content), nil
+}
+
+func mergeConfigureMap(dst map[string]any, src map[string]any) {
+	for key, val := range src {
+		srcMap, srcIsMap := val.(map[string]any)
+		dstMap, dstIsMap := dst[key].(map[string]any)
+		if srcIsMap && dstIsMap {
+			mergeConfigureMap(dstMap, srcMap)
+			continue
+		}
+		dst[key] = val
+	}
 }
 
 // CompareConfigure 对比配置
-func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConfigureRequest) ([]*types.CompareConfigureReply, error) {
-	if !u.permission.HasServer(ctx, req.ServerId) {
-		return nil, errors.NotPermissionError()
-	}
-	if !u.permission.HasEnv(ctx, req.EnvId) {
-		return nil, errors.NotPermissionError()
-	}
+func (u *Configure) CompareConfigure(ctx core.Context, req *types.CompareConfigureRequest) ([]*types.CompareConfigureReply, error) {
+	configure, err := u.repo.GetConfigureByEnvAndApp(ctx, req.EnvId, req.App)
 
-	// 获取当前配置
-	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, req.EnvId, req.ServerId)
-
-	// 解析生产中的配置
 	var oldKeys []string
 	otc := map[string]any{}
 	if err == nil {
@@ -192,9 +194,8 @@ func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConf
 		}
 	}
 
-	// 解析上传的模板
 	var curKeys []string
-	format, content, err := u.RenderCurrentTemplate(ctx, req.ServerId, req.EnvId)
+	format, content, err := u.RenderCurrentTemplate(ctx, req.App, req.EnvId)
 	if err != nil {
 		return nil, errors.RenderTemplateError(err.Error())
 	}
@@ -209,7 +210,6 @@ func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConf
 
 	var reply []*types.CompareConfigureReply
 
-	// 新增字段
 	addKeys := pkg.Diff(curKeys, oldKeys)
 	for _, key := range addKeys {
 		val := ""
@@ -223,7 +223,6 @@ func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConf
 		reply = append(reply, &types.CompareConfigureReply{Type: "add", Key: key, Cur: val})
 	}
 
-	// 删除的字段
 	delKeys := pkg.Diff(oldKeys, curKeys)
 	for _, key := range delKeys {
 		val := ""
@@ -237,7 +236,6 @@ func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConf
 		reply = append(reply, &types.CompareConfigureReply{Type: "del", Key: key, Old: val})
 	}
 
-	// 变更的字段
 	for key, val := range ctc {
 		if otc[key] == nil {
 			continue
@@ -270,28 +268,21 @@ func (u *Configure) CompareConfigure(ctx kratosx.Context, req *types.CompareConf
 	return reply, nil
 }
 
-func (u *Configure) channelKey(envId, srvId uint32) string {
-	return fmt.Sprintf("%v:%v", envId, srvId)
+func (u *Configure) channelKey(envId uint32, app string) string {
+	return fmt.Sprintf("%v:%v", envId, app)
 }
 
-func (u *Configure) Watch(ctx kratosx.Context, in *types.WatcherConfigRequest, reply types.WatcherConfigReplyFunc) error {
-	server, err := u.server.GetServerByKeyword(ctx, in.Server)
-	if err != nil {
-		return errors.ServerNotFound()
-	}
-
+func (u *Configure) Watch(ctx core.Context, in *types.WatcherConfigRequest, reply types.WatcherConfigReplyFunc) error {
 	env, err := u.env.GetEnvByToken(ctx, in.Token)
 	if err != nil {
 		return errors.TokenAuthError()
 	}
 
-	// 获取配置
-	configure, err := u.repo.GetConfigureByEnvAndSrv(ctx, env.Id, server.Id)
+	configure, err := u.repo.GetConfigureByEnvAndApp(ctx, env.Id, in.App)
 	if err != nil {
 		return errors.DatabaseError()
 	}
 
-	// 第一次链接先返回结果
 	if err := reply(&types.WatcherConfigureReply{
 		Content: configure.Content,
 		Format:  configure.Format,
@@ -299,14 +290,11 @@ func (u *Configure) Watch(ctx kratosx.Context, in *types.WatcherConfigRequest, r
 		return errors.WatchConfigureError(err.Error())
 	}
 
-	// 注册回调监听
-	closer := <-u.registerWatch(ctx, env.Id, server.Id, reply)
+	closer := <-u.registerWatch(ctx, env.Id, in.App, reply)
 	return errors.WatchConfigureError(closer)
 }
 
-// CompactPtrSlice 将删除切片中所有nil指针元素并返回一个新的切片。
 func (u *Configure) removeNilWatcher(arr []*watcher) []*watcher {
-	// 创建一个新的切片，用于存储非nil指针
 	var result []*watcher
 	for _, ptr := range arr {
 		if ptr != nil {
@@ -316,11 +304,11 @@ func (u *Configure) removeNilWatcher(arr []*watcher) []*watcher {
 	return result
 }
 
-func (u *Configure) registerWatch(ctx context.Context, envId, srvId uint32, reply types.WatcherConfigReplyFunc) <-chan string {
+func (u *Configure) registerWatch(ctx context.Context, envId uint32, app string, reply types.WatcherConfigReplyFunc) <-chan string {
 	u.mutex.Lock()
 	defer u.mutex.Unlock()
 
-	key := u.channelKey(envId, srvId)
+	key := u.channelKey(envId, app)
 	closer := make(chan string, 1)
 	u.rs[key] = append(u.rs[key], &watcher{
 		reply: reply,
@@ -341,9 +329,8 @@ func (u *Configure) registerWatch(ctx context.Context, envId, srvId uint32, repl
 	return closer
 }
 
-func (u *Configure) SendWatcher(ctx kratosx.Context, envId uint32, srvId uint32) error {
-	// 获取当前配置
-	cfg, err := u.repo.GetConfigureByEnvAndSrv(ctx, envId, srvId)
+func (u *Configure) SendWatcher(ctx core.Context, envId uint32, app string) error {
+	cfg, err := u.repo.GetConfigureByEnvAndApp(ctx, envId, app)
 	if err != nil {
 		return errors.DatabaseError(err.Error())
 	}
@@ -351,15 +338,13 @@ func (u *Configure) SendWatcher(ctx kratosx.Context, envId uint32, srvId uint32)
 	u.mutex.Lock()
 	defer u.mutex.Unlock()
 
-	key := u.channelKey(envId, srvId)
+	key := u.channelKey(envId, app)
 	for ind := 0; ind < len(u.rs[key]); ind++ {
 		item := u.rs[key][ind]
-		// 发送新的配置模板
 		if err := item.reply(&types.WatcherConfigureReply{
 			Content: cfg.Content,
 			Format:  cfg.Format,
 		}); err != nil {
-			// 发送失败，则关闭链接通道
 			item.close <- err.Error()
 			u.rs[key] = append(u.rs[key][:ind], u.rs[key][ind+1:]...)
 			ind--

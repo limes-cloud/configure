@@ -5,7 +5,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 	"github.com/limes-cloud/kratosx/pkg/value"
 
 	pb "github.com/limes-cloud/configure/api/configure"
@@ -13,7 +13,6 @@ import (
 	"github.com/limes-cloud/configure/internal/domain/entity"
 	"github.com/limes-cloud/configure/internal/domain/service"
 	"github.com/limes-cloud/configure/internal/infra/dbs"
-	"github.com/limes-cloud/configure/internal/infra/rpc"
 	"github.com/limes-cloud/configure/internal/types"
 )
 
@@ -26,12 +25,10 @@ func NewConfigure() *Configure {
 	return &Configure{
 		srv: service.NewConfigure(
 			dbs.NewConfigure(),
-			dbs.NewServer(),
 			dbs.NewEnv(),
 			dbs.NewBusiness(),
 			dbs.NewResource(),
 			dbs.NewTemplate(),
-			rpc.NewPermission(),
 		),
 	}
 }
@@ -45,9 +42,9 @@ func init() {
 }
 
 func (s *Configure) CompareConfigure(c context.Context, in *pb.CompareConfigureRequest) (*pb.CompareConfigureResponse, error) {
-	list, err := s.srv.CompareConfigure(kratosx.MustContext(c), &types.CompareConfigureRequest{
-		EnvId:    in.EnvId,
-		ServerId: in.ServerId,
+	list, err := s.srv.CompareConfigure(core.MustContext(c), &types.CompareConfigureRequest{
+		EnvId: in.EnvId,
+		App:   in.App,
 	})
 	if err != nil {
 		return nil, err
@@ -60,7 +57,7 @@ func (s *Configure) CompareConfigure(c context.Context, in *pb.CompareConfigureR
 }
 
 func (s *Configure) GetConfigure(ctx context.Context, in *pb.GetConfigureRequest) (*pb.GetConfigureResponse, error) {
-	res, err := s.srv.GetConfigureByEnvAndSrv(kratosx.MustContext(ctx), in.EnvId, in.ServerId)
+	res, err := s.srv.GetConfigureByEnvAndApp(core.MustContext(ctx), in.EnvId, in.App)
 	if err != nil {
 		return nil, err
 	}
@@ -72,17 +69,17 @@ func (s *Configure) GetConfigure(ctx context.Context, in *pb.GetConfigureRequest
 }
 
 func (s *Configure) UpdateConfigure(ctx context.Context, in *pb.UpdateConfigureRequest) (*pb.UpdateConfigureResponse, error) {
-	return &pb.UpdateConfigureResponse{}, s.srv.UpdateConfigure(kratosx.MustContext(ctx), &entity.Configure{
-		ServerId:    in.ServerId,
+	return &pb.UpdateConfigureResponse{}, s.srv.UpdateConfigure(core.MustContext(ctx), &entity.Configure{
+		App:         in.App,
 		EnvId:       in.EnvId,
 		Description: &in.Description,
 	})
 }
 
 func (s *Configure) WatchConfigure(in *pb.WatchConfigureRequest, reply pb.Configure_WatchConfigureServer) error {
-	return s.srv.Watch(kratosx.MustContext(reply.Context()), &types.WatcherConfigRequest{
-		Server: in.Server,
-		Token:  in.Token,
+	return s.srv.Watch(core.MustContext(reply.Context()), &types.WatcherConfigRequest{
+		App:   in.App,
+		Token: in.Token,
 	}, func(data *types.WatcherConfigureReply) error {
 		return reply.Send(&pb.WatchConfigureResponse{
 			Format:  data.Format,

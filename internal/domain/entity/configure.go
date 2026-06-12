@@ -4,7 +4,7 @@ import "github.com/limes-cloud/kratosx/model"
 
 type Configure struct {
 	model.BaseModel
-	ServerId    uint32  `json:"serverId" gorm:"server_id"`
+	App         string  `json:"app" gorm:"column:app"`
 	EnvId       uint32  `json:"envId" gorm:"env_id"`
 	Content     string  `json:"content" gorm:"content"`
 	Version     string  `json:"version" gorm:"version"`

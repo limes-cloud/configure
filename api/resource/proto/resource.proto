@@ -16,11 +16,6 @@ message GetResourceRequest {
 }
 
 message GetResourceResponse {
-  message Server {
-    uint32 id = 1;
-    string name = 2;
-  }
-
   uint32 id = 1;
   string keyword = 2;
   string fields = 3;
@@ -29,7 +24,7 @@ message GetResourceResponse {
   optional string description = 6;
   uint32 createdAt = 7;
   uint32 updatedAt = 8;
-  repeated Server servers = 9;
+  repeated string apps = 9;
 }
 
 message ListResourceRequest {
@@ -38,12 +33,22 @@ message ListResourceRequest {
     gt: 0
     lte: 50
   }];
-  optional string order = 3 [(validate.rules).string = {in: ["asc", "desc"]}];
-  optional string orderBy = 4 [(validate.rules).string = {in: ["id"]}];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: ["id"]
+  }];
   optional string keyword = 5;
   optional string tag = 6;
   optional bool private = 7;
-  optional uint32 serverId = 8;
+  optional string app = 8 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
 }
 
 message ListResourceResponse {
@@ -67,7 +72,7 @@ message CreateResourceRequest {
   string fields = 2 [(validate.rules).string = {min_len: 1}];
   string tag = 3 [(validate.rules).string = {min_len: 1}];
   optional bool private = 4;
-  repeated uint32 serverIds = 5;
+  repeated string apps = 5;
   optional string description = 6;
 }
 
@@ -81,7 +86,7 @@ message UpdateResourceRequest {
   string fields = 3 [(validate.rules).string = {min_len: 1}];
   string tag = 4 [(validate.rules).string = {min_len: 1}];
   optional bool private = 5;
-  repeated uint32 serverIds = 6;
+  repeated string apps = 6;
   optional string description = 7;
 }
 

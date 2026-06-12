@@ -46,13 +46,13 @@ type TemplateHTTPServer interface {
 
 func RegisterTemplateHTTPServer(s *http.Server, srv TemplateHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/templates", _Template_ListTemplate0_HTTP_Handler(srv))
-	r.GET("/configure/api/v1/template", _Template_GetTemplate0_HTTP_Handler(srv))
-	r.GET("/configure/api/v1/template/current", _Template_CurrentTemplate0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/template", _Template_CreateTemplate0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/template/switch", _Template_SwitchTemplate0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/template/compare", _Template_CompareTemplate0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/template/preview", _Template_PreviewTemplate0_HTTP_Handler(srv))
+	r.GET("/configure/api/templates", _Template_ListTemplate0_HTTP_Handler(srv))
+	r.GET("/configure/api/template", _Template_GetTemplate0_HTTP_Handler(srv))
+	r.GET("/configure/api/template/current", _Template_CurrentTemplate0_HTTP_Handler(srv))
+	r.POST("/configure/api/template", _Template_CreateTemplate0_HTTP_Handler(srv))
+	r.POST("/configure/api/template/switch", _Template_SwitchTemplate0_HTTP_Handler(srv))
+	r.POST("/configure/api/template/compare", _Template_CompareTemplate0_HTTP_Handler(srv))
+	r.POST("/configure/api/template/preview", _Template_PreviewTemplate0_HTTP_Handler(srv))
 }
 
 func _Template_ListTemplate0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
@@ -220,7 +220,7 @@ func NewTemplateHTTPClient(client *http.Client) TemplateHTTPClient {
 
 func (c *TemplateHTTPClientImpl) CompareTemplate(ctx context.Context, in *CompareTemplateRequest, opts ...http.CallOption) (*CompareTemplateResponse, error) {
 	var out CompareTemplateResponse
-	pattern := "/configure/api/v1/template/compare"
+	pattern := "/configure/api/template/compare"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTemplateCompareTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -233,7 +233,7 @@ func (c *TemplateHTTPClientImpl) CompareTemplate(ctx context.Context, in *Compar
 
 func (c *TemplateHTTPClientImpl) CreateTemplate(ctx context.Context, in *CreateTemplateRequest, opts ...http.CallOption) (*CreateTemplateResponse, error) {
 	var out CreateTemplateResponse
-	pattern := "/configure/api/v1/template"
+	pattern := "/configure/api/template"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTemplateCreateTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -246,7 +246,7 @@ func (c *TemplateHTTPClientImpl) CreateTemplate(ctx context.Context, in *CreateT
 
 func (c *TemplateHTTPClientImpl) CurrentTemplate(ctx context.Context, in *CurrentTemplateRequest, opts ...http.CallOption) (*CurrentTemplateResponse, error) {
 	var out CurrentTemplateResponse
-	pattern := "/configure/api/v1/template/current"
+	pattern := "/configure/api/template/current"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTemplateCurrentTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -259,7 +259,7 @@ func (c *TemplateHTTPClientImpl) CurrentTemplate(ctx context.Context, in *Curren
 
 func (c *TemplateHTTPClientImpl) GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...http.CallOption) (*GetTemplateResponse, error) {
 	var out GetTemplateResponse
-	pattern := "/configure/api/v1/template"
+	pattern := "/configure/api/template"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTemplateGetTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -272,7 +272,7 @@ func (c *TemplateHTTPClientImpl) GetTemplate(ctx context.Context, in *GetTemplat
 
 func (c *TemplateHTTPClientImpl) ListTemplate(ctx context.Context, in *ListTemplateRequest, opts ...http.CallOption) (*ListTemplateResponse, error) {
 	var out ListTemplateResponse
-	pattern := "/configure/api/v1/templates"
+	pattern := "/configure/api/templates"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTemplateListTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -285,7 +285,7 @@ func (c *TemplateHTTPClientImpl) ListTemplate(ctx context.Context, in *ListTempl
 
 func (c *TemplateHTTPClientImpl) PreviewTemplate(ctx context.Context, in *PreviewTemplateRequest, opts ...http.CallOption) (*PreviewTemplateResponse, error) {
 	var out PreviewTemplateResponse
-	pattern := "/configure/api/v1/template/preview"
+	pattern := "/configure/api/template/preview"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTemplatePreviewTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -298,7 +298,7 @@ func (c *TemplateHTTPClientImpl) PreviewTemplate(ctx context.Context, in *Previe
 
 func (c *TemplateHTTPClientImpl) SwitchTemplate(ctx context.Context, in *SwitchTemplateRequest, opts ...http.CallOption) (*SwitchTemplateResponse, error) {
 	var out SwitchTemplateResponse
-	pattern := "/configure/api/v1/template/switch"
+	pattern := "/configure/api/template/switch"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTemplateSwitchTemplate))
 	opts = append(opts, http.PathTemplate(pattern))

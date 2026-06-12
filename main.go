@@ -13,14 +13,13 @@ import (
 	_ "go.uber.org/automaxprocs"
 
 	"github.com/limes-cloud/configure/internal/app"
+	"github.com/limes-cloud/configure/internal/core"
 )
 
-const (
-	AppName = "Configure"
-)
+const AppName = "Configure"
 
 func main() {
-	server := kratosx.New(
+	srv := core.InitApp(
 		kratosx.WithRegistrarServer(func(hs *thttp.Server, gs *grpc.Server) {
 			app.New(hs, gs)
 		}),
@@ -31,7 +30,7 @@ func main() {
 		})),
 	)
 
-	if err := server.App().Run(); err != nil {
+	if err := srv.App().Run(); err != nil {
 		log.Fatal("run service fail", err.Error())
 	}
 }

@@ -23,14 +23,17 @@ message ListBusinessRequest {
   optional string orderBy = 4 [(validate.rules).string = {
     in: ["id"]
   }];
-  uint32 serverId = 5 [(validate.rules).uint32 = {gt: 0}];
+  string app = 5 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
   optional string keyword = 6;
 }
 
 message ListBusinessResponse {
   message Business {
     uint32 id = 1;
-    uint32 serverId = 2;
+    string app = 2;
     string keyword = 3;
     string type = 4;
     optional string description = 5;
@@ -43,7 +46,10 @@ message ListBusinessResponse {
 }
 
 message CreateBusinessRequest {
-  uint32 serverId = 1 [(validate.rules).uint32 = {gt: 0}];
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
   string keyword = 2 [(validate.rules).string = {min_len: 1}];
   string type = 3 [(validate.rules).string = {min_len: 1}];
   optional string description = 4;

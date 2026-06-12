@@ -12,13 +12,13 @@ option java_package = "configure.api.business";
 service Business {
   // ListBusiness 获取业务配置信息列表
   rpc ListBusiness(ListBusinessRequest) returns (ListBusinessResponse) {
-    option (google.api.http) = {get: "/configure/api/v1/businesses"};
+    option (google.api.http) = {get: "/configure/api/businesses"};
   }
 
   // CreateBusiness 创建业务配置信息
   rpc CreateBusiness(CreateBusinessRequest) returns (CreateBusinessResponse) {
     option (google.api.http) = {
-      post: "/configure/api/v1/business"
+      post: "/configure/api/business"
       body: "*"
     };
   }
@@ -26,25 +26,25 @@ service Business {
   // UpdateBusiness 更新业务配置信息
   rpc UpdateBusiness(UpdateBusinessRequest) returns (UpdateBusinessResponse) {
     option (google.api.http) = {
-      put: "/configure/api/v1/business"
+      put: "/configure/api/business"
       body: "*"
     };
   }
 
   // DeleteBusiness 删除业务配置信息
   rpc DeleteBusiness(DeleteBusinessRequest) returns (DeleteBusinessResponse) {
-    option (google.api.http) = {delete: "/configure/api/v1/business"};
+    option (google.api.http) = {delete: "/configure/api/business"};
   }
 
   // ListBusinessValue 获取业务配置值信息列表
   rpc ListBusinessValue(ListBusinessValueRequest) returns (ListBusinessValueResponse) {
-    option (google.api.http) = {get: "/configure/api/v1/business/values"};
+    option (google.api.http) = {get: "/configure/api/business/values"};
   }
 
   // UpdateBusinessValue 更新业务配置值信息
   rpc UpdateBusinessValue(UpdateBusinessValueRequest) returns (UpdateBusinessValueResponse) {
     option (google.api.http) = {
-      put: "/configure/api/v1/business/values"
+      put: "/configure/api/business/values"
       body: "*"
     };
   }

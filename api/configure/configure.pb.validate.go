@@ -57,10 +57,10 @@ func (m *GetConfigureRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := GetConfigureRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -183,7 +183,7 @@ func (m *GetConfigureResponse) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for ServerId
+	// no validation rules for App
 
 	// no validation rules for EnvId
 
@@ -299,10 +299,10 @@ func (m *UpdateConfigureRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := UpdateConfigureRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -536,10 +536,10 @@ func (m *CompareConfigureRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetServerId() <= 0 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
 		err := CompareConfigureRequestValidationError{
-			field:  "ServerId",
-			reason: "value must be greater than 0",
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -796,9 +796,9 @@ func (m *WatchConfigureRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetServer()) < 1 {
+	if utf8.RuneCountInString(m.GetApp()) < 1 {
 		err := WatchConfigureRequestValidationError{
-			field:  "Server",
+			field:  "App",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {

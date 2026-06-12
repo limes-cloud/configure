@@ -46,13 +46,13 @@ type ResourceHTTPServer interface {
 
 func RegisterResourceHTTPServer(s *http.Server, srv ResourceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/configure/api/v1/resource", _Resource_GetResource0_HTTP_Handler(srv))
-	r.GET("/configure/api/v1/resources", _Resource_ListResource0_HTTP_Handler(srv))
-	r.POST("/configure/api/v1/resource", _Resource_CreateResource0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/resource", _Resource_UpdateResource0_HTTP_Handler(srv))
-	r.DELETE("/configure/api/v1/resource", _Resource_DeleteResource0_HTTP_Handler(srv))
-	r.GET("/configure/api/v1/resource/values", _Resource_ListResourceValue0_HTTP_Handler(srv))
-	r.PUT("/configure/api/v1/resource/values", _Resource_UpdateResourceValue0_HTTP_Handler(srv))
+	r.GET("/configure/api/resource", _Resource_GetResource0_HTTP_Handler(srv))
+	r.GET("/configure/api/resources", _Resource_ListResource0_HTTP_Handler(srv))
+	r.POST("/configure/api/resource", _Resource_CreateResource0_HTTP_Handler(srv))
+	r.PUT("/configure/api/resource", _Resource_UpdateResource0_HTTP_Handler(srv))
+	r.DELETE("/configure/api/resource", _Resource_DeleteResource0_HTTP_Handler(srv))
+	r.GET("/configure/api/resource/values", _Resource_ListResourceValue0_HTTP_Handler(srv))
+	r.PUT("/configure/api/resource/values", _Resource_UpdateResourceValue0_HTTP_Handler(srv))
 }
 
 func _Resource_GetResource0_HTTP_Handler(srv ResourceHTTPServer) func(ctx http.Context) error {
@@ -217,7 +217,7 @@ func NewResourceHTTPClient(client *http.Client) ResourceHTTPClient {
 
 func (c *ResourceHTTPClientImpl) CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...http.CallOption) (*CreateResourceResponse, error) {
 	var out CreateResourceResponse
-	pattern := "/configure/api/v1/resource"
+	pattern := "/configure/api/resource"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationResourceCreateResource))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -230,7 +230,7 @@ func (c *ResourceHTTPClientImpl) CreateResource(ctx context.Context, in *CreateR
 
 func (c *ResourceHTTPClientImpl) DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...http.CallOption) (*DeleteResourceResponse, error) {
 	var out DeleteResourceResponse
-	pattern := "/configure/api/v1/resource"
+	pattern := "/configure/api/resource"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationResourceDeleteResource))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -243,7 +243,7 @@ func (c *ResourceHTTPClientImpl) DeleteResource(ctx context.Context, in *DeleteR
 
 func (c *ResourceHTTPClientImpl) GetResource(ctx context.Context, in *GetResourceRequest, opts ...http.CallOption) (*GetResourceResponse, error) {
 	var out GetResourceResponse
-	pattern := "/configure/api/v1/resource"
+	pattern := "/configure/api/resource"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationResourceGetResource))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -256,7 +256,7 @@ func (c *ResourceHTTPClientImpl) GetResource(ctx context.Context, in *GetResourc
 
 func (c *ResourceHTTPClientImpl) ListResource(ctx context.Context, in *ListResourceRequest, opts ...http.CallOption) (*ListResourceResponse, error) {
 	var out ListResourceResponse
-	pattern := "/configure/api/v1/resources"
+	pattern := "/configure/api/resources"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationResourceListResource))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -269,7 +269,7 @@ func (c *ResourceHTTPClientImpl) ListResource(ctx context.Context, in *ListResou
 
 func (c *ResourceHTTPClientImpl) ListResourceValue(ctx context.Context, in *ListResourceValueRequest, opts ...http.CallOption) (*ListResourceValueResponse, error) {
 	var out ListResourceValueResponse
-	pattern := "/configure/api/v1/resource/values"
+	pattern := "/configure/api/resource/values"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationResourceListResourceValue))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -282,7 +282,7 @@ func (c *ResourceHTTPClientImpl) ListResourceValue(ctx context.Context, in *List
 
 func (c *ResourceHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...http.CallOption) (*UpdateResourceResponse, error) {
 	var out UpdateResourceResponse
-	pattern := "/configure/api/v1/resource"
+	pattern := "/configure/api/resource"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationResourceUpdateResource))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -295,7 +295,7 @@ func (c *ResourceHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateR
 
 func (c *ResourceHTTPClientImpl) UpdateResourceValue(ctx context.Context, in *UpdateResourceValueRequest, opts ...http.CallOption) (*UpdateResourceValueResponse, error) {
 	var out UpdateResourceValueResponse
-	pattern := "/configure/api/v1/resource/values"
+	pattern := "/configure/api/resource/values"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationResourceUpdateResourceValue))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -3,9 +3,10 @@ package service
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/go-kratos/kratos/v2/encoding"
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/configure/internal/core"
 	"github.com/limes-cloud/kratosx/library/db/gormtranserror"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 	"gorm.io/gorm"
@@ -17,33 +18,37 @@ import (
 	"github.com/limes-cloud/configure/internal/types"
 )
 
+const defaultTemplateNamespace = "conf"
+
+func normalizeTemplateNamespace(namespace string) string {
+	namespace = strings.TrimSpace(namespace)
+	if namespace == "" {
+		return defaultTemplateNamespace
+	}
+	return namespace
+}
+
 type Template struct {
-	repo       repository.Template
-	permission repository.Permission
-	business   repository.Business
-	resource   repository.Resource
+	repo     repository.Template
+	business repository.Business
+	resource repository.Resource
 }
 
 func NewTemplate(
 	repo repository.Template,
 	business repository.Business,
 	resource repository.Resource,
-	permission repository.Permission,
 ) *Template {
 	return &Template{
-		repo:       repo,
-		business:   business,
-		resource:   resource,
-		permission: permission,
+		repo:     repo,
+		business: business,
+		resource: resource,
 	}
 }
 
 // CurrentTemplate 获取当前版本的配置信息
-func (t *Template) CurrentTemplate(ctx kratosx.Context, srvId uint32) (*entity.Template, error) {
-	if !t.permission.HasServer(ctx, srvId) {
-		return nil, errors.NotPermissionError()
-	}
-	template, err := t.repo.CurrentTemplate(ctx, srvId)
+func (t *Template) CurrentTemplate(ctx core.Context, app string, namespace string) (*entity.Template, error) {
+	template, err := t.repo.CurrentTemplate(ctx, app, normalizeTemplateNamespace(namespace))
 	if err != nil {
 		if gormtranserror.Is(gorm.ErrRecordNotFound, err) {
 			return nil, errors.ServerNotExistTemplateError()
@@ -53,13 +58,18 @@ func (t *Template) CurrentTemplate(ctx kratosx.Context, srvId uint32) (*entity.T
 	return template, nil
 }
 
-// GetTemplate 获取指定模板信息
-func (t *Template) GetTemplate(ctx kratosx.Context, id uint32) (*entity.Template, error) {
-	template, err := t.repo.GetTemplate(ctx, id)
-	if !t.permission.HasServer(ctx, template.ServerId) {
-		return nil, errors.NotPermissionError()
+// ListCurrentTemplate 获取应用下当前版本的配置信息
+func (t *Template) ListCurrentTemplate(ctx core.Context, app string) ([]*entity.Template, error) {
+	templates, err := t.repo.ListCurrentTemplate(ctx, app)
+	if err != nil {
+		return nil, errors.GetError(err.Error())
 	}
+	return templates, nil
+}
 
+// GetTemplate 获取指定模板信息
+func (t *Template) GetTemplate(ctx core.Context, id uint32) (*entity.Template, error) {
+	template, err := t.repo.GetTemplate(ctx, id)
 	if err != nil {
 		return nil, errors.GetError(err.Error())
 	}
@@ -67,9 +77,10 @@ func (t *Template) GetTemplate(ctx kratosx.Context, id uint32) (*entity.Template
 }
 
 // ListTemplate 获取分页模板信息
-func (t *Template) ListTemplate(ctx kratosx.Context, req *types.ListTemplateRequest) ([]*entity.Template, uint32, error) {
-	if !t.permission.HasServer(ctx, req.ServerId) {
-		return nil, 0, errors.NotPermissionError()
+func (t *Template) ListTemplate(ctx core.Context, req *types.ListTemplateRequest) ([]*entity.Template, uint32, error) {
+	if req.Namespace != nil {
+		namespace := normalizeTemplateNamespace(*req.Namespace)
+		req.Namespace = &namespace
 	}
 	list, total, err := t.repo.ListTemplate(ctx, req)
 	if err != nil {
@@ -79,38 +90,29 @@ func (t *Template) ListTemplate(ctx kratosx.Context, req *types.ListTemplateRequ
 }
 
 // CreateTemplate 添加模板信息
-func (t *Template) CreateTemplate(ctx kratosx.Context, template *entity.Template) (uint32, error) {
-	if !t.permission.HasServer(ctx, template.ServerId) {
-		return 0, errors.NotPermissionError()
-	}
-
-	// 序列化数据，判断格式是否正确
+func (t *Template) CreateTemplate(ctx core.Context, template *entity.Template) (uint32, error) {
+	template.Namespace = normalizeTemplateNamespace(template.Namespace)
 	otc := map[string]any{}
 	oe := encoding.GetCodec(template.Format)
 	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {
 		return 0, errors.RenderTemplateError(err.Error())
 	}
 
-	// 当前的版本
 	template.Version = crypto.MD5ToUpper([]byte(template.Content))
 
-	// 查找是否存在相同的版本
 	if _, err := t.repo.GetTemplateByVersion(ctx, template.Version); err == nil {
 		return 0, errors.TemplateVersionExistError()
 	}
 
-	// 进行模板检查是否正确
-	bsKeys, _ := t.business.AllBusinessField(ctx, template.ServerId)
-	rsKeys, _ := t.resource.AllResourceField(ctx, template.ServerId)
+	bsKeys, _ := t.business.AllBusinessField(ctx, template.App)
+	rsKeys, _ := t.resource.AllResourceField(ctx, template.App)
 	keys := append(bsKeys, rsKeys...)
 	tp := pkg.NewTemplateParser()
 	if err := tp.CheckTemplate(keys, template.Content); err != nil {
 		return 0, errors.RenderTemplateError(err.Error())
 	}
 
-	// 获取当前的模板
-	current, err := t.repo.CurrentTemplate(ctx, template.ServerId)
-	// 获取变更对比信息
+	current, err := t.repo.CurrentTemplate(ctx, template.App, template.Namespace)
 	if err == nil {
 		compare, err := t.CompareTemplate(ctx, &types.CompareTemplateRequest{
 			Id:      current.Id,
@@ -124,37 +126,28 @@ func (t *Template) CreateTemplate(ctx kratosx.Context, template *entity.Template
 		template.Compare = string(compareByte)
 	}
 
-	// 数据入库
 	id, err := t.repo.CreateTemplate(ctx, template)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
 	}
 
-	// 使用当前配置
-	_ = t.repo.UseTemplate(ctx, template.ServerId, id)
+	_ = t.repo.UseTemplate(ctx, template.App, template.Namespace, id)
 	return id, nil
 }
 
 // PreviewTemplate 预览配置
-func (t *Template) PreviewTemplate(ctx kratosx.Context, req *types.PreviewTemplateRequest) (*types.PreviewTemplateReply, error) {
-	if !t.permission.HasServer(ctx, req.ServerId) {
-		return nil, errors.NotPermissionError()
-	}
-	if !t.permission.HasEnv(ctx, req.EnvId) {
-		return nil, errors.NotPermissionError()
-	}
-
+func (t *Template) PreviewTemplate(ctx core.Context, req *types.PreviewTemplateRequest) (*types.PreviewTemplateReply, error) {
 	bvs, err := t.business.ListBusinessValue(ctx, &types.ListBusinessValueRequest{
-		ServerId: &req.ServerId,
-		EnvId:    &req.EnvId,
+		App:   &req.App,
+		EnvId: &req.EnvId,
 	})
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get business value error", "err", err.Error())
 		return nil, errors.DatabaseError()
 	}
 	rvs, err := t.resource.ListResourceValue(ctx, &types.ListResourceValueRequest{
-		ServerId: &req.ServerId,
-		EnvId:    &req.EnvId,
+		App:   &req.App,
+		EnvId: &req.EnvId,
 	})
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get resource value error", "err", err.Error())
@@ -173,15 +166,9 @@ func (t *Template) PreviewTemplate(ctx kratosx.Context, req *types.PreviewTempla
 }
 
 // PreviewCurrentTemplate 预览当前配置
-func (t *Template) PreviewCurrentTemplate(ctx kratosx.Context, req *types.PreviewCurrentTemplateRequest) (*types.PreviewTemplateReply, error) {
-	if !t.permission.HasServer(ctx, req.ServerId) {
-		return nil, errors.NotPermissionError()
-	}
-	if !t.permission.HasEnv(ctx, req.EnvId) {
-		return nil, errors.NotPermissionError()
-	}
-
-	tp, err := t.repo.CurrentTemplate(ctx, req.ServerId)
+func (t *Template) PreviewCurrentTemplate(ctx core.Context, req *types.PreviewCurrentTemplateRequest) (*types.PreviewTemplateReply, error) {
+	namespace := normalizeTemplateNamespace(req.Namespace)
+	tp, err := t.repo.CurrentTemplate(ctx, req.App, namespace)
 	if err != nil {
 		return nil, errors.DatabaseError(err.Error())
 	}
@@ -191,16 +178,16 @@ func (t *Template) PreviewCurrentTemplate(ctx kratosx.Context, req *types.Previe
 	}
 
 	bvs, err := t.business.ListBusinessValue(ctx, &types.ListBusinessValueRequest{
-		ServerId: &req.ServerId,
-		EnvId:    &req.EnvId,
+		App:   &req.App,
+		EnvId: &req.EnvId,
 	})
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get business value error", "err", err.Error())
 		return nil, errors.DatabaseError()
 	}
 	rvs, err := t.resource.ListResourceValue(ctx, &types.ListResourceValueRequest{
-		ServerId: &req.ServerId,
-		EnvId:    &req.EnvId,
+		App:   &req.App,
+		EnvId: &req.EnvId,
 	})
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get resource value error", "err", err.Error())
@@ -216,27 +203,15 @@ func (t *Template) PreviewCurrentTemplate(ctx kratosx.Context, req *types.Previe
 }
 
 // SwitchTemplate 切换指定版本信息
-func (t *Template) SwitchTemplate(ctx kratosx.Context, srvId, tpId uint32) error {
-	if !t.permission.HasServer(ctx, srvId) {
-		return errors.NotPermissionError()
-	}
-
-	if err := t.repo.UseTemplate(ctx, srvId, tpId); err != nil {
+func (t *Template) SwitchTemplate(ctx core.Context, app string, namespace string, tpId uint32) error {
+	if err := t.repo.UseTemplate(ctx, app, normalizeTemplateNamespace(namespace), tpId); err != nil {
 		return errors.DatabaseError(err.Error())
 	}
 	return nil
 }
 
 // UpdateTemplate 更新模板信息
-func (t *Template) UpdateTemplate(ctx kratosx.Context, req *entity.Template) error {
-	template, err := t.repo.GetTemplate(ctx, req.Id)
-	if err != nil {
-		return errors.UpdateError(err.Error())
-	}
-	if !t.permission.HasServer(ctx, template.ServerId) {
-		return errors.NotPermissionError()
-	}
-
+func (t *Template) UpdateTemplate(ctx core.Context, req *entity.Template) error {
 	if err := t.repo.UpdateTemplate(ctx, req); err != nil {
 		return errors.DatabaseError(err.Error())
 	}
@@ -244,15 +219,7 @@ func (t *Template) UpdateTemplate(ctx kratosx.Context, req *entity.Template) err
 }
 
 // DeleteUpdateTemplate 删除模板信息
-func (t *Template) DeleteUpdateTemplate(ctx kratosx.Context, id uint32) error {
-	template, err := t.repo.GetTemplate(ctx, id)
-	if err != nil {
-		return errors.UpdateError(err.Error())
-	}
-	if !t.permission.HasServer(ctx, template.ServerId) {
-		return errors.NotPermissionError()
-	}
-
+func (t *Template) DeleteUpdateTemplate(ctx core.Context, id uint32) error {
 	if err := t.repo.DeleteTemplate(ctx, id); err != nil {
 		return errors.DatabaseError(err.Error())
 	}
@@ -260,20 +227,14 @@ func (t *Template) DeleteUpdateTemplate(ctx kratosx.Context, id uint32) error {
 }
 
 // CompareTemplate 对比变更细节
-func (t *Template) CompareTemplate(ctx kratosx.Context, req *types.CompareTemplateRequest) ([]*types.CompareTemplateReply, error) {
-	// 查询版本
+func (t *Template) CompareTemplate(ctx core.Context, req *types.CompareTemplateRequest) ([]*types.CompareTemplateReply, error) {
 	template, err := t.repo.GetTemplate(ctx, req.Id)
 	if err != nil {
 		return nil, errors.GetError(err.Error())
 	}
-	if !t.permission.HasServer(ctx, template.ServerId) {
-		return nil, errors.NotPermissionError()
-	}
 
-	// 解析当前版本数据
 	var oldKeys []string
 	otc := map[string]any{}
-
 	oe := encoding.GetCodec(template.Format)
 	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {
 		return nil, errors.RenderTemplateError()
@@ -282,10 +243,8 @@ func (t *Template) CompareTemplate(ctx kratosx.Context, req *types.CompareTempla
 		oldKeys = append(oldKeys, key)
 	}
 
-	// 解析上传的模板
 	var curKeys []string
 	ctc := map[string]any{}
-
 	ce := encoding.GetCodec(req.Format)
 	if err := ce.Unmarshal([]byte(req.Content), &ctc); err != nil {
 		return nil, errors.RenderTemplateError()
@@ -296,7 +255,6 @@ func (t *Template) CompareTemplate(ctx kratosx.Context, req *types.CompareTempla
 
 	var reply []*types.CompareTemplateReply
 
-	// 新增字段
 	addKeys := pkg.Diff(curKeys, oldKeys)
 	for _, key := range addKeys {
 		val := ""
@@ -310,7 +268,6 @@ func (t *Template) CompareTemplate(ctx kratosx.Context, req *types.CompareTempla
 		reply = append(reply, &types.CompareTemplateReply{Type: "add", Key: key, Cur: val})
 	}
 
-	// 删除的字段
 	delKeys := pkg.Diff(oldKeys, curKeys)
 	for _, key := range delKeys {
 		val := ""
@@ -324,7 +281,6 @@ func (t *Template) CompareTemplate(ctx kratosx.Context, req *types.CompareTempla
 		reply = append(reply, &types.CompareTemplateReply{Type: "del", Key: key, Old: val})
 	}
 
-	// 变更的字段
 	for key, val := range ctc {
 		if otc[key] == nil {
 			continue

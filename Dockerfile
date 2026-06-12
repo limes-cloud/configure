@@ -8,7 +8,7 @@ ADD go.sum .
 RUN go mod download
 WORKDIR /go/build
 ADD . .
-RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o configure cmd/configure/main.go
+RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o configure main.go
 
 
 FROM alpine

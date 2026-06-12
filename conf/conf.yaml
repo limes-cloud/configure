@@ -1,0 +1,65 @@
+name: configure
+env: TEST
+server:
+  http:
+    host: 0.0.0.0
+    port: 6091
+    timeout: 10s
+    cors:
+      allowCredentials: true
+      allowOrigins: ["*"]
+      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      allowHeaders: ["Content-Type", "Content-Length", "Authorization"]
+      exposeHeaders: ["Content-Length", "Access-Control-Allow-Headers"]
+    formatResponse: true
+    marshal:
+      emitUnpopulated: true
+      useProtoNames: true
+  grpc:
+    host: 0.0.0.0
+    port: 6092
+    timeout: 10s
+log:
+  level: 0
+  caller: true
+  output:
+    - stdout
+    - file
+  file:
+    name: ./tmp/runtime/output.log
+    maxSize: 1
+    maxBackup: 5
+    maxAge: 1
+    compress: false
+database:
+  enable: true
+  name: system
+  drive: mysql
+  autoCreate: true
+  connect:
+    username: root
+    password: root
+    host: 127.0.0.1
+    port: 3306
+    dbName: configure
+    option: ?charset=utf8mb4&parseTime=True&loc=Local
+  config:
+    transformError:
+      enable: true
+    initializer:
+      enable: true
+      path: deploy/data.sql
+    maxLifetime: 2h
+    maxOpenConn: 20
+    maxIdleConn: 10
+    logLevel: 4
+    slowThreshold: 2s
+redis:
+  - enable: true
+    name: cache
+    host: 127.0.0.1:6379
+client:
+  - server: Manager
+    type: direct
+    backends:
+      - target: 127.0.0.1:8010

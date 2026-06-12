@@ -13,7 +13,7 @@ import (
 
 type source struct {
 	host    string
-	server  string
+	app     string
 	token   string
 	request pb.ConfigureClient
 
@@ -22,7 +22,7 @@ type source struct {
 	cancel context.CancelFunc
 }
 
-func New(host, name, token string) config.Source {
+func New(host, app, token string) config.Source {
 	conn, err := grpc.DialInsecure(context.Background(), grpc.WithEndpoint(host))
 	if err != nil {
 		panic("configure connect error:" + err.Error())
@@ -30,7 +30,7 @@ func New(host, name, token string) config.Source {
 	return &source{
 		request: pb.NewConfigureClient(conn),
 		host:    host,
-		server:  name,
+		app:     app,
 		token:   token,
 	}
 }
@@ -46,7 +46,7 @@ func NewFromEnv() config.Source {
 	return &source{
 		request: pb.NewConfigureClient(conn),
 		host:    host,
-		server:  name,
+		app:     name,
 		token:   token,
 	}
 }
@@ -63,8 +63,8 @@ func (s *source) Load() ([]*config.KeyValue, error) {
 	s.mu.Unlock()
 
 	client, err := s.request.WatchConfigure(ctx, &pb.WatchConfigureRequest{
-		Server: s.server,
-		Token:  s.token,
+		App:   s.app,
+		Token: s.token,
 	})
 	if err != nil {
 		cancel()
