@@ -63,3 +63,7 @@ client:
     type: direct
     backends:
       - target: 127.0.0.1:8010
+    signature:
+      enable: true
+      ak: manager
+      sk: manager

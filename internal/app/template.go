@@ -6,6 +6,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/configure/internal/core"
+	kmodel "github.com/limes-cloud/kratosx/model"
 	"github.com/limes-cloud/kratosx/pkg/value"
 
 	"github.com/limes-cloud/configure/api/errors"
@@ -18,16 +19,19 @@ import (
 
 type Template struct {
 	pb.UnimplementedTemplateServer
-	srv *service.Template
+	srv       *service.Template
+	namespace *service.TemplateNamespace
 }
 
 func NewTemplate() *Template {
 	return &Template{
 		srv: service.NewTemplate(
 			dbs.NewTemplate(),
+			dbs.NewTemplateNamespace(),
 			dbs.NewBusiness(),
 			dbs.NewResource(),
 		),
+		namespace: service.NewTemplateNamespace(dbs.NewTemplateNamespace(), dbs.NewTemplate()),
 	}
 }
 
@@ -79,6 +83,58 @@ func (s *Template) ListTemplate(ctx context.Context, req *pb.ListTemplateRequest
 		return nil, errors.TransformError()
 	}
 	return &reply, nil
+}
+
+func (s *Template) ListTemplateNamespace(ctx context.Context, req *pb.ListTemplateNamespaceRequest) (*pb.ListTemplateNamespaceResponse, error) {
+	list, total, err := s.namespace.ListTemplateNamespace(core.MustContext(ctx), &types.ListTemplateNamespaceRequest{
+		Page:      req.Page,
+		PageSize:  req.PageSize,
+		App:       req.App,
+		Namespace: req.Namespace,
+		Name:      req.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	reply := pb.ListTemplateNamespaceResponse{Total: total}
+	if err := value.Transform(list, &reply.List); err != nil {
+		return nil, errors.TransformError()
+	}
+	return &reply, nil
+}
+
+func (s *Template) CreateTemplateNamespace(ctx context.Context, req *pb.CreateTemplateNamespaceRequest) (*pb.CreateTemplateNamespaceResponse, error) {
+	id, err := s.namespace.CreateTemplateNamespace(core.MustContext(ctx), &entity.TemplateNamespace{
+		App:         req.App,
+		Namespace:   req.Namespace,
+		Name:        req.Name,
+		Description: req.Description,
+		Sort:        req.Sort,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateTemplateNamespaceResponse{Id: id}, nil
+}
+
+func (s *Template) UpdateTemplateNamespace(ctx context.Context, req *pb.UpdateTemplateNamespaceRequest) (*pb.UpdateTemplateNamespaceResponse, error) {
+	if err := s.namespace.UpdateTemplateNamespace(core.MustContext(ctx), &entity.TemplateNamespace{
+		BaseModel:   kmodel.BaseModel{Id: req.Id},
+		Namespace:   req.Namespace,
+		Name:        req.Name,
+		Description: req.Description,
+		Sort:        req.Sort,
+	}); err != nil {
+		return nil, err
+	}
+	return &pb.UpdateTemplateNamespaceResponse{}, nil
+}
+
+func (s *Template) DeleteTemplateNamespace(ctx context.Context, req *pb.DeleteTemplateNamespaceRequest) (*pb.DeleteTemplateNamespaceResponse, error) {
+	if err := s.namespace.DeleteTemplateNamespace(core.MustContext(ctx), req.Id); err != nil {
+		return nil, err
+	}
+	return &pb.DeleteTemplateNamespaceResponse{}, nil
 }
 
 func (s *Template) CreateTemplate(c context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateResponse, error) {

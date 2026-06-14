@@ -15,6 +15,32 @@ service Template {
     option (google.api.http) = {get: "/configure/api/templates"};
   }
 
+  // ListTemplateNamespace 获取指定应用下的命名空间列表
+  rpc ListTemplateNamespace(ListTemplateNamespaceRequest) returns (ListTemplateNamespaceResponse) {
+    option (google.api.http) = {get: "/configure/api/template/namespaces"};
+  }
+
+  // CreateTemplateNamespace 创建模板命名空间
+  rpc CreateTemplateNamespace(CreateTemplateNamespaceRequest) returns (CreateTemplateNamespaceResponse) {
+    option (google.api.http) = {
+      post: "/configure/api/template/namespace"
+      body: "*"
+    };
+  }
+
+  // UpdateTemplateNamespace 更新模板命名空间
+  rpc UpdateTemplateNamespace(UpdateTemplateNamespaceRequest) returns (UpdateTemplateNamespaceResponse) {
+    option (google.api.http) = {
+      put: "/configure/api/template/namespace"
+      body: "*"
+    };
+  }
+
+  // DeleteTemplateNamespace 删除模板命名空间
+  rpc DeleteTemplateNamespace(DeleteTemplateNamespaceRequest) returns (DeleteTemplateNamespaceResponse) {
+    option (google.api.http) = {delete: "/configure/api/template/namespace"};
+  }
+
   // GetTemplate 获取指定模板
   rpc GetTemplate(GetTemplateRequest) returns (GetTemplateResponse) {
     option (google.api.http) = {get: "/configure/api/template"};

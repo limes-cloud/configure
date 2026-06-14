@@ -21,32 +21,48 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationTemplateCompareTemplate = "/configure.api.template.Template/CompareTemplate"
 const OperationTemplateCreateTemplate = "/configure.api.template.Template/CreateTemplate"
+const OperationTemplateCreateTemplateNamespace = "/configure.api.template.Template/CreateTemplateNamespace"
 const OperationTemplateCurrentTemplate = "/configure.api.template.Template/CurrentTemplate"
+const OperationTemplateDeleteTemplateNamespace = "/configure.api.template.Template/DeleteTemplateNamespace"
 const OperationTemplateGetTemplate = "/configure.api.template.Template/GetTemplate"
 const OperationTemplateListTemplate = "/configure.api.template.Template/ListTemplate"
+const OperationTemplateListTemplateNamespace = "/configure.api.template.Template/ListTemplateNamespace"
 const OperationTemplatePreviewTemplate = "/configure.api.template.Template/PreviewTemplate"
 const OperationTemplateSwitchTemplate = "/configure.api.template.Template/SwitchTemplate"
+const OperationTemplateUpdateTemplateNamespace = "/configure.api.template.Template/UpdateTemplateNamespace"
 
 type TemplateHTTPServer interface {
 	// CompareTemplate CompareTemplate 对比模板内容
 	CompareTemplate(context.Context, *CompareTemplateRequest) (*CompareTemplateResponse, error)
 	// CreateTemplate CreateTemplate 创建模板
 	CreateTemplate(context.Context, *CreateTemplateRequest) (*CreateTemplateResponse, error)
+	// CreateTemplateNamespace CreateTemplateNamespace 创建模板命名空间
+	CreateTemplateNamespace(context.Context, *CreateTemplateNamespaceRequest) (*CreateTemplateNamespaceResponse, error)
 	// CurrentTemplate CurrentTemplate 获取当前使用的模板
 	CurrentTemplate(context.Context, *CurrentTemplateRequest) (*CurrentTemplateResponse, error)
+	// DeleteTemplateNamespace DeleteTemplateNamespace 删除模板命名空间
+	DeleteTemplateNamespace(context.Context, *DeleteTemplateNamespaceRequest) (*DeleteTemplateNamespaceResponse, error)
 	// GetTemplate GetTemplate 获取指定模板
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error)
 	// ListTemplate ListTemplate 获取模板列表
 	ListTemplate(context.Context, *ListTemplateRequest) (*ListTemplateResponse, error)
+	// ListTemplateNamespace ListTemplateNamespace 获取指定应用下的命名空间列表
+	ListTemplateNamespace(context.Context, *ListTemplateNamespaceRequest) (*ListTemplateNamespaceResponse, error)
 	// PreviewTemplate PreviewTemplate 预览模板渲染结果
 	PreviewTemplate(context.Context, *PreviewTemplateRequest) (*PreviewTemplateResponse, error)
 	// SwitchTemplate SwitchTemplate 切换使用的模板
 	SwitchTemplate(context.Context, *SwitchTemplateRequest) (*SwitchTemplateResponse, error)
+	// UpdateTemplateNamespace UpdateTemplateNamespace 更新模板命名空间
+	UpdateTemplateNamespace(context.Context, *UpdateTemplateNamespaceRequest) (*UpdateTemplateNamespaceResponse, error)
 }
 
 func RegisterTemplateHTTPServer(s *http.Server, srv TemplateHTTPServer) {
 	r := s.Route("/")
 	r.GET("/configure/api/templates", _Template_ListTemplate0_HTTP_Handler(srv))
+	r.GET("/configure/api/template/namespaces", _Template_ListTemplateNamespace0_HTTP_Handler(srv))
+	r.POST("/configure/api/template/namespace", _Template_CreateTemplateNamespace0_HTTP_Handler(srv))
+	r.PUT("/configure/api/template/namespace", _Template_UpdateTemplateNamespace0_HTTP_Handler(srv))
+	r.DELETE("/configure/api/template/namespace", _Template_DeleteTemplateNamespace0_HTTP_Handler(srv))
 	r.GET("/configure/api/template", _Template_GetTemplate0_HTTP_Handler(srv))
 	r.GET("/configure/api/template/current", _Template_CurrentTemplate0_HTTP_Handler(srv))
 	r.POST("/configure/api/template", _Template_CreateTemplate0_HTTP_Handler(srv))
@@ -70,6 +86,88 @@ func _Template_ListTemplate0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.
 			return err
 		}
 		reply := out.(*ListTemplateResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Template_ListTemplateNamespace0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListTemplateNamespaceRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTemplateListTemplateNamespace)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListTemplateNamespace(ctx, req.(*ListTemplateNamespaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListTemplateNamespaceResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Template_CreateTemplateNamespace0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateTemplateNamespaceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTemplateCreateTemplateNamespace)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.CreateTemplateNamespace(ctx, req.(*CreateTemplateNamespaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateTemplateNamespaceResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Template_UpdateTemplateNamespace0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateTemplateNamespaceRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTemplateUpdateTemplateNamespace)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateTemplateNamespace(ctx, req.(*UpdateTemplateNamespaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateTemplateNamespaceResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Template_DeleteTemplateNamespace0_HTTP_Handler(srv TemplateHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteTemplateNamespaceRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTemplateDeleteTemplateNamespace)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.DeleteTemplateNamespace(ctx, req.(*DeleteTemplateNamespaceRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteTemplateNamespaceResponse)
 		return ctx.Result(200, reply)
 	}
 }
@@ -203,11 +301,15 @@ func _Template_PreviewTemplate0_HTTP_Handler(srv TemplateHTTPServer) func(ctx ht
 type TemplateHTTPClient interface {
 	CompareTemplate(ctx context.Context, req *CompareTemplateRequest, opts ...http.CallOption) (rsp *CompareTemplateResponse, err error)
 	CreateTemplate(ctx context.Context, req *CreateTemplateRequest, opts ...http.CallOption) (rsp *CreateTemplateResponse, err error)
+	CreateTemplateNamespace(ctx context.Context, req *CreateTemplateNamespaceRequest, opts ...http.CallOption) (rsp *CreateTemplateNamespaceResponse, err error)
 	CurrentTemplate(ctx context.Context, req *CurrentTemplateRequest, opts ...http.CallOption) (rsp *CurrentTemplateResponse, err error)
+	DeleteTemplateNamespace(ctx context.Context, req *DeleteTemplateNamespaceRequest, opts ...http.CallOption) (rsp *DeleteTemplateNamespaceResponse, err error)
 	GetTemplate(ctx context.Context, req *GetTemplateRequest, opts ...http.CallOption) (rsp *GetTemplateResponse, err error)
 	ListTemplate(ctx context.Context, req *ListTemplateRequest, opts ...http.CallOption) (rsp *ListTemplateResponse, err error)
+	ListTemplateNamespace(ctx context.Context, req *ListTemplateNamespaceRequest, opts ...http.CallOption) (rsp *ListTemplateNamespaceResponse, err error)
 	PreviewTemplate(ctx context.Context, req *PreviewTemplateRequest, opts ...http.CallOption) (rsp *PreviewTemplateResponse, err error)
 	SwitchTemplate(ctx context.Context, req *SwitchTemplateRequest, opts ...http.CallOption) (rsp *SwitchTemplateResponse, err error)
+	UpdateTemplateNamespace(ctx context.Context, req *UpdateTemplateNamespaceRequest, opts ...http.CallOption) (rsp *UpdateTemplateNamespaceResponse, err error)
 }
 
 type TemplateHTTPClientImpl struct {
@@ -244,6 +346,19 @@ func (c *TemplateHTTPClientImpl) CreateTemplate(ctx context.Context, in *CreateT
 	return &out, err
 }
 
+func (c *TemplateHTTPClientImpl) CreateTemplateNamespace(ctx context.Context, in *CreateTemplateNamespaceRequest, opts ...http.CallOption) (*CreateTemplateNamespaceResponse, error) {
+	var out CreateTemplateNamespaceResponse
+	pattern := "/configure/api/template/namespace"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTemplateCreateTemplateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *TemplateHTTPClientImpl) CurrentTemplate(ctx context.Context, in *CurrentTemplateRequest, opts ...http.CallOption) (*CurrentTemplateResponse, error) {
 	var out CurrentTemplateResponse
 	pattern := "/configure/api/template/current"
@@ -251,6 +366,19 @@ func (c *TemplateHTTPClientImpl) CurrentTemplate(ctx context.Context, in *Curren
 	opts = append(opts, http.Operation(OperationTemplateCurrentTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TemplateHTTPClientImpl) DeleteTemplateNamespace(ctx context.Context, in *DeleteTemplateNamespaceRequest, opts ...http.CallOption) (*DeleteTemplateNamespaceResponse, error) {
+	var out DeleteTemplateNamespaceResponse
+	pattern := "/configure/api/template/namespace"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTemplateDeleteTemplateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -283,6 +411,19 @@ func (c *TemplateHTTPClientImpl) ListTemplate(ctx context.Context, in *ListTempl
 	return &out, err
 }
 
+func (c *TemplateHTTPClientImpl) ListTemplateNamespace(ctx context.Context, in *ListTemplateNamespaceRequest, opts ...http.CallOption) (*ListTemplateNamespaceResponse, error) {
+	var out ListTemplateNamespaceResponse
+	pattern := "/configure/api/template/namespaces"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTemplateListTemplateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *TemplateHTTPClientImpl) PreviewTemplate(ctx context.Context, in *PreviewTemplateRequest, opts ...http.CallOption) (*PreviewTemplateResponse, error) {
 	var out PreviewTemplateResponse
 	pattern := "/configure/api/template/preview"
@@ -303,6 +444,19 @@ func (c *TemplateHTTPClientImpl) SwitchTemplate(ctx context.Context, in *SwitchT
 	opts = append(opts, http.Operation(OperationTemplateSwitchTemplate))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *TemplateHTTPClientImpl) UpdateTemplateNamespace(ctx context.Context, in *UpdateTemplateNamespaceRequest, opts ...http.CallOption) (*UpdateTemplateNamespaceResponse, error) {
+	var out UpdateTemplateNamespaceResponse
+	pattern := "/configure/api/template/namespace"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTemplateUpdateTemplateNamespace))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

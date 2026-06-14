@@ -14,6 +14,8 @@ import (
 
 	"github.com/limes-cloud/configure/internal/app"
 	"github.com/limes-cloud/configure/internal/core"
+	initentity "github.com/limes-cloud/configure/internal/initiator/entity"
+	initmenu "github.com/limes-cloud/configure/internal/initiator/menu"
 )
 
 const AppName = "Configure"
@@ -29,6 +31,9 @@ func main() {
 			return nil
 		})),
 	)
+
+	initentity.Register(core.MustContext(context.Background()))
+	initmenu.Register(core.MustContext(context.Background()))
 
 	if err := srv.App().Run(); err != nil {
 		log.Fatal("run service fail", err.Error())

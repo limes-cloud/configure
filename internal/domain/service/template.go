@@ -29,20 +29,23 @@ func normalizeTemplateNamespace(namespace string) string {
 }
 
 type Template struct {
-	repo     repository.Template
-	business repository.Business
-	resource repository.Resource
+	repo      repository.Template
+	namespace repository.TemplateNamespace
+	business  repository.Business
+	resource  repository.Resource
 }
 
 func NewTemplate(
 	repo repository.Template,
+	namespace repository.TemplateNamespace,
 	business repository.Business,
 	resource repository.Resource,
 ) *Template {
 	return &Template{
-		repo:     repo,
-		business: business,
-		resource: resource,
+		repo:      repo,
+		namespace: namespace,
+		business:  business,
+		resource:  resource,
 	}
 }
 
@@ -92,6 +95,9 @@ func (t *Template) ListTemplate(ctx core.Context, req *types.ListTemplateRequest
 // CreateTemplate 添加模板信息
 func (t *Template) CreateTemplate(ctx core.Context, template *entity.Template) (uint32, error) {
 	template.Namespace = normalizeTemplateNamespace(template.Namespace)
+	if _, err := t.namespace.GetTemplateNamespaceByAppAndNamespace(ctx, template.App, template.Namespace); err != nil {
+		return 0, errors.GetError(err.Error())
+	}
 	otc := map[string]any{}
 	oe := encoding.GetCodec(template.Format)
 	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {

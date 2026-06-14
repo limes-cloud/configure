@@ -19,13 +19,17 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Template_ListTemplate_FullMethodName    = "/configure.api.template.Template/ListTemplate"
-	Template_GetTemplate_FullMethodName     = "/configure.api.template.Template/GetTemplate"
-	Template_CurrentTemplate_FullMethodName = "/configure.api.template.Template/CurrentTemplate"
-	Template_CreateTemplate_FullMethodName  = "/configure.api.template.Template/CreateTemplate"
-	Template_SwitchTemplate_FullMethodName  = "/configure.api.template.Template/SwitchTemplate"
-	Template_CompareTemplate_FullMethodName = "/configure.api.template.Template/CompareTemplate"
-	Template_PreviewTemplate_FullMethodName = "/configure.api.template.Template/PreviewTemplate"
+	Template_ListTemplate_FullMethodName            = "/configure.api.template.Template/ListTemplate"
+	Template_ListTemplateNamespace_FullMethodName   = "/configure.api.template.Template/ListTemplateNamespace"
+	Template_CreateTemplateNamespace_FullMethodName = "/configure.api.template.Template/CreateTemplateNamespace"
+	Template_UpdateTemplateNamespace_FullMethodName = "/configure.api.template.Template/UpdateTemplateNamespace"
+	Template_DeleteTemplateNamespace_FullMethodName = "/configure.api.template.Template/DeleteTemplateNamespace"
+	Template_GetTemplate_FullMethodName             = "/configure.api.template.Template/GetTemplate"
+	Template_CurrentTemplate_FullMethodName         = "/configure.api.template.Template/CurrentTemplate"
+	Template_CreateTemplate_FullMethodName          = "/configure.api.template.Template/CreateTemplate"
+	Template_SwitchTemplate_FullMethodName          = "/configure.api.template.Template/SwitchTemplate"
+	Template_CompareTemplate_FullMethodName         = "/configure.api.template.Template/CompareTemplate"
+	Template_PreviewTemplate_FullMethodName         = "/configure.api.template.Template/PreviewTemplate"
 )
 
 // TemplateClient is the client API for Template service.
@@ -34,6 +38,14 @@ const (
 type TemplateClient interface {
 	// ListTemplate 获取模板列表
 	ListTemplate(ctx context.Context, in *ListTemplateRequest, opts ...grpc.CallOption) (*ListTemplateResponse, error)
+	// ListTemplateNamespace 获取指定应用下的命名空间列表
+	ListTemplateNamespace(ctx context.Context, in *ListTemplateNamespaceRequest, opts ...grpc.CallOption) (*ListTemplateNamespaceResponse, error)
+	// CreateTemplateNamespace 创建模板命名空间
+	CreateTemplateNamespace(ctx context.Context, in *CreateTemplateNamespaceRequest, opts ...grpc.CallOption) (*CreateTemplateNamespaceResponse, error)
+	// UpdateTemplateNamespace 更新模板命名空间
+	UpdateTemplateNamespace(ctx context.Context, in *UpdateTemplateNamespaceRequest, opts ...grpc.CallOption) (*UpdateTemplateNamespaceResponse, error)
+	// DeleteTemplateNamespace 删除模板命名空间
+	DeleteTemplateNamespace(ctx context.Context, in *DeleteTemplateNamespaceRequest, opts ...grpc.CallOption) (*DeleteTemplateNamespaceResponse, error)
 	// GetTemplate 获取指定模板
 	GetTemplate(ctx context.Context, in *GetTemplateRequest, opts ...grpc.CallOption) (*GetTemplateResponse, error)
 	// CurrentTemplate 获取当前使用的模板
@@ -59,6 +71,42 @@ func NewTemplateClient(cc grpc.ClientConnInterface) TemplateClient {
 func (c *templateClient) ListTemplate(ctx context.Context, in *ListTemplateRequest, opts ...grpc.CallOption) (*ListTemplateResponse, error) {
 	out := new(ListTemplateResponse)
 	err := c.cc.Invoke(ctx, Template_ListTemplate_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templateClient) ListTemplateNamespace(ctx context.Context, in *ListTemplateNamespaceRequest, opts ...grpc.CallOption) (*ListTemplateNamespaceResponse, error) {
+	out := new(ListTemplateNamespaceResponse)
+	err := c.cc.Invoke(ctx, Template_ListTemplateNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templateClient) CreateTemplateNamespace(ctx context.Context, in *CreateTemplateNamespaceRequest, opts ...grpc.CallOption) (*CreateTemplateNamespaceResponse, error) {
+	out := new(CreateTemplateNamespaceResponse)
+	err := c.cc.Invoke(ctx, Template_CreateTemplateNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templateClient) UpdateTemplateNamespace(ctx context.Context, in *UpdateTemplateNamespaceRequest, opts ...grpc.CallOption) (*UpdateTemplateNamespaceResponse, error) {
+	out := new(UpdateTemplateNamespaceResponse)
+	err := c.cc.Invoke(ctx, Template_UpdateTemplateNamespace_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *templateClient) DeleteTemplateNamespace(ctx context.Context, in *DeleteTemplateNamespaceRequest, opts ...grpc.CallOption) (*DeleteTemplateNamespaceResponse, error) {
+	out := new(DeleteTemplateNamespaceResponse)
+	err := c.cc.Invoke(ctx, Template_DeleteTemplateNamespace_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,6 +173,14 @@ func (c *templateClient) PreviewTemplate(ctx context.Context, in *PreviewTemplat
 type TemplateServer interface {
 	// ListTemplate 获取模板列表
 	ListTemplate(context.Context, *ListTemplateRequest) (*ListTemplateResponse, error)
+	// ListTemplateNamespace 获取指定应用下的命名空间列表
+	ListTemplateNamespace(context.Context, *ListTemplateNamespaceRequest) (*ListTemplateNamespaceResponse, error)
+	// CreateTemplateNamespace 创建模板命名空间
+	CreateTemplateNamespace(context.Context, *CreateTemplateNamespaceRequest) (*CreateTemplateNamespaceResponse, error)
+	// UpdateTemplateNamespace 更新模板命名空间
+	UpdateTemplateNamespace(context.Context, *UpdateTemplateNamespaceRequest) (*UpdateTemplateNamespaceResponse, error)
+	// DeleteTemplateNamespace 删除模板命名空间
+	DeleteTemplateNamespace(context.Context, *DeleteTemplateNamespaceRequest) (*DeleteTemplateNamespaceResponse, error)
 	// GetTemplate 获取指定模板
 	GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error)
 	// CurrentTemplate 获取当前使用的模板
@@ -146,6 +202,18 @@ type UnimplementedTemplateServer struct {
 
 func (UnimplementedTemplateServer) ListTemplate(context.Context, *ListTemplateRequest) (*ListTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTemplate not implemented")
+}
+func (UnimplementedTemplateServer) ListTemplateNamespace(context.Context, *ListTemplateNamespaceRequest) (*ListTemplateNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListTemplateNamespace not implemented")
+}
+func (UnimplementedTemplateServer) CreateTemplateNamespace(context.Context, *CreateTemplateNamespaceRequest) (*CreateTemplateNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTemplateNamespace not implemented")
+}
+func (UnimplementedTemplateServer) UpdateTemplateNamespace(context.Context, *UpdateTemplateNamespaceRequest) (*UpdateTemplateNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateTemplateNamespace not implemented")
+}
+func (UnimplementedTemplateServer) DeleteTemplateNamespace(context.Context, *DeleteTemplateNamespaceRequest) (*DeleteTemplateNamespaceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTemplateNamespace not implemented")
 }
 func (UnimplementedTemplateServer) GetTemplate(context.Context, *GetTemplateRequest) (*GetTemplateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTemplate not implemented")
@@ -192,6 +260,78 @@ func _Template_ListTemplate_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TemplateServer).ListTemplate(ctx, req.(*ListTemplateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Template_ListTemplateNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTemplateNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplateServer).ListTemplateNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Template_ListTemplateNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplateServer).ListTemplateNamespace(ctx, req.(*ListTemplateNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Template_CreateTemplateNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTemplateNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplateServer).CreateTemplateNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Template_CreateTemplateNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplateServer).CreateTemplateNamespace(ctx, req.(*CreateTemplateNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Template_UpdateTemplateNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTemplateNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplateServer).UpdateTemplateNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Template_UpdateTemplateNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplateServer).UpdateTemplateNamespace(ctx, req.(*UpdateTemplateNamespaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Template_DeleteTemplateNamespace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTemplateNamespaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TemplateServer).DeleteTemplateNamespace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Template_DeleteTemplateNamespace_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TemplateServer).DeleteTemplateNamespace(ctx, req.(*DeleteTemplateNamespaceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -314,6 +454,22 @@ var Template_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListTemplate",
 			Handler:    _Template_ListTemplate_Handler,
+		},
+		{
+			MethodName: "ListTemplateNamespace",
+			Handler:    _Template_ListTemplateNamespace_Handler,
+		},
+		{
+			MethodName: "CreateTemplateNamespace",
+			Handler:    _Template_CreateTemplateNamespace_Handler,
+		},
+		{
+			MethodName: "UpdateTemplateNamespace",
+			Handler:    _Template_UpdateTemplateNamespace_Handler,
+		},
+		{
+			MethodName: "DeleteTemplateNamespace",
+			Handler:    _Template_DeleteTemplateNamespace_Handler,
 		},
 		{
 			MethodName: "GetTemplate",

@@ -90,6 +90,21 @@ func (m *ListTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.Namespace != nil {
+
+		if utf8.RuneCountInString(m.GetNamespace()) > 32 {
+			err := ListTemplateRequestValidationError{
+				field:  "Namespace",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return ListTemplateRequestMultiError(errors)
 	}
@@ -308,6 +323,1042 @@ var _ interface {
 	ErrorName() string
 } = ListTemplateResponseValidationError{}
 
+// Validate checks the field values on ListTemplateNamespaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListTemplateNamespaceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListTemplateNamespaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListTemplateNamespaceRequestMultiError, or nil if none found.
+func (m *ListTemplateNamespaceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListTemplateNamespaceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetPage() <= 0 {
+		err := ListTemplateNamespaceRequestValidationError{
+			field:  "Page",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if val := m.GetPageSize(); val <= 0 || val > 50 {
+		err := ListTemplateNamespaceRequestValidationError{
+			field:  "PageSize",
+			reason: "value must be inside range (0, 50]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
+		err := ListTemplateNamespaceRequestValidationError{
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.Namespace != nil {
+
+		if utf8.RuneCountInString(m.GetNamespace()) > 64 {
+			err := ListTemplateNamespaceRequestValidationError{
+				field:  "Namespace",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.Name != nil {
+
+		if utf8.RuneCountInString(m.GetName()) > 64 {
+			err := ListTemplateNamespaceRequestValidationError{
+				field:  "Name",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListTemplateNamespaceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListTemplateNamespaceRequestMultiError is an error wrapping multiple
+// validation errors returned by ListTemplateNamespaceRequest.ValidateAll() if
+// the designated constraints aren't met.
+type ListTemplateNamespaceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListTemplateNamespaceRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListTemplateNamespaceRequestMultiError) AllErrors() []error { return m }
+
+// ListTemplateNamespaceRequestValidationError is the validation error returned
+// by ListTemplateNamespaceRequest.Validate if the designated constraints
+// aren't met.
+type ListTemplateNamespaceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListTemplateNamespaceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListTemplateNamespaceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListTemplateNamespaceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListTemplateNamespaceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListTemplateNamespaceRequestValidationError) ErrorName() string {
+	return "ListTemplateNamespaceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListTemplateNamespaceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListTemplateNamespaceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListTemplateNamespaceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListTemplateNamespaceRequestValidationError{}
+
+// Validate checks the field values on ListTemplateNamespaceResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListTemplateNamespaceResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListTemplateNamespaceResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListTemplateNamespaceResponseMultiError, or nil if none found.
+func (m *ListTemplateNamespaceResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListTemplateNamespaceResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListTemplateNamespaceResponseValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListTemplateNamespaceResponseValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListTemplateNamespaceResponseValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListTemplateNamespaceResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListTemplateNamespaceResponseMultiError is an error wrapping multiple
+// validation errors returned by ListTemplateNamespaceResponse.ValidateAll()
+// if the designated constraints aren't met.
+type ListTemplateNamespaceResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListTemplateNamespaceResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListTemplateNamespaceResponseMultiError) AllErrors() []error { return m }
+
+// ListTemplateNamespaceResponseValidationError is the validation error
+// returned by ListTemplateNamespaceResponse.Validate if the designated
+// constraints aren't met.
+type ListTemplateNamespaceResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListTemplateNamespaceResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListTemplateNamespaceResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListTemplateNamespaceResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListTemplateNamespaceResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListTemplateNamespaceResponseValidationError) ErrorName() string {
+	return "ListTemplateNamespaceResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListTemplateNamespaceResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListTemplateNamespaceResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListTemplateNamespaceResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListTemplateNamespaceResponseValidationError{}
+
+// Validate checks the field values on CreateTemplateNamespaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CreateTemplateNamespaceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CreateTemplateNamespaceRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// CreateTemplateNamespaceRequestMultiError, or nil if none found.
+func (m *CreateTemplateNamespaceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CreateTemplateNamespaceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
+		err := CreateTemplateNamespaceRequestValidationError{
+			field:  "App",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetNamespace()); l < 1 || l > 64 {
+		err := CreateTemplateNamespaceRequestValidationError{
+			field:  "Namespace",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 64 {
+		err := CreateTemplateNamespaceRequestValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Sort
+
+	if m.Description != nil {
+
+		if utf8.RuneCountInString(m.GetDescription()) > 255 {
+			err := CreateTemplateNamespaceRequestValidationError{
+				field:  "Description",
+				reason: "value length must be at most 255 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return CreateTemplateNamespaceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// CreateTemplateNamespaceRequestMultiError is an error wrapping multiple
+// validation errors returned by CreateTemplateNamespaceRequest.ValidateAll()
+// if the designated constraints aren't met.
+type CreateTemplateNamespaceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CreateTemplateNamespaceRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CreateTemplateNamespaceRequestMultiError) AllErrors() []error { return m }
+
+// CreateTemplateNamespaceRequestValidationError is the validation error
+// returned by CreateTemplateNamespaceRequest.Validate if the designated
+// constraints aren't met.
+type CreateTemplateNamespaceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreateTemplateNamespaceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreateTemplateNamespaceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreateTemplateNamespaceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreateTemplateNamespaceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreateTemplateNamespaceRequestValidationError) ErrorName() string {
+	return "CreateTemplateNamespaceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreateTemplateNamespaceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreateTemplateNamespaceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreateTemplateNamespaceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreateTemplateNamespaceRequestValidationError{}
+
+// Validate checks the field values on CreateTemplateNamespaceResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *CreateTemplateNamespaceResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CreateTemplateNamespaceResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// CreateTemplateNamespaceResponseMultiError, or nil if none found.
+func (m *CreateTemplateNamespaceResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CreateTemplateNamespaceResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	if len(errors) > 0 {
+		return CreateTemplateNamespaceResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// CreateTemplateNamespaceResponseMultiError is an error wrapping multiple
+// validation errors returned by CreateTemplateNamespaceResponse.ValidateAll()
+// if the designated constraints aren't met.
+type CreateTemplateNamespaceResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CreateTemplateNamespaceResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CreateTemplateNamespaceResponseMultiError) AllErrors() []error { return m }
+
+// CreateTemplateNamespaceResponseValidationError is the validation error
+// returned by CreateTemplateNamespaceResponse.Validate if the designated
+// constraints aren't met.
+type CreateTemplateNamespaceResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CreateTemplateNamespaceResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CreateTemplateNamespaceResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CreateTemplateNamespaceResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CreateTemplateNamespaceResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CreateTemplateNamespaceResponseValidationError) ErrorName() string {
+	return "CreateTemplateNamespaceResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e CreateTemplateNamespaceResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCreateTemplateNamespaceResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CreateTemplateNamespaceResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CreateTemplateNamespaceResponseValidationError{}
+
+// Validate checks the field values on UpdateTemplateNamespaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateTemplateNamespaceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateTemplateNamespaceRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// UpdateTemplateNamespaceRequestMultiError, or nil if none found.
+func (m *UpdateTemplateNamespaceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateTemplateNamespaceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := UpdateTemplateNamespaceRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetNamespace()); l < 1 || l > 64 {
+		err := UpdateTemplateNamespaceRequestValidationError{
+			field:  "Namespace",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 64 {
+		err := UpdateTemplateNamespaceRequestValidationError{
+			field:  "Name",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Sort
+
+	if m.Description != nil {
+
+		if utf8.RuneCountInString(m.GetDescription()) > 255 {
+			err := UpdateTemplateNamespaceRequestValidationError{
+				field:  "Description",
+				reason: "value length must be at most 255 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return UpdateTemplateNamespaceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateTemplateNamespaceRequestMultiError is an error wrapping multiple
+// validation errors returned by UpdateTemplateNamespaceRequest.ValidateAll()
+// if the designated constraints aren't met.
+type UpdateTemplateNamespaceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateTemplateNamespaceRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateTemplateNamespaceRequestMultiError) AllErrors() []error { return m }
+
+// UpdateTemplateNamespaceRequestValidationError is the validation error
+// returned by UpdateTemplateNamespaceRequest.Validate if the designated
+// constraints aren't met.
+type UpdateTemplateNamespaceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateTemplateNamespaceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateTemplateNamespaceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateTemplateNamespaceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateTemplateNamespaceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateTemplateNamespaceRequestValidationError) ErrorName() string {
+	return "UpdateTemplateNamespaceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateTemplateNamespaceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateTemplateNamespaceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateTemplateNamespaceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateTemplateNamespaceRequestValidationError{}
+
+// Validate checks the field values on UpdateTemplateNamespaceResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateTemplateNamespaceResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateTemplateNamespaceResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// UpdateTemplateNamespaceResponseMultiError, or nil if none found.
+func (m *UpdateTemplateNamespaceResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateTemplateNamespaceResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return UpdateTemplateNamespaceResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateTemplateNamespaceResponseMultiError is an error wrapping multiple
+// validation errors returned by UpdateTemplateNamespaceResponse.ValidateAll()
+// if the designated constraints aren't met.
+type UpdateTemplateNamespaceResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateTemplateNamespaceResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateTemplateNamespaceResponseMultiError) AllErrors() []error { return m }
+
+// UpdateTemplateNamespaceResponseValidationError is the validation error
+// returned by UpdateTemplateNamespaceResponse.Validate if the designated
+// constraints aren't met.
+type UpdateTemplateNamespaceResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateTemplateNamespaceResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateTemplateNamespaceResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateTemplateNamespaceResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateTemplateNamespaceResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateTemplateNamespaceResponseValidationError) ErrorName() string {
+	return "UpdateTemplateNamespaceResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateTemplateNamespaceResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateTemplateNamespaceResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateTemplateNamespaceResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateTemplateNamespaceResponseValidationError{}
+
+// Validate checks the field values on DeleteTemplateNamespaceRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteTemplateNamespaceRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteTemplateNamespaceRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// DeleteTemplateNamespaceRequestMultiError, or nil if none found.
+func (m *DeleteTemplateNamespaceRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteTemplateNamespaceRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := DeleteTemplateNamespaceRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return DeleteTemplateNamespaceRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteTemplateNamespaceRequestMultiError is an error wrapping multiple
+// validation errors returned by DeleteTemplateNamespaceRequest.ValidateAll()
+// if the designated constraints aren't met.
+type DeleteTemplateNamespaceRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteTemplateNamespaceRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteTemplateNamespaceRequestMultiError) AllErrors() []error { return m }
+
+// DeleteTemplateNamespaceRequestValidationError is the validation error
+// returned by DeleteTemplateNamespaceRequest.Validate if the designated
+// constraints aren't met.
+type DeleteTemplateNamespaceRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteTemplateNamespaceRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteTemplateNamespaceRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteTemplateNamespaceRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteTemplateNamespaceRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteTemplateNamespaceRequestValidationError) ErrorName() string {
+	return "DeleteTemplateNamespaceRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteTemplateNamespaceRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteTemplateNamespaceRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteTemplateNamespaceRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteTemplateNamespaceRequestValidationError{}
+
+// Validate checks the field values on DeleteTemplateNamespaceResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteTemplateNamespaceResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteTemplateNamespaceResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// DeleteTemplateNamespaceResponseMultiError, or nil if none found.
+func (m *DeleteTemplateNamespaceResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteTemplateNamespaceResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return DeleteTemplateNamespaceResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteTemplateNamespaceResponseMultiError is an error wrapping multiple
+// validation errors returned by DeleteTemplateNamespaceResponse.ValidateAll()
+// if the designated constraints aren't met.
+type DeleteTemplateNamespaceResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteTemplateNamespaceResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteTemplateNamespaceResponseMultiError) AllErrors() []error { return m }
+
+// DeleteTemplateNamespaceResponseValidationError is the validation error
+// returned by DeleteTemplateNamespaceResponse.Validate if the designated
+// constraints aren't met.
+type DeleteTemplateNamespaceResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteTemplateNamespaceResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteTemplateNamespaceResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteTemplateNamespaceResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteTemplateNamespaceResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteTemplateNamespaceResponseValidationError) ErrorName() string {
+	return "DeleteTemplateNamespaceResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteTemplateNamespaceResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteTemplateNamespaceResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteTemplateNamespaceResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteTemplateNamespaceResponseValidationError{}
+
 // Validate checks the field values on GetTemplateRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -447,6 +1498,8 @@ func (m *GetTemplateResponse) validate(all bool) error {
 
 	// no validation rules for App
 
+	// no validation rules for Namespace
+
 	// no validation rules for Description
 
 	// no validation rules for Version
@@ -574,6 +1627,21 @@ func (m *CurrentTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.Namespace != nil {
+
+		if utf8.RuneCountInString(m.GetNamespace()) > 32 {
+			err := CurrentTemplateRequestValidationError{
+				field:  "Namespace",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return CurrentTemplateRequestMultiError(errors)
 	}
@@ -679,6 +1747,8 @@ func (m *CurrentTemplateResponse) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for App
+
+	// no validation rules for Namespace
 
 	// no validation rules for Description
 
@@ -849,6 +1919,21 @@ func (m *CreateTemplateRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.Namespace != nil {
+
+		if utf8.RuneCountInString(m.GetNamespace()) > 32 {
+			err := CreateTemplateRequestValidationError{
+				field:  "Namespace",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1082,6 +2167,21 @@ func (m *SwitchTemplateRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.Namespace != nil {
+
+		if utf8.RuneCountInString(m.GetNamespace()) > 32 {
+			err := SwitchTemplateRequestValidationError{
+				field:  "Namespace",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1630,6 +2730,21 @@ func (m *PreviewTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.Namespace != nil {
+
+		if utf8.RuneCountInString(m.GetNamespace()) > 32 {
+			err := PreviewTemplateRequestValidationError{
+				field:  "Namespace",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return PreviewTemplateRequestMultiError(errors)
 	}
@@ -1845,6 +2960,8 @@ func (m *ListTemplateResponse_Template) validate(all bool) error {
 
 	// no validation rules for App
 
+	// no validation rules for Namespace
+
 	// no validation rules for Description
 
 	// no validation rules for Version
@@ -1937,6 +3054,135 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListTemplateResponse_TemplateValidationError{}
+
+// Validate checks the field values on
+// ListTemplateNamespaceResponse_TemplateNamespace with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ListTemplateNamespaceResponse_TemplateNamespace) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListTemplateNamespaceResponse_TemplateNamespace with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in
+// ListTemplateNamespaceResponse_TemplateNamespaceMultiError, or nil if none found.
+func (m *ListTemplateNamespaceResponse_TemplateNamespace) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListTemplateNamespaceResponse_TemplateNamespace) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for App
+
+	// no validation rules for Namespace
+
+	// no validation rules for Name
+
+	// no validation rules for Sort
+
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
+	if m.Description != nil {
+		// no validation rules for Description
+	}
+
+	if len(errors) > 0 {
+		return ListTemplateNamespaceResponse_TemplateNamespaceMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListTemplateNamespaceResponse_TemplateNamespaceMultiError is an error
+// wrapping multiple validation errors returned by
+// ListTemplateNamespaceResponse_TemplateNamespace.ValidateAll() if the
+// designated constraints aren't met.
+type ListTemplateNamespaceResponse_TemplateNamespaceMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListTemplateNamespaceResponse_TemplateNamespaceMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListTemplateNamespaceResponse_TemplateNamespaceMultiError) AllErrors() []error { return m }
+
+// ListTemplateNamespaceResponse_TemplateNamespaceValidationError is the
+// validation error returned by
+// ListTemplateNamespaceResponse_TemplateNamespace.Validate if the designated
+// constraints aren't met.
+type ListTemplateNamespaceResponse_TemplateNamespaceValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListTemplateNamespaceResponse_TemplateNamespaceValidationError) Field() string {
+	return e.field
+}
+
+// Reason function returns reason value.
+func (e ListTemplateNamespaceResponse_TemplateNamespaceValidationError) Reason() string {
+	return e.reason
+}
+
+// Cause function returns cause value.
+func (e ListTemplateNamespaceResponse_TemplateNamespaceValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListTemplateNamespaceResponse_TemplateNamespaceValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListTemplateNamespaceResponse_TemplateNamespaceValidationError) ErrorName() string {
+	return "ListTemplateNamespaceResponse_TemplateNamespaceValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListTemplateNamespaceResponse_TemplateNamespaceValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListTemplateNamespaceResponse_TemplateNamespace.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListTemplateNamespaceResponse_TemplateNamespaceValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListTemplateNamespaceResponse_TemplateNamespaceValidationError{}
 
 // Validate checks the field values on CompareTemplateResponse_CompareInfo with
 // the rules defined in the proto definition for this message. If any rules
