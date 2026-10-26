@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/kratosx v1.3.3
-	github.com/limes-cloud/manager/api v0.0.0-20251129152247-b0c746c5fef5
+	github.com/limes-cloud/manager/api v0.0.0-20261026110354-b57fe642f908
 	github.com/redis/go-redis/v9 v9.7.3
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20250818200422-3122310a409c
@@ -110,5 +110,3 @@ require (
 	gorm.io/driver/postgres v1.6.0 // indirect
 	gorm.io/driver/sqlserver v1.6.1 // indirect
 )
-
-replace github.com/limes-cloud/manager/api v0.0.0-20251129152247-b0c746c5fef5 => ../manager/api
