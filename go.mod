@@ -7,8 +7,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.8.4
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratosx v1.2.9
-	github.com/limes-cloud/manager v1.0.32
+	github.com/limes-cloud/kratosx v1.3.3
 	github.com/limes-cloud/manager/api v0.0.0-20251129152247-b0c746c5fef5
 	github.com/redis/go-redis/v9 v9.7.3
 	go.uber.org/automaxprocs v1.5.3
@@ -113,5 +112,3 @@ require (
 )
 
 replace github.com/limes-cloud/manager/api v0.0.0-20251129152247-b0c746c5fef5 => ../manager/api
-
-replace github.com/limes-cloud/kratosx v1.2.9 => ../../framework/kratosx
