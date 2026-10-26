@@ -23,8 +23,7 @@ message ListBusinessRequest {
   optional string orderBy = 4 [(validate.rules).string = {
     in: ["id"]
   }];
-  string app = 5 [(validate.rules).string = {
-    min_len: 1
+  optional string app = 5 [(validate.rules).string = {
     max_len: 32
   }];
   optional string keyword = 6;
@@ -37,6 +36,7 @@ message ListBusinessResponse {
     string keyword = 3;
     string type = 4;
     optional string description = 5;
+    string extra = 8;
     uint32 createdAt = 6;
     uint32 updatedAt = 7;
   }
@@ -46,13 +46,13 @@ message ListBusinessResponse {
 }
 
 message CreateBusinessRequest {
-  string app = 1 [(validate.rules).string = {
-    min_len: 1
+  optional string app = 1 [(validate.rules).string = {
     max_len: 32
   }];
   string keyword = 2 [(validate.rules).string = {min_len: 1}];
   string type = 3 [(validate.rules).string = {min_len: 1}];
   optional string description = 4;
+  optional string extra = 5 [(validate.rules).string = {max_len: 4096}];
 }
 
 message CreateBusinessResponse {
@@ -64,6 +64,7 @@ message UpdateBusinessRequest {
   string keyword = 2 [(validate.rules).string = {min_len: 1}];
   string type = 3 [(validate.rules).string = {min_len: 1}];
   optional string description = 4;
+  optional string extra = 5 [(validate.rules).string = {max_len: 4096}];
 }
 
 message UpdateBusinessResponse {}

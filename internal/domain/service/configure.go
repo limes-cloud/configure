@@ -8,7 +8,9 @@ import (
 
 	"github.com/go-kratos/kratos/v2/encoding"
 	"github.com/limes-cloud/configure/internal/core"
+	"github.com/limes-cloud/kratosx/library/db/gormtranserror"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
+	"gorm.io/gorm"
 
 	"github.com/limes-cloud/configure/api/errors"
 	"github.com/limes-cloud/configure/internal/domain/entity"
@@ -86,6 +88,7 @@ func (u *Configure) UpdateConfigure(ctx core.Context, req *entity.Configure) err
 
 	configure, err := u.repo.GetConfigureByEnvAndApp(ctx, req.EnvId, req.App)
 	if err == nil {
+		// 已存在：校验版本后更新
 		if req.Version == configure.Version {
 			return errors.ConfigureVersionExistError()
 		}
@@ -93,10 +96,14 @@ func (u *Configure) UpdateConfigure(ctx core.Context, req *entity.Configure) err
 		if err := u.repo.UpdateConfigure(ctx, req); err != nil {
 			return errors.DatabaseError(err.Error())
 		}
-	} else {
+	} else if gormtranserror.Is(gorm.ErrRecordNotFound, err) {
+		// 不存在：创建
 		if _, err := u.repo.CreateConfigure(ctx, req); err != nil {
 			return errors.DatabaseError(err.Error())
 		}
+	} else {
+		// 其他查询错误：不能当作"不存在"处理，直接返回
+		return errors.GetError(err.Error())
 	}
 
 	if err := u.repo.BroadcastConfigure(ctx, req.EnvId, req.App); err != nil {
@@ -186,6 +193,9 @@ func (u *Configure) CompareConfigure(ctx core.Context, req *types.CompareConfigu
 	otc := map[string]any{}
 	if err == nil {
 		oe := encoding.GetCodec(configure.Format)
+		if oe == nil {
+			return nil, errors.RenderTemplateError("unsupported template format")
+		}
 		if err := oe.Unmarshal([]byte(configure.Content), &otc); err != nil {
 			return nil, errors.RenderTemplateError()
 		}
@@ -201,6 +211,9 @@ func (u *Configure) CompareConfigure(ctx core.Context, req *types.CompareConfigu
 	}
 	ctc := map[string]any{}
 	ce := encoding.GetCodec(format)
+	if ce == nil {
+		return nil, errors.RenderTemplateError("unsupported template format")
+	}
 	if err := ce.Unmarshal([]byte(content), &ctc); err != nil {
 		return nil, errors.RenderTemplateError()
 	}

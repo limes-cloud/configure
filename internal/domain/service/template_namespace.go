@@ -26,6 +26,15 @@ func NormalizeTemplateNamespace(namespace string) string {
 	return normalizeTemplateNamespace(namespace)
 }
 
+// GetTemplateNamespace 获取指定的模板命名空间
+func (u *TemplateNamespace) GetTemplateNamespace(ctx core.Context, id uint32) (*entity.TemplateNamespace, error) {
+	namespace, err := u.repo.GetTemplateNamespace(ctx, id)
+	if err != nil {
+		return nil, errors.GetError(err.Error())
+	}
+	return namespace, nil
+}
+
 // ListTemplateNamespace 获取模板命名空间列表
 func (u *TemplateNamespace) ListTemplateNamespace(ctx core.Context, req *types.ListTemplateNamespaceRequest) ([]*entity.TemplateNamespace, uint32, error) {
 	list, total, err := u.repo.ListTemplateNamespace(ctx, req)

@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	thttp "github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
@@ -18,18 +16,12 @@ import (
 	initmenu "github.com/limes-cloud/configure/internal/initiator/menu"
 )
 
-const AppName = "Configure"
-
 func main() {
 	srv := core.InitApp(
 		kratosx.WithRegistrarServer(func(hs *thttp.Server, gs *grpc.Server) {
 			app.New(hs, gs)
 		}),
 		kratosx.WithMiddleware(authorize.AuthMiddleware()),
-		kratosx.WithKratosOptions(kratos.AfterStart(func(_ context.Context) error {
-			fmt.Printf("Hello %s !\n", AppName)
-			return nil
-		})),
 	)
 
 	initentity.Register(core.MustContext(context.Background()))

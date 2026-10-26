@@ -44,7 +44,7 @@ func init() {
 }
 
 func (s *Template) CurrentTemplate(ctx context.Context, req *pb.CurrentTemplateRequest) (*pb.CurrentTemplateResponse, error) {
-	res, err := s.srv.CurrentTemplate(core.MustContext(ctx), req.App, req.GetNamespace())
+	res, err := s.srv.CurrentTemplate(core.MustContext(ctx), resolveApp(core.MustContext(ctx), req.GetApp()), req.GetNamespace())
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ func (s *Template) ListTemplate(ctx context.Context, req *pb.ListTemplateRequest
 	res, total, err := s.srv.ListTemplate(core.MustContext(ctx), &types.ListTemplateRequest{
 		Page:      req.Page,
 		PageSize:  req.PageSize,
-		App:       req.App,
+		App:       resolveApp(core.MustContext(ctx), req.GetApp()),
 		Namespace: req.Namespace,
 	})
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *Template) ListTemplateNamespace(ctx context.Context, req *pb.ListTempla
 	list, total, err := s.namespace.ListTemplateNamespace(core.MustContext(ctx), &types.ListTemplateNamespaceRequest{
 		Page:      req.Page,
 		PageSize:  req.PageSize,
-		App:       req.App,
+		App:       resolveApp(core.MustContext(ctx), req.GetApp()),
 		Namespace: req.Namespace,
 		Name:      req.Name,
 	})
@@ -105,7 +105,7 @@ func (s *Template) ListTemplateNamespace(ctx context.Context, req *pb.ListTempla
 
 func (s *Template) CreateTemplateNamespace(ctx context.Context, req *pb.CreateTemplateNamespaceRequest) (*pb.CreateTemplateNamespaceResponse, error) {
 	id, err := s.namespace.CreateTemplateNamespace(core.MustContext(ctx), &entity.TemplateNamespace{
-		App:         req.App,
+		App:         resolveApp(core.MustContext(ctx), req.GetApp()),
 		Namespace:   req.Namespace,
 		Name:        req.Name,
 		Description: req.Description,
@@ -118,6 +118,9 @@ func (s *Template) CreateTemplateNamespace(ctx context.Context, req *pb.CreateTe
 }
 
 func (s *Template) UpdateTemplateNamespace(ctx context.Context, req *pb.UpdateTemplateNamespaceRequest) (*pb.UpdateTemplateNamespaceResponse, error) {
+	if err := s.checkTemplateNamespacePermission(core.MustContext(ctx), req.Id); err != nil {
+		return nil, err
+	}
 	if err := s.namespace.UpdateTemplateNamespace(core.MustContext(ctx), &entity.TemplateNamespace{
 		BaseModel:   kmodel.BaseModel{Id: req.Id},
 		Namespace:   req.Namespace,
@@ -131,6 +134,9 @@ func (s *Template) UpdateTemplateNamespace(ctx context.Context, req *pb.UpdateTe
 }
 
 func (s *Template) DeleteTemplateNamespace(ctx context.Context, req *pb.DeleteTemplateNamespaceRequest) (*pb.DeleteTemplateNamespaceResponse, error) {
+	if err := s.checkTemplateNamespacePermission(core.MustContext(ctx), req.Id); err != nil {
+		return nil, err
+	}
 	if err := s.namespace.DeleteTemplateNamespace(core.MustContext(ctx), req.Id); err != nil {
 		return nil, err
 	}
@@ -139,7 +145,7 @@ func (s *Template) DeleteTemplateNamespace(ctx context.Context, req *pb.DeleteTe
 
 func (s *Template) CreateTemplate(c context.Context, req *pb.CreateTemplateRequest) (*pb.CreateTemplateResponse, error) {
 	id, err := s.srv.CreateTemplate(core.MustContext(c), &entity.Template{
-		App:         req.App,
+		App:         resolveApp(core.MustContext(c), req.GetApp()),
 		Namespace:   req.GetNamespace(),
 		Content:     req.Content,
 		Description: req.Description,
@@ -149,7 +155,7 @@ func (s *Template) CreateTemplate(c context.Context, req *pb.CreateTemplateReque
 }
 
 func (s *Template) SwitchTemplate(ctx context.Context, req *pb.SwitchTemplateRequest) (*pb.SwitchTemplateResponse, error) {
-	return &pb.SwitchTemplateResponse{}, s.srv.SwitchTemplate(core.MustContext(ctx), req.App, req.GetNamespace(), req.Id)
+	return &pb.SwitchTemplateResponse{}, s.srv.SwitchTemplate(core.MustContext(ctx), resolveApp(core.MustContext(ctx), req.GetApp()), req.GetNamespace(), req.Id)
 }
 
 func (s *Template) CompareTemplate(ctx context.Context, req *pb.CompareTemplateRequest) (*pb.CompareTemplateResponse, error) {
@@ -171,7 +177,7 @@ func (s *Template) CompareTemplate(ctx context.Context, req *pb.CompareTemplateR
 func (s *Template) PreviewTemplate(ctx context.Context, req *pb.PreviewTemplateRequest) (*pb.PreviewTemplateResponse, error) {
 	res, err := s.srv.PreviewTemplate(core.MustContext(ctx), &types.PreviewTemplateRequest{
 		EnvId:     req.EnvId,
-		App:       req.App,
+		App:       resolveApp(core.MustContext(ctx), req.GetApp()),
 		Namespace: req.GetNamespace(),
 		Format:    req.Format,
 		Content:   req.Content,
@@ -180,4 +186,20 @@ func (s *Template) PreviewTemplate(ctx context.Context, req *pb.PreviewTemplateR
 		return nil, err
 	}
 	return &pb.PreviewTemplateResponse{Content: res.Content}, nil
+}
+
+// checkTemplateNamespacePermission 校验模板命名空间归属：非 manager 只能操作自己应用（AppKey）下的命名空间，越权返回 NotPermissionError
+func (s *Template) checkTemplateNamespacePermission(ctx core.Context, id uint32) error {
+	appKey := ctx.AppKey()
+	if appKey == "" || appKey == "manager" {
+		return nil
+	}
+	namespace, err := s.namespace.GetTemplateNamespace(ctx, id)
+	if err != nil {
+		return err
+	}
+	if namespace.App != appKey {
+		return errors.NotPermissionError()
+	}
+	return nil
 }

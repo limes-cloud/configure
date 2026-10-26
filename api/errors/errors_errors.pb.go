@@ -382,12 +382,12 @@ func IsServerNotExistTemplateError(err error) bool {
 func ServerNotExistTemplateError(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_ServerNotExistTemplateError.String(), "当前服务还未提交过模板")
+		return errors.New(500, ErrorReason_ServerNotExistTemplateError.String(), "当前应用还未提交过模板")
 	case 1:
-		return errors.New(500, ErrorReason_ServerNotExistTemplateError.String(), "当前服务还未提交过模板:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_ServerNotExistTemplateError.String(), "当前应用还未提交过模板:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_ServerNotExistTemplateError.String(), "当前服务还未提交过模板:"+msg)
+		return errors.New(500, ErrorReason_ServerNotExistTemplateError.String(), "当前应用还未提交过模板:"+msg)
 	}
 }
 
@@ -462,12 +462,12 @@ func IsServerNotFound(err error) bool {
 func ServerNotFound(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_ServerNotFound.String(), "服务不存在")
+		return errors.New(500, ErrorReason_ServerNotFound.String(), "应用不存在")
 	case 1:
-		return errors.New(500, ErrorReason_ServerNotFound.String(), "服务不存在:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_ServerNotFound.String(), "应用不存在:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_ServerNotFound.String(), "服务不存在:"+msg)
+		return errors.New(500, ErrorReason_ServerNotFound.String(), "应用不存在:"+msg)
 	}
 }
 

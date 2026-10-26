@@ -17,6 +17,15 @@ func NewBusiness(repo repository.Business) *Business {
 	return &Business{repo: repo}
 }
 
+// GetBusiness 获取指定的业务配置信息
+func (u *Business) GetBusiness(ctx core.Context, id uint32) (*entity.Business, error) {
+	business, err := u.repo.GetBusiness(ctx, id)
+	if err != nil {
+		return nil, errors.GetError(err.Error())
+	}
+	return business, nil
+}
+
 // ListBusiness 获取业务配置信息列表
 func (u *Business) ListBusiness(ctx core.Context, req *types.ListBusinessRequest) ([]*entity.Business, uint32, error) {
 	list, total, err := u.repo.ListBusiness(ctx, req)
@@ -79,7 +88,7 @@ func (u *Business) UpdateBusinessValue(ctx core.Context, list []*entity.Business
 		if item.BusinessId != bid {
 			continue
 		}
-		v, err := item.MarshalValue(business.Type)
+		v, err := item.MarshalValue(business.Type, business.Extra)
 		if err != nil {
 			return err
 		}

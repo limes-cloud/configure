@@ -1,64 +1,76 @@
+# configure —— 百度内部配置中心服务
 
-#### 文档地址
-[GoPlatform 文档](https://www.yuque.com/helloworld-ioafi/blvuyc/uow9xkke8kbkavla)
-#### 项目背景
-市面上的后台快速开发框架，例如若依等admin框架，通常只提供了后台管理端的开发支持，而缺乏对客户端（C端）业务的完善支持。在实际应用中，我们面临着一系列问题。
+> 本服务是 **百度内部** 统一应用管理平台（GoPlatform）的**配置中心**，为平台内各服务（manager / resource / ai-agent / cron 等）提供配置的集中管理、下发与热更新能力。
 
-首先，将C端业务逻辑直接集成到后台管理端存在潜在的安全风险。这可能导致用户权限越级，进而危及整个管理端数据的安全性。
+## 功能定位
 
-其次，二次开发这些admin框架时，需要深入理解并适应它们的项目代码逻辑。由于开发习惯和代码风格的不同，这可能导致不必要的困扰和适应期。
+- **配置管理**：配置（`configure`）的读取、修改、比对（compare）与**实时监听**（Watch，gRPC stream 下发）；服务启动时经 `CONF_HOST / CONF_TOKEN / APP_NAME` 环境变量从本中心拉取自身配置
+- **业务配置**（`business`）：按业务维度组织与维护配置项（values）
+- **环境管理**（`env`）：环境（dev / test / prod 等）与 Token 的申请、重置（供客户端拉取配置鉴权）
+- **资源配置**（`resource`）：资源视图与值的管理
+- **模板管理**（`template`）：配置模板与模板命名空间，支持配置的模板化生成
 
-随着业务的不断增长，我们逐渐意识到所有服务都放在一个单一服务中是不合理的。业务的复杂化使得我们需要更灵活的解决方案，而这包括对服务的有效拆分。
+## 技术栈
 
-在这一背景下，我们必须认识到随着业务的不断复杂化，单一服务的模式已经无法满足需求。因此，我们需要考虑服务的拆分，设计一个更合理的分布式架构，以应对多样化的业务需求。这不仅有助于提高系统的可维护性和扩展性，还能够降低潜在的风险，并更好地满足未来业务的发展和变化。通过合理的服务拆分，我们能够更好地管理和部署各个业务模块，使整个系统更加健壮和适应性强。
+| 维度 | 选型 |
+|---|---|
+| 语言 | Go 1.24.6 |
+| 微服务框架 | go-kratos/kratos + limes-cloud/kratosx |
+| 数据库 | MySQL（GORM） |
+| 缓存 | Redis |
+| 鉴权 | 经 `manager/api/authorize` 的 `AuthMiddleware` 统一校验（登录态 + X-App-Key 应用识别） |
+| Proto | protoc + kratosx proto 插件，路由统一 `/configure/api/*` |
 
+## 服务模块与路由
 
-#### 项目架构
-##### 项目架构图
-<img style="box-shadow:0 0 15px rgba(0,0,0,0.1);border-radius: 4px;" src="./images/frame.jpg">
+| 模块 | 说明 | 主要路由 |
+|---|---|---|
+| configure | 配置 CRUD / 比对 / 监听 | `GET\|PUT /configure/api/configure`、`POST /configure/api/configure/compare`、`WatchConfigure`（stream） |
+| business | 业务配置与值 | `/configure/api/business*` |
+| env | 环境与 Token | `/configure/api/env*` |
+| resource | 资源与值 | `/configure/api/resource*` |
+| template | 模板与命名空间 | `/configure/api/template*` |
 
-##### 项目架构说明
-系统整体结构分为四个主要部分，分别是用户端、网关、管理端和基础服务。
-用户端： 用户端是业务的具体实现部分，需要由开发者自行进行开发和编写。这一部分负责处理具体业务逻辑，包括用户交互、数据展示等。
-网关： 网关主要用于请求分发，充当前端访问后台的唯一入口。网关的作用在于统一处理前端请求，将其分发给相应的业务模块或服务，起到了路由和调度的作用。
-管理端： 管理端主要负责业务的管理功能。其中，管理端的绝大多数功能是可以直接复用的，用户只需关注具体的业务实现。这使得开发者能够更专注于业务逻辑而无需过多关注管理端的通用功能。
-基础服务：
-基础服务包含一系列基础设施，如资源中心、配置中心、定时任务等。这些服务提供了系统运行所需的基本支持，为其他模块提供了底层的支持和服务。基础服务的存在有助于系统的稳定性和可扩展性，同时提供了一些通用的功能，避免了在各个业务模块中重复实现相同的基础功能。
-这种系统设计使得各部分功能清晰划分，提高了系统的可维护性和扩展性。同时，通过将通用功能抽取到基础服务中，可以更好地实现功能复用，减少重复开发，提高开发效率。
+## 目录结构
 
-#### 技术选型
-##### 开发框架
-- 前端：使用字节 [Arco中后台最佳实践框架](https://arco.design/vue/docs/theme)进行开发
-- 后端：使用B站 [Kratos一套轻量级 Go 微服务框架](https://arco.design/vue/docs/theme)进行开发
-- 缓存：redis
-- 数据库：mysql
+```
+server/configure/
+├── api/        # proto 定义与生成代码（独立 go 模块）
+├── internal/   # core（上下文/配置）、app（handler 自注册）、domain（entity/repository/service）、
+│               # infra（dbs 仓储 / 客户端）、initiator（启动自注册）、types（DTO）、pkg（工具）
+├── conf/       # 服务配置（端口 / DB / Redis）
+├── main.go     # 入口：kratosx.InitApp + 自注册
+└── Dockerfile  # 多阶段构建
+```
 
-项目支持单台服务器以及k8s集群。
+## 启动与构建
 
+```bash
+# 本地运行（默认读取 conf/ 配置）
+go run main.go
 
-#### 快速预览
-##### 常规主题
-<img style="box-shadow:0 0 15px rgba(0,0,0,0.1);border-radius: 4px;" src="./images/white-menu.png">
+# 构建
+go build -o configure main.go
 
-##### 夜间主题
-<img style="box-shadow:0 0 15px rgba(0,0,0,0.1);border-radius: 4px;" src="./images/black-menu.png">
+# 生成 proto（api 目录下执行）
+kratosx proto client api/configure/proto/configure_service.proto
+```
 
-#### 仓库介绍
+默认端口：HTTP **6091** / gRPC **6092**。
 
-##### admin-platform-web 基础管理平台
-主要是存放了整个基础管理平台的前端代码，仓库地址：[admin-platform-web](https://github.com/limes-cloud/basic-platform-web)
+## 客户端接入
 
-##### gateway 通用网关
-主要是负责整个系统的前端到后端服务之前的路由调度，仓库地址：[gateway](https://github.com/limes-cloud/gateway)
+其他服务通过环境变量接入本配置中心：
 
-##### manager 管理中心
-主要是基础管理平台的后端基础服务，主要是负责菜单、部门、角色、鉴权等，仓库地址：[manager](https://github.com/limes-cloud/manager)
+```bash
+export CONF_HOST=<https://configure 服务地址>
+export CONF_TOKEN=<env 管理下发的 Token>
+export APP_NAME=<服务名>
+```
 
-##### configure 配置中心
-主要是基础管理平台的后端基础服务，主要是负责整个系统的配置管理，能够实现配置的实时变更，环境隔离等，仓库地址：[configure](https://github.com/limes-cloud/configure)
+配置加载逻辑见 `internal/core/`，与 limes-cloud/manager 的配置加载约定一致。
 
-##### resource 资源中心
-主要是基础管理平台的后端基础服务，主要是负责整个系统的静态资源文件管理，可对接阿里云、腾讯云对象存储，仓库地址：[resource](https://github.com/limes-cloud/resource)
+## 相关服务
 
-#### 免费商用
-go-platform 再次承诺，此框架将永久免费商用，纯爱发电～～
+- [manager](../manager/README.md) —— 统一应用管理平台管理端
+- [resource](../resource/README.md) —— 资源中心（对象存储 / 文件 / 目录 / 应用配置）

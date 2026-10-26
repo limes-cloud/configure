@@ -100,6 +100,9 @@ func (t *Template) CreateTemplate(ctx core.Context, template *entity.Template) (
 	}
 	otc := map[string]any{}
 	oe := encoding.GetCodec(template.Format)
+	if oe == nil {
+		return 0, errors.RenderTemplateError("unsupported template format")
+	}
 	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {
 		return 0, errors.RenderTemplateError(err.Error())
 	}
@@ -162,13 +165,13 @@ func (t *Template) PreviewTemplate(ctx core.Context, req *types.PreviewTemplateR
 	tp := pkg.NewTemplateParser()
 	content, err := tp.RenderTemplate(bvs, rvs, req.Format, req.Content)
 	if err != nil {
-		return nil, err
+		return nil, errors.RenderTemplateError(err.Error())
 	}
 
 	return &types.PreviewTemplateReply{
 		Content: content,
 		Format:  req.Format,
-	}, err
+	}, nil
 }
 
 // PreviewCurrentTemplate 预览当前配置
@@ -202,10 +205,10 @@ func (t *Template) PreviewCurrentTemplate(ctx core.Context, req *types.PreviewCu
 	tpr := pkg.NewTemplateParser()
 	tp.Content, err = tpr.RenderTemplate(bvs, rvs, tp.Format, tp.Content)
 	if err != nil {
-		return nil, err
+		return nil, errors.RenderTemplateError(err.Error())
 	}
 
-	return reply, err
+	return reply, nil
 }
 
 // SwitchTemplate 切换指定版本信息
@@ -242,6 +245,9 @@ func (t *Template) CompareTemplate(ctx core.Context, req *types.CompareTemplateR
 	var oldKeys []string
 	otc := map[string]any{}
 	oe := encoding.GetCodec(template.Format)
+	if oe == nil {
+		return nil, errors.RenderTemplateError("unsupported template format")
+	}
 	if err := oe.Unmarshal([]byte(template.Content), &otc); err != nil {
 		return nil, errors.RenderTemplateError()
 	}
@@ -252,6 +258,9 @@ func (t *Template) CompareTemplate(ctx core.Context, req *types.CompareTemplateR
 	var curKeys []string
 	ctc := map[string]any{}
 	ce := encoding.GetCodec(req.Format)
+	if ce == nil {
+		return nil, errors.RenderTemplateError("unsupported template format")
+	}
 	if err := ce.Unmarshal([]byte(req.Content), &ctc); err != nil {
 		return nil, errors.RenderTemplateError()
 	}

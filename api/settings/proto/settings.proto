@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package configure.api.settings;
+
+import "validate/validate.proto";
+
+option go_package = "configure/api/settings;settings";
+option java_multiple_files = true;
+option java_package = "configure.api.settings";
+
+message GetSettingsRequest {
+  optional string app = 1 [(validate.rules).string = {max_len: 32}];
+  uint32 envId = 2 [(validate.rules).uint32 = {gt: 0}];
+}
+
+message SettingsItem {
+  string keyword = 1;      // 变量 key（对应模板 ${keyword}）
+  string type = 2;         // 值类型：string | text | int | float | bool | enum | object | kv | array
+  string description = 3;  // 变量说明
+  string extra = 4;        // 渲染元数据（JSON 字符串，见业务变量 extra）
+  string value = 5;        // 当前值（原始字符串；未设置 = 空）
+}
+
+message GetSettingsResponse {
+  string app = 1;
+  uint32 envId = 2;
+  string format = 3;               // 当前模板格式（json | yaml）
+  repeated SettingsItem items = 4;
+}
+
+message UpdateSettingsRequest {
+  optional string app = 1 [(validate.rules).string = {max_len: 32}];
+  uint32 envId = 2 [(validate.rules).uint32 = {gt: 0}];
+  message ValueItem {
+    string keyword = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+    string value = 2;
+  }
+  repeated ValueItem items = 3 [(validate.rules).repeated = {min_items: 1}];
+}
+
+message UpdateSettingsResponse {}

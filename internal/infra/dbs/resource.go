@@ -6,11 +6,12 @@ import (
 	"sync"
 
 	"github.com/limes-cloud/configure/internal/core"
-	"google.golang.org/protobuf/proto"
+	"github.com/limes-cloud/kratosx/pkg/value"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	"github.com/limes-cloud/configure/internal/domain/entity"
+	"github.com/limes-cloud/configure/internal/pkg"
 	"github.com/limes-cloud/configure/internal/types"
 )
 
@@ -78,16 +79,16 @@ func (r Resource) ListResource(ctx core.Context, req *types.ListResourceRequest)
 	}
 	db = db.Offset(int((req.Page - 1) * req.PageSize)).Limit(int(req.PageSize))
 
-	if req.OrderBy == nil || *req.OrderBy == "" {
-		req.OrderBy = proto.String("id")
+	// 排序白名单校验（纵深防御：正常入口已被 proto validate 拦截，此处兜底防止内部调用绕过）
+	orderBy := value.Value(req.OrderBy)
+	if !pkg.ValidOrderBy(orderBy) {
+		orderBy = "id"
 	}
-	if req.Order == nil || *req.Order == "" {
-		req.Order = proto.String("asc")
+	order := value.Value(req.Order)
+	if !pkg.ValidOrder(order) {
+		order = "asc"
 	}
-	db = db.Order(fmt.Sprintf("%s %s", *req.OrderBy, *req.Order))
-	if *req.OrderBy != "id" {
-		db = db.Order("id asc")
-	}
+	db = db.Order(fmt.Sprintf("%s %s", orderBy, order))
 
 	return list, uint32(total), db.Find(&list).Error
 }

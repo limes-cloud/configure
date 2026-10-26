@@ -79,15 +79,19 @@ func (m *ListTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := ListTemplateRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := ListTemplateRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+
 	}
 
 	if m.Namespace != nil {
@@ -367,15 +371,19 @@ func (m *ListTemplateNamespaceRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := ListTemplateNamespaceRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := ListTemplateNamespaceRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+
 	}
 
 	if m.Namespace != nil {
@@ -650,17 +658,6 @@ func (m *CreateTemplateNamespaceRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := CreateTemplateNamespaceRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if l := utf8.RuneCountInString(m.GetNamespace()); l < 1 || l > 64 {
 		err := CreateTemplateNamespaceRequestValidationError{
 			field:  "Namespace",
@@ -684,6 +681,21 @@ func (m *CreateTemplateNamespaceRequest) validate(all bool) error {
 	}
 
 	// no validation rules for Sort
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := CreateTemplateNamespaceRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if m.Description != nil {
 
@@ -1616,15 +1628,19 @@ func (m *CurrentTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := CurrentTemplateRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := CurrentTemplateRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+
 	}
 
 	if m.Namespace != nil {
@@ -1866,17 +1882,6 @@ func (m *CreateTemplateRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := CreateTemplateRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetContent()) < 3 {
 		err := CreateTemplateRequestValidationError{
 			field:  "Content",
@@ -1919,6 +1924,21 @@ func (m *CreateTemplateRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := CreateTemplateRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Namespace != nil {
@@ -2158,15 +2178,19 @@ func (m *SwitchTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := SwitchTemplateRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := SwitchTemplateRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+
 	}
 
 	if m.Namespace != nil {
@@ -2686,17 +2710,6 @@ func (m *PreviewTemplateRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := PreviewTemplateRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if _, ok := _PreviewTemplateRequest_Format_InLookup[m.GetFormat()]; !ok {
 		err := PreviewTemplateRequestValidationError{
 			field:  "Format",
@@ -2728,6 +2741,21 @@ func (m *PreviewTemplateRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := PreviewTemplateRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Namespace != nil {

@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"sync"
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
@@ -21,15 +22,28 @@ type Configure struct {
 	srv *service.Configure
 }
 
-func NewConfigure() *Configure {
-	return &Configure{
-		srv: service.NewConfigure(
+var (
+	configureSrv  *service.Configure
+	configureOnce sync.Once
+)
+
+// getConfigureSrv 获取配置服务单例（settings 等模块组合复用时共享，避免重复订阅配置变更广播）
+func getConfigureSrv() *service.Configure {
+	configureOnce.Do(func() {
+		configureSrv = service.NewConfigure(
 			dbs.NewConfigure(),
 			dbs.NewEnv(),
 			dbs.NewBusiness(),
 			dbs.NewResource(),
 			dbs.NewTemplate(),
-		),
+		)
+	})
+	return configureSrv
+}
+
+func NewConfigure() *Configure {
+	return &Configure{
+		srv: getConfigureSrv(),
 	}
 }
 

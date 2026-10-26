@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"strings"
 
 	json "github.com/json-iterator/go"
@@ -86,6 +85,10 @@ func (u *Resource) ListResourceValue(ctx core.Context, rid uint32) ([]*entity.Re
 
 // UpdateResourceValue 更新业务配置值信息
 func (u *Resource) UpdateResourceValue(ctx core.Context, list []*entity.ResourceValue) error {
+	if len(list) == 0 {
+		return nil
+	}
+
 	rid := list[0].ResourceId
 
 	resource, err := u.repo.GetResource(ctx, list[0].ResourceId)
@@ -107,7 +110,7 @@ func (u *Resource) UpdateResourceValue(ctx core.Context, list []*entity.Resource
 		}
 		for _, key := range fields {
 			if m[key] == nil {
-				return fmt.Errorf("缺少字段%s", key)
+				return errors.ResourceValueTypeError("缺少字段" + key)
 			}
 		}
 		list[ind].Value, _ = json.MarshalToString(m)

@@ -1,8 +1,6 @@
 package menu
 
 import (
-	"context"
-
 	"github.com/limes-cloud/configure/internal/core"
 	managerMenu "github.com/limes-cloud/manager/api/menu"
 )
@@ -17,7 +15,7 @@ func Register(ctx core.Context) {
 			return
 		}
 
-		reply, err := managerMenu.NewMenuClient(conn).RegisterMenu(context.Background(), &managerMenu.RegisterMenuRequest{
+		reply, err := managerMenu.NewMenuClient(conn).RegisterMenu(ctx.Ctx(), &managerMenu.RegisterMenuRequest{
 			AppKeyword: appKeyword,
 			Mode:       registerModeAppend,
 			Menus:      menus,

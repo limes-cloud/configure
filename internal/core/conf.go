@@ -5,17 +5,9 @@ import (
 
 	kconfig "github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
-	"github.com/limes-cloud/kratosx/config"
 
 	"github.com/limes-cloud/configure/api/configure/client"
 )
-
-var conf = &Conf{}
-
-type Conf struct {
-	Test string
-	Res  string
-}
 
 func configSource() kconfig.Source {
 	host := os.Getenv("CONF_HOST")
@@ -25,12 +17,4 @@ func configSource() kconfig.Source {
 		return client.New(host, name, token)
 	}
 	return file.NewSource("conf/")
-}
-
-func configScanWatch(watch config.Watcher) {
-	watch("business", func(value config.Value) {
-		if err := value.Scan(conf); err != nil {
-			panic(err)
-		}
-	})
 }

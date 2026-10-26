@@ -38,15 +38,3 @@ type PreviewCurrentTemplateRequest struct {
 	App       string `json:"app"`
 	Namespace string `json:"namespace"`
 }
-
-type ParseByContentRequest struct {
-	EnvId   uint32 `json:"env_id"`
-	App     string `json:"app"`
-	Format  string `json:"format"`
-	Content string `json:"content"`
-}
-
-type TemplateValue struct {
-	Value   string
-	Exclude bool
-}

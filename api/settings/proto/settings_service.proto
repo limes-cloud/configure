@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package configure.api.settings;
+
+option go_package = "configure/api/settings;settings";
+option java_multiple_files = true;
+option java_package = "configure.api.settings";
+
+import "api/settings/proto/settings.proto";
+import "google/api/annotations.proto";
+
+service Settings {
+  // GetSettings 获取系统配置（当前模板引用的业务变量 + 指定环境的值）
+  rpc GetSettings(GetSettingsRequest) returns (GetSettingsResponse) {
+    option (google.api.http) = {get: "/configure/api/settings"};
+  }
+
+  // UpdateSettings 保存系统配置（类型校验 + 落库 + 重新渲染 + 广播，保存即生效）
+  rpc UpdateSettings(UpdateSettingsRequest) returns (UpdateSettingsResponse) {
+    option (google.api.http) = {
+      put: "/configure/api/settings"
+      body: "*"
+    };
+  }
+}

@@ -79,17 +79,6 @@ func (m *ListBusinessRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := ListBusinessRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.Order != nil {
 
 		if _, ok := _ListBusinessRequest_Order_InLookup[m.GetOrder()]; !ok {
@@ -111,6 +100,21 @@ func (m *ListBusinessRequest) validate(all bool) error {
 			err := ListBusinessRequestValidationError{
 				field:  "OrderBy",
 				reason: "value must be in list [id]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := ListBusinessRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
 			}
 			if !all {
 				return err
@@ -373,17 +377,6 @@ func (m *CreateBusinessRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 32 {
-		err := CreateBusinessRequestValidationError{
-			field:  "App",
-			reason: "value length must be between 1 and 32 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := CreateBusinessRequestValidationError{
 			field:  "Keyword",
@@ -406,8 +399,38 @@ func (m *CreateBusinessRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 32 {
+			err := CreateBusinessRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 32 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Extra != nil {
+
+		if utf8.RuneCountInString(m.GetExtra()) > 4096 {
+			err := CreateBusinessRequestValidationError{
+				field:  "Extra",
+				reason: "value length must be at most 4096 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -651,6 +674,21 @@ func (m *UpdateBusinessRequest) validate(all bool) error {
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Extra != nil {
+
+		if utf8.RuneCountInString(m.GetExtra()) > 4096 {
+			err := UpdateBusinessRequestValidationError{
+				field:  "Extra",
+				reason: "value length must be at most 4096 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1591,6 +1629,8 @@ func (m *ListBusinessResponse_Business) validate(all bool) error {
 	// no validation rules for Keyword
 
 	// no validation rules for Type
+
+	// no validation rules for Extra
 
 	// no validation rules for CreatedAt
 
